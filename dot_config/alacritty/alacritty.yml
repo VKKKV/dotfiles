@@ -1,0 +1,107 @@
+# 指定 Alacritty 启动时使用 Fish Shell
+shell:
+  program: /usr/bin/zsh
+  args:
+    - -l
+
+# 不指定 TERM 会导致一些旧机器通过 ssh 连接时无法正常工作
+env:
+  TERM: xterm-256color
+
+# Colors (Tomorrow Night Bright)
+colors:
+  # Default colors
+  primary:
+    background: '0x002b36'
+    foreground: '0x93a1a1'
+
+  # Colors the cursor will use if `custom_cursor_colors` is true
+  cursor:
+    text: '0x002b36'
+    cursor: '0x93a1a1'
+
+  # Normal colors
+  normal:
+    black:   '0x002b36'
+    red:     '0xdc322f'
+    green:   '0x859900'
+    yellow:  '0xb58900'
+    blue:    '0x268bd2'
+    magenta: '0x6c71c4'
+    cyan:    '0x2aa198'
+    white:   '0x93a1a1'
+
+  # Bright colors
+  bright:
+    black:   '0x657b83'
+    red:     '0xdc322f'
+    green:   '0x859900'
+    yellow:  '0xb58900'
+    blue:    '0x268bd2'
+    magenta: '0x6c71c4'
+    cyan:    '0x2aa198'
+    white:   '0xfdf6e3'
+
+  indexed_colors:
+    - { index: 16, color: '0xcb4b16' }
+    - { index: 17, color: '0xd33682' }
+    - { index: 18, color: '0x073642' }
+    - { index: 19, color: '0x586e75' }
+    - { index: 20, color: '0x839496' }
+    - { index: 21, color: '0xeee8d5' }
+
+# 设置字体
+# 字体下载: https://www.nerdfonts.com/font-downloads
+# 图标符号搜索: https://www.nerdfonts.com/cheat-sheet
+# 推荐备选字体: JetBrains Mono Regular Nerd Font Complete Mono
+font:
+  normal:
+    family: 'JetBrains Nerd Font Mono'
+    style: Regular
+  bold:
+    family: 'JetBrains Nerd Font Mono'
+    style: Regular
+  italic:
+    family: 'JetBrains Nerd Font Mono'
+    style: Italic
+  bold_italic:
+    family: 'JetBrains Nerd Font Mono'
+    style: Italic
+
+  # 字体大小
+  size: 16.0
+
+  offset:
+    x: 0
+    y: 4
+  glyph_offset:
+    x: 0
+    y: 2
+
+window:
+  # 窗口透明度 (0 全透明, 1 不透明)
+  opacity: 0.9
+  padding:
+    x: 5
+    y: 0
+  decorations: transparent
+
+scrolling:
+  # 回滚缓冲区中的最大行数,指定“0”将禁用滚动。
+  history: 10000
+  # 滚动行数
+  multiplier: 4
+
+cursor:
+  style:
+    shape: Block
+
+selection:
+  semantic_escape_chars: ',│`|:"'' ()[]{}<>'
+  save_to_clipboard: true
+
+live_config_reload: true
+
+# 全屏显示窗口, 绑定快捷键 Ctrl-x
+key_bindings:
+  - { key: X, mods: Control, action: ToggleSimpleFullscreen }
