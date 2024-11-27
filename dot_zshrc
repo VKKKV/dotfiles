@@ -60,23 +60,28 @@ function in {
 
 
 # Helpful aliases
-alias c='clear' # clear terminal
+# alias c='clear' # clear terminal
 alias l='eza -lh --icons=auto' # long list
 alias ls='eza -1 --icons=auto' # short list
 alias ll='eza -lha --icons=auto --sort=name --group-directories-first' # long list all
 alias ld='eza -lhD --icons=auto' # long list dirs
 alias lt='eza --icons=auto --tree' # list folder as tree
-alias un='$aurhelper -Rns' # uninstall package
-alias up='$aurhelper -Syu' # update system/package/aur
-alias pl='$aurhelper -Qs' # list installed package
-alias pa='$aurhelper -Ss' # list available package
-alias pc='$aurhelper -Sc' # remove unused cache
-alias po='$aurhelper -Qtdq | $aurhelper -Rns -' # remove unused packages, also try > $aurhelper -Qqd | $aurhelper -Rsu --print -
+# alias un='$aurhelper -Rns' # uninstall package
+# alias up='$aurhelper -Syu' # update system/package/aur
+# alias pl='$aurhelper -Qs' # list installed package
+# alias pa='$aurhelper -Ss' # list available package
+# alias pc='$aurhelper -Sc' # remove unused cache
+# alias po='$aurhelper -Qtdq | $aurhelper -Rns -' # remove unused packages, also try > $aurhelper -Qqd | $aurhelper -Rsu --print -
+
+#MyAlias
 alias vc='code' # gui code editor
 alias ra=ranger
 alias wps='QT_SCREEN_SCALE_FACTORS=1 QT_FONT_DPI=144 wps'
 alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias vi=vim
+alias baca='/home/arch/.conda/envs/baca/bin/baca'
+
+
 # Directory navigation shortcuts
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -101,7 +106,7 @@ eval $(thefuck --alias)
 
 # Helpful export
 export CRYPTOGRAPHY_OPENSSL_NO_LEGACY=1
-export PATH="$PATH:./node_modules/.bin"
+export PATH="$PATH:./node_modules/.bin:./.local/bin/"
 # export TERM="xterm-kitty"
 
 # >>> conda initialize >>>
