@@ -76,13 +76,12 @@ alias lt='eza --icons=auto --tree' # list folder as tree
 
 #MyAlias
 # alias vc='code' # gui code editor
-alias ra=ranger
+# alias ra=ranger
 alias wps='QT_SCREEN_SCALE_FACTORS=1 QT_FONT_DPI=144 wps'
 # alias config='/usr/bin/git --git-dir=$HOME/.dotfiles/ --work-tree=$HOME'
 alias vi=vim
 alias baca='/home/arch/.conda/envs/baca/bin/baca'
-alias yz=yazi
-
+alias ra=y
 
 
 # Directory navigation shortcuts
@@ -109,6 +108,27 @@ eval $(thefuck --alias)
 # Helpful export
 export CRYPTOGRAPHY_OPENSSL_NO_LEGACY=1
 export PATH="$PATH:./node_modules/.bin:./.local/bin/"
+export EDITOR=vim
+
+
+# yazi
+function y() {
+	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
+	yazi "$@" --cwd-file="$tmp"
+	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+		builtin cd -- "$cwd"
+	fi
+	rm -f -- "$tmp"
+}
+
+
+
+
+
+
+
+
+
 
 
 
@@ -140,15 +160,34 @@ unset __conda_setup
 #	|   \ \__\   |\________\ \__\   \ \_______\ \_______\ \__\\ \__\ \__\ |
 #	|    \|__|    \|_______|\|__|    \|_______|\|_______|\|__| \|__|\|__| |
 #	'---------------------------------------------------------------------'
+
 # fzf setting
 # modify from https://github.com/chinanf-boy/
+
+# Define the patterns to exclude
+EXCLUDES=(
+    'IdeaProjects-main/'
+    'node_modules/'
+    'build/'
+    'gems/'
+    '.icons/'
+)
+
+# Construct the fd command with exclusions
+FD_COMMAND="fd --hidden"
+
+for EXCLUDE in "${EXCLUDES[@]}"; do
+    FD_COMMAND+=" --exclude '$EXCLUDE'"
+done
+
+
 # export FZF_DEFAULT_OPTS='--bind=ctrl-t:top,change:top --bind ctrl-e:down,ctrl-u:up'
 # export FZF_DEFAULT_OPTS='--bind ctrl-e:down,ctrl-u:up --preview "[[ $(file --mime {}) =~ binary ]] && echo {} is a binary file || (ccat --color=always {} || highlight -O ansi -l {} || cat {}) 2> /dev/null | head -500"'
 # export FZF_DEFAULT_COMMAND='ag --hidden --ignore .git -g ""'
 # export FZF_DEFAULT_OPTS='--preview "[[ $(file --mime {}) =~ binary ]] && echo {} is a binary file || (ccat --color=always {} || highlight -O ansi -l {} || cat {}) 2> /dev/null | head -500"'
 export FZF_DEFAULT_OPTS='--preview "[[ $(file --mime {}) =~ binary ]] && echo {} is a binary file || ( bat --color=always --style=numbers --line-range=:500 {} ||ccat --color=always {} || highlight -O ansi -l {} || cat {}) 2> /dev/null | head -500"'
 # export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!**/.git/*"'
-export FZF_DEFAULT_COMMAND='fd'
+export FZF_DEFAULT_COMMAND="$FD_COMMAND"
 export FZF_COMPLETION_TRIGGER='\'
 export FZF_TMUX=1
 export FZF_TMUX_HEIGHT='80%'
@@ -183,3 +222,4 @@ export FZF_TMUX_HEIGHT='80%'
 #}
 
 
+source <(fzf --zsh)

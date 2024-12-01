@@ -23,6 +23,9 @@ let mapleader=" "
 
 
 call plug#begin()
+
+Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+Plug 'junegunn/fzf.vim'
 Plug 'preservim/nerdcommenter'
 let g:NERDSpaceDelims=1
 Plug 'vim-airline/vim-airline'
