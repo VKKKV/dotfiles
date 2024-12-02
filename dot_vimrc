@@ -21,19 +21,44 @@ let mapleader=" "
 
 
 
-
 call plug#begin()
 
+" symbol surround
+Plug 'tpope/vim-surround'
+
+" fzf
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+
+" nerdcommenter
+" leader+cc & leader+cv
 Plug 'preservim/nerdcommenter'
-let g:NERDSpaceDelims=1
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-"let g:airline_theme='minimalist'
-"let g:airline_theme='gruvbox'
+" 创建默认映射
+let g:NERDCreateDefaultMappings = 1
+
+" 默认在注释分隔符后添加空格
+let g:NERDSpaceDelims = 1
+
+" 使用紧凑语法格式化多行注释
+let g:NERDCompactSexyComs = 1
+
+" 将行注释分隔符左对齐，而不是跟随代码缩进
+let g:NERDDefaultAlign = 'left'
+
+" 设置语言默认使用其备用分隔符
+let g:NERDAltDelims_java = 1
+
+" 添加自定义格式或覆盖默认格式
+let g:NERDCustomDelimiters = { 'c': { 'left': '/**','right': '*/' } }
+
+" 允许注释和反转空行（在注释区域时很有用）
+let g:NERDCommentEmptyLines = 1
+let g:NERDTrimTrailingWhitespace = 1
+
 
 " AIRLINE THEME
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
 let g:airline_theme='angr'
 let g:airline_powerline_fonts = 1                                                                                                         
 " show git branch
@@ -43,11 +68,14 @@ let g:airline_powerline_fonts=1
 let g:airline#extensions#tabline#enabled = 1
 let g:airline#extensions#tabline#fnamemod = ':t'
 let g:airline_section_z = "%3p%% %l:%c"
-Plug 'https://github.com/junegunn/vim-easy-align.git'
+
+
+" align code
+" Plug 'https://github.com/junegunn/vim-easy-align.git'
 " Start interactive EasyAlign in visual mode (e.g. vipga)
-xmap ga <Plug>(EasyAlign)
+" xmap ga <Plug>(EasyAlign)
 " Start interactive EasyAlign for a motion/text object (e.g. gaip)
-nmap ga <Plug>(EasyAlign)
+" nmap ga <Plug>(EasyAlign)
 
 " Using a non-default branch
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
@@ -66,4 +94,4 @@ call plug#end()
 
 " Color schemes should be loaded after plug#end().
 " We prepend it with 'silent!' to ignore errors when it's not yet installed.
-"silent! colorscheme seoul256
+" silent! colorscheme seoul256

@@ -1,7 +1,4 @@
-# @author nate zhou
-# @since 2023,2024
-# codeberg.org/unixchad/dotfiles
-# github.com/gnuunixchad/dotfiles
+# @author vkkkv
 
 color listnormal cyan default
 color listfocus black yellow standout bold
@@ -57,9 +54,8 @@ bind-key p pb-play
 bind-key a pb-toggle-download-all
 bind-key SPACE toggle-article-read
 
-browser "w3m %u"
+browser "w3m -o auto_image=TRUE %u"
 refresh-on-startup yes
 reload-threads 100 # loading feeds in parallel
-
 #use-proxy yes
 #proxy localhost:PORT

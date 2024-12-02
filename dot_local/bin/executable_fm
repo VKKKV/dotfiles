@@ -1,16 +1,21 @@
 #!/usr/bin/zsh
 # @author nate zhou
 # @since 2024
+# @author vkkkv 
+# modify from nate zhou's dotfile
 # open text file with vim using fzf
 
 # FZF_DEFAULT_COMMAND='rg --files --hidden'
 
 search_path=(
-    "$HOME/.config/"
-    "$HOME/.ssh/config"
-    "$HOME/.zshrc"
-    "$HOME/.vimrc"
-    "$HOME/.local/bin"
+	"$HOME/.config/"
+	"$HOME/.ssh/config"
+	"$HOME/.zshrc"
+	"$HOME/.vimrc"
+	"$HOME/.local/bin"
+	"$HOME/.newsboat/"
+	"$HOME/.w3m/"
+
 )
 
 # Use fzf to select a file from the search path
@@ -20,6 +25,6 @@ selected_file=$(find "${search_path[@]}" -type f | grep -ve "/.git/" -ve "/gems/
 
 # Don't open vim if no file is selected
 if [ -n "$selected_file" ]; then
-    vim "$selected_file"
+	vim "$selected_file"
 fi
 

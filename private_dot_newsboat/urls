@@ -2,6 +2,15 @@
 # github.com/gnuunixchad/dotfiles
 
 # [distros]
-https://archlinux.org/feeds/news/ archlinux
-https://www.archlinuxcn.org/feed/ archlinuxcn
-https://micronews.debian.org/feeds/feed.rss
+https://archlinux.org/feeds/news/
+https://www.archlinuxcn.org/feed/
+https://hnrss.org/frontpage "~Hacker News"
+http://www.linuxjournal.com/node/feed "~Linux Journal"
+
+https://www.zhihu.com/rss 	"知乎每日精选"
+https://www.ruanyifeng.com/blog/atom.xml 	"阮一峰的网络日志"
+https://sspai.com/feed 	"少数派"
+https://v2ex.com/index.xml 	"V2EX"
+https://www.gcores.com/rss 	"机核"
+https://feeds2.feedburner.com/programthink 	"编程随想的博客"
+http://blog.codingnow.com/atom.xml 	"云风的 BLOG"
