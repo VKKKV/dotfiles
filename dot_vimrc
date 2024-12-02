@@ -22,6 +22,8 @@ let mapleader=" "
 
 
 call plug#begin()
+" smooth scroll
+Plug 'psliwka/vim-smoothie'
 
 " symbol surround
 Plug 'tpope/vim-surround'
