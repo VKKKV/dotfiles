@@ -1,11 +1,48 @@
 # @author vkkkv
+auto-reload yes
+suppress-first-reload yes
+reload-time 30
+reload-threads 6
+download-retries 4
+download-timeout 10
+download-path "~/Downloads/newsboat"
+max-items 4000
+prepopulate-query-feeds yes
+notify-format "%d new articles"
+notify-program "/usr/bin/notify-send"
+show-read-feeds yes
+scrolloff 10
+confirm-mark-feed-read no
+confirm-exit yes
+show-keymap-hint no
 
-color listnormal cyan default
-color listfocus black yellow standout bold
-color listnormal_unread blue default
-color listfocus_unread yellow default bold
-color info red black bold
-color article white default bold
+# feed-sort-order unreadarticlecount-asc
+feed-sort-order none
+player mpv
+define-filter "All feeds with 's' flag" "flags # \"s\""
+text-width 100
+
+
+
+
+
+
+# macro i set browser "clear;kitty icat %u ;tput civis >/dev/tty 2>/dev/null;read -r -s -n 1;tput cnorm >/dev/tty 2>/dev/null;kitty icat --clear"
+
+color listnormal color15 default
+color listfocus color0 color15 standout bold
+color listnormal_unread color208 default
+color listfocus_unread color208 color0 bold
+color info color15 color0 bold
+color article color15 default
+
+
+# color listnormal cyan default
+# color listfocus black yellow standout bold
+# color listnormal_unread blue default
+# color listfocus_unread yellow default bold
+# color info red black bold
+# color article white default bold
 
 highlight all "---.*---" yellow
 highlight feedlist ".*(0/0))" black
@@ -21,41 +58,24 @@ highlight article ":.*\\(image\\)$" blue default
 highlight article ":.*\\(embedded flash\\)$" magenta default
 
 
-#Arrow keys for navigation
-bind-key DOWN down
-bind-key UP up
-bind-key RIGHT open
-bind-key LEFT quit
 
 #More vim-like keys
 bind-key j down
 bind-key k up
 bind-key j next articlelist
 bind-key k prev articlelist
-bind-key J pagedown
-bind-key K pageup
 bind-key L next-feed articlelist
 bind-key H prev-feed articlelist
-bind-key n next-unread
-bind-key N prev-unread
 bind-key G end
 bind-key g home
-bind-key d pagedown
-bind-key ^F pagedown
-bind-key ^B pageup
-bind-key u pageup
+bind-key ^d pagedown
+bind-key ^u pageup
 bind-key l open
 bind-key h quit
-bind-key a toggle-article-read
-bind-key D pb-download
 bind-key U show-urls
-bind-key x pb-delete
 bind-key p pb-play
 bind-key a pb-toggle-download-all
 bind-key SPACE toggle-article-read
 
-browser "w3m -o auto_image=TRUE %u"
-refresh-on-startup yes
-reload-threads 100 # loading feeds in parallel
-#use-proxy yes
-#proxy localhost:PORT
+# browser "w3m -o auto_image=TRUE %u"
+browser "zen %u"

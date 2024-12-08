@@ -47,14 +47,11 @@ if (empty($TMUX) && getenv('TERM_PROGRAM') != 'Apple_Terminal')
   endif
 endif
 
-
-
-
-
 " map
 let mapleader=" "
 nnoremap <Leader>w :w!<CR>
 nnoremap <Leader>q :q<CR>
+nnoremap <leader>` :terminal<CR>
 nnoremap <leader>s :source %<CR>
 nnoremap <leader>tt :tabnew<CR>
 nnoremap <leader>tx :tabclose<CR>
@@ -74,8 +71,6 @@ source ~/.config/vim/open_file_under_cursor.vim
  
 call plug#begin()
 Plug 'morhetz/gruvbox'
-colorscheme gruvbox
-
 
 " about git
 Plug 'airblade/vim-gitgutter'
@@ -117,13 +112,11 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 let g:airline_theme='gruvbox'
 " let g:airline_theme='molokai'
-
-" let g:airline_powerline_fonts = 1
-" let g:airline#extensions#branch#enabled=1
-" let g:airline#extensions#hunks#enabled=0
-" let g:airline_powerline_fonts=1
-" let g:airline#extensions#tabline#enabled = 1
-" let g:airline#extensions#tabline#fnamemod = ':t'
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#branch#enabled=1
+let g:airline#extensions#hunks#enabled=0
+let g:airline#extensions#tabline#enabled = 1
+let g:airline#extensions#tabline#fnamemod = ':t'
 " let g:airline_section_z = "%3p%% %l:%c"
 
 " coc

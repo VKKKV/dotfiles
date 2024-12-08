@@ -30,35 +30,33 @@ function command_not_found_handler {
 }
 
 # Detect AUR wrapper
-if pacman -Qi yay &>/dev/null; then
-   aurhelper="yay"
-elif pacman -Qi paru &>/dev/null; then
-   aurhelper="paru"
-fi
-
-function in {
-    local -a inPkg=("$@")
-    local -a arch=()
-    local -a aur=()
-
-    for pkg in "${inPkg[@]}"; do
-        if pacman -Si "${pkg}" &>/dev/null; then
-            arch+=("${pkg}")
-        else
-            aur+=("${pkg}")
-        fi
-    done
-
-    if [[ ${#arch[@]} -gt 0 ]]; then
-        sudo pacman -S "${arch[@]}"
-    fi
-
-    if [[ ${#aur[@]} -gt 0 ]]; then
-        ${aurhelper} -S "${aur[@]}"
-    fi
-}
-
-
+# if pacman -Qi yay &>/dev/null; then
+#    aurhelper="yay"
+# elif pacman -Qi paru &>/dev/null; then
+#    aurhelper="paru"
+# fi
+#
+# function in {
+#     local -a inPkg=("$@")
+#     local -a arch=()
+#     local -a aur=()
+#
+#     for pkg in "${inPkg[@]}"; do
+#         if pacman -Si "${pkg}" &>/dev/null; then
+#             arch+=("${pkg}")
+#         else
+#             aur+=("${pkg}")
+#         fi
+#     done
+#
+#     if [[ ${#arch[@]} -gt 0 ]]; then
+#         sudo pacman -S "${arch[@]}"
+#     fi
+#
+#     if [[ ${#aur[@]} -gt 0 ]]; then
+#         ${aurhelper} -S "${aur[@]}"
+#     fi
+# }
 
 # Helpful aliases
 # Directory navigation shortcuts
@@ -78,6 +76,9 @@ alias news=newsboat
 alias w3m='w3m -o auto_image=TRUE'
 alias mkdir='mkdir -p'
 alias tmuxa='tmux attach'
+alias weather='curl wttr.in/Shanghai'
+alias z='zoxide'
+alias icat="kitten icat"
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -86,7 +87,7 @@ alias tmuxa='tmux attach'
 # neofetch | lolcat
 
 # fuck
-eval $(thefuck --alias)
+# eval $(thefuck --alias)
 
 # Helpful export
 export CRYPTOGRAPHY_OPENSSL_NO_LEGACY=1
@@ -106,17 +107,17 @@ function y() {
 
 # >>> conda initialize >>>
 # !! Contents within this block are managed by 'conda init' !!
-__conda_setup="$('/opt/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-if [ $? -eq 0 ]; then
-    eval "$__conda_setup"
-else
-    if [ -f "/opt/miniconda3/etc/profile.d/conda.sh" ]; then
-        . "/opt/miniconda3/etc/profile.d/conda.sh"
-    else
-        export PATH="/opt/miniconda3/bin:$PATH"
-    fi
-fi
-unset __conda_setup
+# __conda_setup="$('/opt/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
+# if [ $? -eq 0 ]; then
+#     eval "$__conda_setup"
+# else
+#     if [ -f "/opt/miniconda3/etc/profile.d/conda.sh" ]; then
+#         . "/opt/miniconda3/etc/profile.d/conda.sh"
+#     else
+#         export PATH="/opt/miniconda3/bin:$PATH"
+#     fi
+# fi
+# unset __conda_setup
 # <<< conda initialize <<<
 
 
@@ -152,9 +153,9 @@ export FZF_DEFAULT_COMMAND="$FD_COMMAND"
 
 export FZF_DEFAULT_OPTS='--preview "[[ $(file --mime {}) =~ binary ]] && echo {} is a binary file || ( bat --color=always --style=numbers --line-range=:500 {} ||ccat --color=always {} || highlight -O ansi -l {} || cat {}) 2> /dev/null | head -500"'
 # export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!**/.git/*"'
-export FZF_COMPLETION_TRIGGER='\'
+# export FZF_COMPLETION_TRIGGER='\'
 export FZF_TMUX=1
 export FZF_TMUX_HEIGHT='80%'
 # export fzf_preview_cmd='[[ $(file --mime {}) =~ binary ]] && echo {} is a binary file || (ccat --color=always {} || highlight -O ansi -l {} || cat {}) 2> /dev/null | head -500'
 
-source <(fzf --zsh)
+# source <(fzf --zsh)
