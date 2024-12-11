@@ -68,7 +68,6 @@ nnoremap <Leader>x :bd<CR>
 " keybind gf gotoFile
 source ~/.config/vim/open_file_under_cursor.vim
 
- 
 call plug#begin()
 Plug 'morhetz/gruvbox'
 
