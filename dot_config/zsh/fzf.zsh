@@ -16,7 +16,7 @@ for EXCLUDE in "${EXCLUDES[@]}"; do
 	FD_COMMAND+=" --exclude '$EXCLUDE'"
 done
 export FZF_DEFAULT_COMMAND="$FD_COMMAND"
-export FZF_DEFAULT_OPTS='--bind=ctrl-j:preview-down,ctrl-k:preview-up --preview "[[ $(file --mime -b {}) =~ ^image ]] && catimg -w100 {} || [[ $(file --mime {}) =~ binary ]] && echo {} is a binary file || ( bat --color=always --style=plain.changes --line-range=:500 {} ||ccat --color=always {} || highlight -O ansi -l {} || cat {}) 2> /dev/null | head -500"'
+export FZF_DEFAULT_OPTS='--bind=ctrl-j:preview-down,ctrl-k:preview-up --preview "[[ $(file --mime -b {}) =~ ^image ]] && catimg -w100 {} || [[ $(file --mime {}) =~ binary ]] && echo {} is a binary file || ( bat --color=always --style=plain.changes --line-range=:500 {}) 2> /dev/null | head -500"'
 export FZF_COMPLETION_TRIGGER='\'
 export FZF_TMUX=1
 export FZF_TMUX_HEIGHT='80%'

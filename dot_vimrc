@@ -49,31 +49,34 @@ endif
 
 " map
 let mapleader=" "
-nnoremap <Leader>w :w!<CR>
+nnoremap <Leader>s :w!<CR>
 nnoremap <Leader>q :q<CR>
-nnoremap <leader>` :terminal<CR>
-nnoremap <leader>s :source %<CR>
-nnoremap <leader>tt :tabnew<CR>
-nnoremap <leader>tx :tabclose<CR>
+nnoremap <Leader>r :source %<CR>
+
+nnoremap <leader>t :tabnew<CR>
 map <C-j> <C-W>j
 map <C-k> <C-W>k
 map <C-h> <C-W>h
 map <C-l> <C-W>l
 nnoremap <leader>- :split<CR>
 nnoremap <leader>\| :vsplit<CR>
-" p switch buffer
-" x close buffer
+" p switch buffer & x close buffer
 nnoremap <Leader>p :bp<CR>
 nnoremap <Leader>x :bd<CR>
+nnoremap <Leader>f :Files<CR>
+nnoremap <Leader>l :Lines<CR>
+" add markdown codeblock, cursor need under a block
+nnoremap <Leader>mc {O<DOWN>```<DOWN><ESC>}i```<ESC><DOWN>O<ESC>
+
 " keybind gf gotoFile
 source ~/.config/vim/open_file_under_cursor.vim
 
 call plug#begin()
 Plug 'morhetz/gruvbox'
-
+Plug 'christoomey/vim-tmux-navigator'
 " about git
-Plug 'airblade/vim-gitgutter'
-Plug 'tpope/vim-fugitive'
+" Plug 'airblade/vim-gitgutter'
+" Plug 'tpope/vim-fugitive'
 
 " smooth scroll
 Plug 'psliwka/vim-smoothie'

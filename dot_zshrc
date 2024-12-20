@@ -62,11 +62,11 @@ function command_not_found_handler {
 
 # Helpful aliases
 # Directory navigation shortcuts
-alias ..='cd ..'
-alias ...='cd ../..'
-alias .3='cd ../../..'
-alias .4='cd ../../../..'
-alias .5='cd ../../../../..'
+alias ..='z ..'
+alias ...='z ../..'
+alias .3='z ../../..'
+alias .4='z ../../../..'
+alias .5='z ../../../../..'
 alias ls='eza --icons=auto'
 alias la='eza -la'
 alias ll='eza -lha --icons=auto --sort=name --group-directories-first' # long list all
@@ -75,9 +75,13 @@ alias vi=vim
 alias news=newsboat
 # alias w3m='w3m -o auto_image=TRUE'
 alias mkdir='mkdir -p'
-alias tmuxa='tmux attach'
+alias ta='tmux attach || tmux'
 alias weather='curl wttr.in/Shanghai'
 alias icat="kitten icat"
+alias ci='source  ~/.config/zsh/conda.zsh'
+alias ty='cd ~/.local/share/Trash/files && yazi'
+alias sz='source ~/.zshrc'
+
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh
 [[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
@@ -103,46 +107,18 @@ function y() {
 	rm -f -- "$tmp"
 }
 
-# >>> conda initialize >>>
-# !! Contents within this block are managed by 'conda init' !!
-# __conda_setup="$('/opt/miniconda3/bin/conda' 'shell.bash' 'hook' 2> /dev/null)"
-# if [ $? -eq 0 ]; then
-#     eval "$__conda_setup"
-# else
-#     if [ -f "/opt/miniconda3/etc/profile.d/conda.sh" ]; then
-#         . "/opt/miniconda3/etc/profile.d/conda.sh"
-#     else
-#         export PATH="/opt/miniconda3/bin:$PATH"
-#     fi
-# fi
-# unset __conda_setup
-# <<< conda initialize <<<
-
-# fzf setting
-# modify from https://github.com/chinanf-boy/
-
-# Define the patterns to exclude
-EXCLUDES=(
-	'IdeaProjects-main/'
-	'node_modules/'
-	'build/'
-	'gems/'
-	'.icons/'
-	'google-chrome/'
-)
-# Construct the fd command with exclusions
-FD_COMMAND="fd --hidden"
-for EXCLUDE in "${EXCLUDES[@]}"; do
-	FD_COMMAND+=" --exclude '$EXCLUDE'"
-done
-export FZF_DEFAULT_COMMAND="$FD_COMMAND"
-export FZF_DEFAULT_OPTS='--preview "[[ $(file --mime {}) =~ binary ]] && echo {} is a binary file || ( bat --color=always --style=numbers --line-range=:500 {} ||ccat --color=always {} || highlight -O ansi -l {} || cat {}) 2> /dev/null | head -500"'
-# export FZF_DEFAULT_COMMAND='rg --files --hidden --glob "!**/.git/*"'
-# export FZF_COMPLETION_TRIGGER='\'
-export FZF_TMUX=1
-export FZF_TMUX_HEIGHT='80%'
-# export fzf_preview_cmd='[[ $(file --mime {}) =~ binary ]] && echo {} is a binary file || (ccat --color=always {} || highlight -O ansi -l {} || cat {}) 2> /dev/null | head -500'
-# source <(fzf --zsh)
-# shellcheck shell=bash
-
+# myfzf config
+source ~/.config/zsh/fzf.zsh
+# ctrl-t-->select file or dic alt-c-->change directory ctrl-r-->history instruction
+source <(fzf --zsh)
+# zoxide init
 eval "$(zoxide init zsh)"
+# zoxide with fzf search and change directory
+zf() {
+  local dir=$(
+    zoxide query --list --score |
+    fzf --height 40% --layout reverse --info inline \
+        --nth 2.. --tac --sort --query "$*" \
+        --bind 'enter:become:echo {2..}'
+  ) && cd "$dir"
+}
