@@ -81,6 +81,7 @@ alias icat="kitten icat"
 alias ci='source  ~/.config/zsh/conda.zsh'
 alias ty='cd ~/.local/share/Trash/files && yazi'
 alias sz='source ~/.zshrc'
+alias lg='lazygit'
 
 
 # To customize prompt, run `p10k configure` or edit ~/.p10k.zsh
@@ -90,7 +91,7 @@ alias sz='source ~/.zshrc'
 # neofetch | lolcat
 
 # fuck
-# eval $(thefuck --alias)
+eval $(thefuck --alias)
 
 # Helpful export
 export CRYPTOGRAPHY_OPENSSL_NO_LEGACY=1

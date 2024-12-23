@@ -1,6 +1,5 @@
 " Make sure you use single quotes
 syntax enable
-set number
 set relativenumber
 set shiftwidth=4
 set softtabstop=4
