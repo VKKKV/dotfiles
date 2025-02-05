@@ -29,6 +29,8 @@ function command_not_found_handler {
 	return 127
 }
 
+[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
 # Detect AUR wrapper
 # if pacman -Qi yay &>/dev/null; then
 #    aurhelper="yay"
@@ -61,7 +63,6 @@ function command_not_found_handler {
 # set -o vi
 
 # Helpful aliases
-# Directory navigation shortcuts
 alias ..='z ..'
 alias ...='z ../..'
 alias .3='z ../../..'
@@ -82,21 +83,16 @@ alias ci='source  ~/.config/zsh/conda.zsh'
 alias ty='cd ~/.local/share/Trash/files && yazi'
 alias sz='source ~/.zshrc'
 alias lg='lazygit'
-
-
-# To customize prompt, run `p10k configure` or edit ~/.p10k.zsh
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# pokemon-colorscripts --no-title -r 1,3,6
-# neofetch | lolcat
+alias zed=zeditor
+alias zc='zed ~/code'
 
 # fuck
-eval $(thefuck --alias)
+# eval $(thefuck --alias)
 
-# Helpful export
 export CRYPTOGRAPHY_OPENSSL_NO_LEGACY=1
 export PATH="$PATH:./node_modules/.bin:$HOME/.local/bin/"
 export EDITOR=vim
+export ALIYUNPAN_CONFIG_DIR=/home/arch/.local/share/aliyunpan/config
 
 # yazi
 function y() {

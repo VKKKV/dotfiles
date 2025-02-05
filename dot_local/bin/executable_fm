@@ -22,6 +22,8 @@ search_path=(
 	"$HOME/.local/bin"
 	"$HOME/.newsboat/"
 	"$HOME/.w3m/"
+	"$HOME/.local/lib/hyde/"
+	"$HOME/.local/share/hyde/"
 )
 
 selected_file=$(find "${search_path[@]}" -type f \
