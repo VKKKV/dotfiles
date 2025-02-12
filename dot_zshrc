@@ -85,6 +85,7 @@ alias sz='source ~/.zshrc'
 alias lg='lazygit'
 alias zed=zeditor
 alias zc='zed ~/code'
+alias date='date "+%Y-%m-%d %H:%M:%S"'
 
 # fuck
 # eval $(thefuck --alias)
@@ -119,3 +120,5 @@ zf() {
         --bind 'enter:become:echo {2..}'
   ) && cd "$dir"
 }
+___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
+source /usr/share/nvm/init-nvm.sh
