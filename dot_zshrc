@@ -1,12 +1,17 @@
 # Oh-my-zsh installation path
 ZSH=/usr/share/oh-my-zsh/
+HISTSIZE=-1
+SAVEHIST=-1
+setopt HIST_IGNORE_DUPS  # 忽略重复的命令
+export FORCE_THEME_UPDATE=true
+ZSH_THEME="robbyrussell"
+# set -o vi
 
 # Powerlevel10k theme path
-source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
+# source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 
-# List of plugins used
 plugins=( git sudo zsh-256color zsh-autosuggestions zsh-syntax-highlighting)
-# plugins=( git sudo zsh-256color)
+
 source $ZSH/oh-my-zsh.sh
 
 # In case a command is not found, try to find the package that has it
@@ -29,40 +34,6 @@ function command_not_found_handler {
 	return 127
 }
 
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
-
-# Detect AUR wrapper
-# if pacman -Qi yay &>/dev/null; then
-#    aurhelper="yay"
-# elif pacman -Qi paru &>/dev/null; then
-#    aurhelper="paru"
-# fi
-#
-# function in {
-#     local -a inPkg=("$@")
-#     local -a arch=()
-#     local -a aur=()
-#
-#     for pkg in "${inPkg[@]}"; do
-#         if pacman -Si "${pkg}" &>/dev/null; then
-#             arch+=("${pkg}")
-#         else
-#             aur+=("${pkg}")
-#         fi
-#     done
-#
-#     if [[ ${#arch[@]} -gt 0 ]]; then
-#         sudo pacman -S "${arch[@]}"
-#     fi
-#
-#     if [[ ${#aur[@]} -gt 0 ]]; then
-#         ${aurhelper} -S "${aur[@]}"
-#     fi
-# }
-
-# set -o vi
-
-# Helpful aliases
 alias ..='z ..'
 alias ...='z ../..'
 alias .3='z ../../..'
@@ -91,7 +62,7 @@ alias date='date "+%Y-%m-%d %H:%M:%S"'
 # eval $(thefuck --alias)
 
 export CRYPTOGRAPHY_OPENSSL_NO_LEGACY=1
-export PATH="$PATH:./node_modules/.bin:$HOME/.local/bin/"
+export PATH="$PATH:./node_modules/.bin:$HOME/.local/bin/:/home/arch/.local/share/gem/ruby/3.3.0/bin"
 export EDITOR=vim
 export ALIYUNPAN_CONFIG_DIR=/home/arch/.local/share/aliyunpan/config
 
@@ -105,11 +76,8 @@ function y() {
 	rm -f -- "$tmp"
 }
 
-# myfzf config
 source ~/.config/zsh/fzf.zsh
-# ctrl-t-->select file or dic alt-c-->change directory ctrl-r-->history instruction
 source <(fzf --zsh)
-# zoxide init
 eval "$(zoxide init zsh)"
 # zoxide with fzf search and change directory
 zf() {
@@ -122,3 +90,4 @@ zf() {
 }
 ___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
 source /usr/share/nvm/init-nvm.sh
+

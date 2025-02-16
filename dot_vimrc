@@ -1,5 +1,5 @@
 syntax enable
-set number
+
 set relativenumber
 set shiftwidth=4
 set softtabstop=4
@@ -26,7 +26,7 @@ set cmdheight=2
 set signcolumn=yes
 set shortmess+=c
 set updatetime=300
-set cursorcolumn
+" set cursorcolumn
 set cursorline
 " highlight CursorColumn cterm=NONE ctermbg=darkgray guibg=darkgray
 " highlight ColorColumn ctermbg=darkgrey guibg=darkgrey
@@ -61,8 +61,11 @@ nnoremap <Leader>x :bd<CR>
 nnoremap <Leader>f :Files<CR>
 nnoremap <Leader>l :Lines<CR>
 nnoremap <Leader>mc {O<DOWN>```<DOWN><ESC>}i```<ESC><DOWN>O<ESC>
+nnoremap <Leader>md :MarkdownPreview<CR>
+
+
 " write date format like 2025-02-05 17:07:51
-nnoremap <Leader>dt "=strftime('%Y-%m-%d %H:%M:%S')<CR>P
+nnoremap <Leader>dt "=strftime('%Y-%m-%d %H:%M:%S')<CR>P 
 " python format
 command! FormatPythonRuff execute ':%!ruff format -'
 
@@ -70,12 +73,30 @@ command! FormatPythonRuff execute ':%!ruff format -'
 source "~/.config/vim/open_file_under_cursor.vim"
 
 call plug#begin()
+Plug 'ferrine/md-img-paste.vim'
+
+autocmd FileType markdown nmap <buffer><silent> <leader>mp :call mdip#MarkdownClipboardImage()<CR>
+" there are some defaults for image directory and image name, you can change them
+" let g:mdip_imgdir = 'img'
+" let g:mdip_imgname = 'image'
 Plug 'morhetz/gruvbox'
+Plug 'Stoozy/vimcord'
+" cP cV
+Plug 'christoomey/vim-system-copy'
 Plug 'christoomey/vim-tmux-navigator'
 Plug 'psliwka/vim-smoothie'
 Plug 'tpope/vim-surround'
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
+let g:mkdp_auto_start = 0
+let g:mkdp_auto_close = 0
+let g:mkdp_refresh_slow = 1
+let g:mkdp_command_for_global = 1
+let g:mkdp_open_to_the_world = 1
+let g:mkdp_browser = 'firefox'
+let g:mkdp_theme = 'dark'
+
 let g:fzf_vim = {}
 let g:fzf_vim.preview_window = ['right,50%', 'ctrl-/']
 let g:fzf_layout = { 'tmux': '-p70%,60%' }
