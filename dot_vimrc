@@ -26,10 +26,12 @@ set cmdheight=2
 set signcolumn=yes
 set shortmess+=c
 set updatetime=300
-" set cursorcolumn
+set lazyredraw
 set cursorline
+" set guicursor=n-v-c:hor20
 " highlight CursorColumn cterm=NONE ctermbg=darkgray guibg=darkgray
 " highlight ColorColumn ctermbg=darkgrey guibg=darkgrey
+" set cursorcolumn
 " set clipboard=unnamedplus
 " set ruler
 filetype indent on
@@ -48,6 +50,11 @@ let mapleader=" "
 nnoremap <Leader>s :w!<CR>
 noremap <Leader>q :q!<CR>
 nnoremap <leader>t :tabnew<CR>
+nnoremap <Leader>p :bp<CR>
+nnoremap <Leader>n :bn<CR>
+nnoremap <Leader>x :bd<CR>
+nnoremap <Leader>mc {O<DOWN>```<DOWN><ESC>}i```<ESC><DOWN>O<ESC>
+nnoremap <Leader>md :MarkdownPreview<CR>
 " map <C-j> <C-W>j
 " map <C-k> <C-W>k
 " map <C-h> <C-W>h
@@ -55,20 +62,12 @@ nnoremap <leader>t :tabnew<CR>
 " nnoremap <leader>s :split<CR>
 " nnoremap <leader>v :vsplit<CR>
 " p switch buffer & x close buffer
-nnoremap <Leader>p :bp<CR>
-nnoremap <Leader>n :bn<CR>
-nnoremap <Leader>x :bd<CR>
-nnoremap <Leader>f :Files<CR>
-nnoremap <Leader>l :Lines<CR>
-nnoremap <Leader>mc {O<DOWN>```<DOWN><ESC>}i```<ESC><DOWN>O<ESC>
-nnoremap <Leader>md :MarkdownPreview<CR>
 
 
 " write date format like 2025-02-05 17:07:51
 nnoremap <Leader>dt "=strftime('%Y-%m-%d %H:%M:%S')<CR>P 
 " python format
 command! FormatPythonRuff execute ':%!ruff format -'
-
 " keybind gf gotoFile
 source "~/.config/vim/open_file_under_cursor.vim"
 
@@ -76,18 +75,18 @@ call plug#begin()
 Plug 'ferrine/md-img-paste.vim'
 
 autocmd FileType markdown nmap <buffer><silent> <leader>mp :call mdip#MarkdownClipboardImage()<CR>
-" there are some defaults for image directory and image name, you can change them
-" let g:mdip_imgdir = 'img'
-" let g:mdip_imgname = 'image'
 Plug 'morhetz/gruvbox'
 Plug 'Stoozy/vimcord'
 " cP cV
 Plug 'christoomey/vim-system-copy'
 Plug 'christoomey/vim-tmux-navigator'
-Plug 'psliwka/vim-smoothie'
+" Plug 'psliwka/vim-smoothie'
 Plug 'tpope/vim-surround'
-Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
-Plug 'junegunn/fzf.vim'
+" Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
+" Plug 'junegunn/fzf.vim'
+" let g:fzf_vim = {}
+" let g:fzf_vim.preview_window = ['right,50%', 'ctrl-/']
+" let g:fzf_layout = { 'tmux': '-p70%,60%' }
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
 let g:mkdp_auto_start = 0
 let g:mkdp_auto_close = 0
@@ -96,10 +95,6 @@ let g:mkdp_command_for_global = 1
 let g:mkdp_open_to_the_world = 1
 let g:mkdp_browser = 'firefox'
 let g:mkdp_theme = 'dark'
-
-let g:fzf_vim = {}
-let g:fzf_vim.preview_window = ['right,50%', 'ctrl-/']
-let g:fzf_layout = { 'tmux': '-p70%,60%' }
 
 " leader+cc & leader+cv
 Plug 'preservim/nerdcommenter'
@@ -116,7 +111,7 @@ Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
 let g:airline_theme='gruvbox'
 let g:airline_powerline_fonts = 1
-" let g:airline_section_z = "%3p%% %l:%c"
+let g:airline_section_z = "%3p%% %l:%c"
 let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 
@@ -125,7 +120,6 @@ nnoremap <Leader>n :NERDTreeToggle<CR>
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 let g:coc_node_path='/usr/bin/node'
 
-" Unmanaged plugin (manually installed and updated)
 Plug '~/my-prototype-plugin'
 call plug#end()
 " CocUninstall 删除插件
@@ -138,21 +132,15 @@ let g:coc_global_extensions = [
 	\'coc-clangd',
 	\'coc-pyright',
 	\'coc-word',
-	\'coc-tsserver',
 	\'coc-json',
-	\'coc-html',
-	\'coc-css',
 	\'coc-go',
-	\'coc-sumneko-lua',
 	\'coc-sh',
 	\'coc-db',
 	\'coc-java',
 	\'coc-toml',
-	\'coc-solidity',
 	\'coc-prettier',
 	\'coc-snippets',
 	\'coc-pairs',
-	\'coc-translator',
 	\'@yaegassy/coc-volar',
 	\'coc-git']
 
