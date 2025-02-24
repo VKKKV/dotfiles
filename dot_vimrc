@@ -75,12 +75,16 @@ call plug#begin()
 Plug 'ferrine/md-img-paste.vim'
 
 autocmd FileType markdown nmap <buffer><silent> <leader>mp :call mdip#MarkdownClipboardImage()<CR>
+
+Plug 'andymass/matchup.vim'
+Plug 'romainl/vim-cool'
+Plug 'michaeljsmith/vim-indent-object'
 Plug 'morhetz/gruvbox'
 Plug 'Stoozy/vimcord'
 " cP cV
 Plug 'christoomey/vim-system-copy'
 Plug 'christoomey/vim-tmux-navigator'
-" Plug 'psliwka/vim-smoothie'
+Plug 'psliwka/vim-smoothie'
 Plug 'tpope/vim-surround'
 " Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 " Plug 'junegunn/fzf.vim'
@@ -116,7 +120,7 @@ let g:airline#extensions#branch#enabled = 1
 let g:airline#extensions#tabline#enabled = 1
 
 Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
-nnoremap <Leader>n :NERDTreeToggle<CR>
+nnoremap <Leader>b :NERDTreeToggle<CR>
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 let g:coc_node_path='/usr/bin/node'
 
