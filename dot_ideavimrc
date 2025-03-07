@@ -19,6 +19,7 @@ set incsearch
 map Q gq
 
 " --- Enable IdeaVim plugins https://jb.gg/ideavim-plugins
+set clipboard+=unnamed
 set relativenumber
 set shiftwidth=4
 set softtabstop=4
@@ -58,39 +59,25 @@ nnoremap <leader>t :tabnew<CR>
 nnoremap <Leader>p :bp<CR>
 nnoremap <Leader>n :bn<CR>
 nnoremap <Leader>x :bd<CR>
+nnoremap cP "+yy
+vnoremap cp "+y
+nnoremap cv "+p
 
 Plug 'machakann/vim-highlightedyank'
-Plug 'tpope/vim-commentary'
 Plug 'tpope/vim-surround'
 Plug 'tpope/vim-commentary'
+vnoremap <silent> <leader>cc :Commentary<CR>
+nnoremap <silent> <leader>cc V:Commentary<CR>
+
 Plug 'preservim/nerdtree'
+nnoremap <Leader>b :NERDTreeToggle<CR>
 
-let g:NERDCreateDefaultMappings = 1
-let g:NERDSpaceDelims = 1
-let g:NERDCompactSexyComs = 1
-let g:NERDDefaultAlign = 'left'
-let g:NERDAltDelims_java = 1
-let g:NERDCommentEmptyLines = 1
-let g:NERDTrimTrailingWhitespace = 1
-nnoremap <Leader>n :NERDTreeToggle<CR>
-
-
-"" Enable Vim-like key mappings
 let g:ideavim_enable_vim_like_bindings = 1
-"" Enable tab completion
 let g:ideavim_enable_tab_completion = 1
-
-"" Enable smart indent
 let g:ideavim_enable_smart_indent = 1
-
-"" Enable auto-indent
 let g:ideavim_enable_auto_indent = 1
-"" Enable line number column
 let g:ideavim_enable_line_number_column = 1
-
-"" Enable column number column
-let g:ideavim_enable_column_number_column = 1
-"" Enable the "Show line numbers" checkbox in the IDE
+" let g:ideavim_enable_column_number_column = 1
 
 "" -- Map IDE actions to IdeaVim -- https://jb.gg/abva4t
 ""  \r to the Reformat Code action
