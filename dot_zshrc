@@ -55,6 +55,7 @@ alias zed=zeditor
 alias zc='zed ~/code'
 alias date='date "+%Y-%m-%d %H:%M:%S"'
 alias zvs='cd ~/vspro && yazi'
+alias gpg='gpg --pinentry-mode loopback'
 
 # fuck
 # eval $(thefuck --alias)
