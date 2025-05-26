@@ -1,15 +1,27 @@
 source ~/.vim/basic.vim
 
-au Filetype * :setl fo-=o
-
 call plug#begin()
 source ~/.vim/plugins.vim
 call plug#end()
 
 source ~/.vim/pluginsConf.vim
 source ~/.vim/keymaps.vim
+" close tsserver in vue but cant work
+" autocmd FileType vue call coc#config('typescript.suggestion.enabled', v:false)
+" autocmd BufLeave *.vue call coc#config('typescript.suggestion.enabled', v:true)
+" autocmd FileType vue call coc#config('tsserver.enable', v:false)
+" autocmd FileType typescript,javascript call coc#config('tsserver.enable', v:true)
 
+" avoid comment continue in o and enter
+au Filetype * :setl fo-=o fo-=r
+" coc_pairs
+autocmd FileType tex let b:coc_pairs = [["$", "$"]]
+" Highlight the symbol and its references when holding the cursor
+autocmd CursorHold * silent call CocActionAsync('highlight')
+" copilot
+autocmd VimEnter * Copilot disable
 
+" theme
 autocmd vimenter * ++nested colorscheme gruvbox
 set background=dark
 

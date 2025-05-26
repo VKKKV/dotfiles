@@ -1,12 +1,13 @@
 " basic
 syntax enable
+set title
 set ttimeoutlen=50
 set timeoutlen=400
 set fileformat=unix
 set laststatus=2
 set number
 set list
-set listchars=tab:»·,trail:·,extends:>,precedes:<,nbsp:%
+set listchars=tab:\|·,trail:·,extends:>,precedes:<,nbsp:%
 " set mouse=a
 set scrolloff=4
 set relativenumber
@@ -30,7 +31,7 @@ set hlsearch
 set ignorecase
 set colorcolumn=80
 set textwidth=80
-set formatoptions+=tcrq
+set formatoptions+=tcq
 set splitbelow
 set splitright
 set hidden
@@ -47,7 +48,6 @@ set cursorline
 set cursorcolumn
 filetype indent on
 filetype plugin on
-
 " color in tmux
 if (empty($TMUX) && getenv('TERM_PROGRAM') != 'Apple_Terminal')
 	if (has("termguicolors"))

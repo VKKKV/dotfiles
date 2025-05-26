@@ -1,3 +1,7 @@
+"commenter
+Plug 'tomtom/tcomment_vim'
+" vue
+" Plug 'posva/vim-vue'
 " format
 " install astyle clang dart elixir go texlive-core perl-tidy python-autopep8 python-black python-ruff python-sqlparse rubocop rustfmt shfmt
 Plug 'vim-autoformat/vim-autoformat'
@@ -14,8 +18,6 @@ Plug 'junegunn/fzf.vim'
 Plug 'andymass/matchup.vim'
 " auto disable search highlight
 Plug 'romainl/vim-cool'
-" discord rpc
-Plug 'Stoozy/vimcord'
 " tmux
 Plug 'christoomey/vim-tmux-navigator'
 " cursor move smoothly
@@ -33,8 +35,6 @@ Plug 'ferrine/md-img-paste.vim'
 Plug 'christoomey/vim-system-copy'
 " MarkdownPreview
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
-" nerdcommenter leader+cc & leader+cv
-Plug 'preservim/nerdcommenter'
 " theme
 Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline'
@@ -42,11 +42,8 @@ Plug 'vim-airline/vim-airline-themes'
 " nerdtree
 Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'PhilRunninger/nerdtree-visual-selection', { 'on': 'NERDTreeToggle' }
-
 " coc
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
-
-" coc vue volar
 Plug 'yaegassy/coc-volar', { 'do': 'yarn install --frozen-lockfile' }
 Plug 'yaegassy/coc-volar-tools', { 'do': 'yarn install --frozen-lockfile' }
 
