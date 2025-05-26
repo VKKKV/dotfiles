@@ -57,7 +57,7 @@ alias date='date "+%Y-%m-%d %H:%M:%S"'
 alias zvs='cd ~/vspro && yazi'
 alias gpg='gpg --pinentry-mode loopback'
 alias zathura='zathura --fork'
-
+alias cp='cp -r'
 # fuck
 # eval $(thefuck --alias)
 

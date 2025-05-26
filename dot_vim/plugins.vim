@@ -16,29 +16,29 @@ Plug 'andymass/matchup.vim'
 Plug 'romainl/vim-cool'
 " discord rpc
 Plug 'Stoozy/vimcord'
+" tmux
 Plug 'christoomey/vim-tmux-navigator'
 " cursor move smoothly
 Plug 'psliwka/vim-smoothie'
+" surround
 Plug 'tpope/vim-surround'
-"snippets
+" snippets
 Plug 'honza/vim-snippets'
 Plug 'sirver/ultisnips'
 " latex
 Plug 'lervag/vimtex'
-" img paste
+" markdown img paste
 Plug 'ferrine/md-img-paste.vim'
-" cP cV
+" copy cP cV
 Plug 'christoomey/vim-system-copy'
 " MarkdownPreview
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
-" leader+cc & leader+cv
+" nerdcommenter leader+cc & leader+cv
 Plug 'preservim/nerdcommenter'
-" THEME
+" theme
 Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-" vue
-Plug 'posva/vim-vue'
 " nerdtree
 Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
 Plug 'PhilRunninger/nerdtree-visual-selection', { 'on': 'NERDTreeToggle' }
@@ -46,7 +46,7 @@ Plug 'PhilRunninger/nerdtree-visual-selection', { 'on': 'NERDTreeToggle' }
 " coc
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 
-" coc vim
+" coc vue volar
 Plug 'yaegassy/coc-volar', { 'do': 'yarn install --frozen-lockfile' }
 Plug 'yaegassy/coc-volar-tools', { 'do': 'yarn install --frozen-lockfile' }
 

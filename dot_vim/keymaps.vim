@@ -83,10 +83,9 @@ function! ShowDocumentation()
 		call feedkeys('K', 'in')
 	endif
 endfunction
-nnoremap <silent> <Leader>cm :CocList marketplace<CR>
-nnoremap <silent> <Leader>ce :CocList extensions<CR>
+nnoremap <silent> <Leader>a :CocList marketplace<CR>
+nnoremap <silent> <Leader>e :CocList extensions<CR>
 nnoremap <silent> <Leader>cc :CocList commands<CR>
-nnoremap <silent> <Leader>co :CocList outline<CR>
 
 " copilot enable
 nnoremap <silent> <leader>ce :Copilot enable<CR>
