@@ -26,17 +26,12 @@ alias ll='eza -lha --icons=auto --sort=name --group-directories-first' # long li
 alias wps='QT_SCREEN_SCALE_FACTORS=1 QT_FONT_DPI=144 wps'
 alias vi=vim
 alias news=newsboat
-# alias w3m='w3m -o auto_image=TRUE'
 alias mkdir='mkdir -p'
 alias ta='tmux attach || tmux'
 alias weather='curl wttr.in/Shanghai'
 alias icat="kitten icat"
 alias ci='source  ~/.config/zsh/conda.zsh'
-alias ty='cd ~/.local/share/Trash/files && yazi'
-alias sz='source ~/.zshrc'
 alias lg='lazygit'
-alias zed=zeditor
-alias zc='zed ~/code'
 alias date='date "+%Y-%m-%d %H:%M:%S"'
 alias zvs='cd ~/vspro && yazi'
 alias gpg='gpg --pinentry-mode loopback'
@@ -67,7 +62,9 @@ zf() {
         --bind 'enter:become:echo {2..}'
   ) && cd "$dir"
 }
+
 ___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
 source /usr/share/nvm/init-nvm.sh
 
 eval "$(atuin init --disable-up-arrow zsh)"
+

@@ -14,6 +14,11 @@ nnoremap <leader>b :ls<CR>
 nnoremap <leader>s :w<CR>
 nnoremap <leader>i :split<CR>
 nnoremap <leader>v :vsplit<CR>
+" resize window
+nnoremap <silent> <C-Up>    :resize -2<CR>
+nnoremap <silent> <C-Down>  :resize +2<CR>
+nnoremap <silent> <C-Left>  :vertical resize -2<CR>
+nnoremap <silent> <C-Right> :vertical resize +2<CR>
 " date time
 nnoremap <Leader>d "=strftime('%Y-%m-%d %H:%M:%S')<CR>P
 " markdown
@@ -37,10 +42,10 @@ nmap gc <Plug>(coc-git-commit)
 
 " Note: the `coc-snippets` extension is required for this to work.
 inoremap <silent><expr> <Tab>
+			\ exists('b:_copilot.suggestions') ? copilot#Accept("\<CR>") :
 			\ coc#pum#visible() ? coc#pum#next(1):
 			\ CheckBackspace() ? "\<Tab>" :
 			\ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-			\ exists('b:_copilot.suggestions') ? copilot#Accept("\<CR>") :
 			\ NextCharIsPair() ? "\<Right>" :
 			\ coc#refresh()
 inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
