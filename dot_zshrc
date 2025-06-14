@@ -2,14 +2,9 @@
 ZSH=/usr/share/oh-my-zsh/
 HISTSIZE=-1
 SAVEHIST=-1
-setopt HIST_IGNORE_DUPS
 export CRYPTOGRAPHY_OPENSSL_NO_LEGACY=1
 export PATH="$PATH:./node_modules/.bin:$HOME/.local/bin/:/home/arch/.local/share/gem/ruby/3.3.0/bin"
 export EDITOR=vim
-export ALIYUNPAN_CONFIG_DIR=/home/Kita/.local/share/aliyunpan/config
-
-export FORCE_THEME_UPDATE=true
-ZSH_THEME="robbyrussell"
 
 plugins=( git sudo zsh-256color zsh-autosuggestions zsh-syntax-highlighting)
 
@@ -37,8 +32,6 @@ alias zvs='cd ~/vspro && yazi'
 alias gpg='gpg --pinentry-mode loopback'
 alias zathura='zathura --fork'
 alias cp='cp -r'
-# fuck
-# eval $(thefuck --alias)
 
 # yazi
 function y() {
