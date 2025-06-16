@@ -1,0 +1,106 @@
+{
+  "coc.preferences.autoApplySingleQuickfix": false,
+  "coc.preferences.enableLinkedEditing": true,
+  "coc.preferences.enableMessageDialog": true,
+  "coc.preferences.formatOnType": true,
+  "coc.preferences.useQuickfixForLocations": true,
+  "coc.preferences.willSaveHandlerTimeout": 1000,
+  "coc.source.file.ignoreHidden": false,
+  "codeLens.enable": true,
+  "colors.enable": true,
+  "codeLens.position": "eol",
+  "diagnostic.checkCurrentLine": true,
+  "diagnostic.displayByVimDiagnostic": true,
+  "diagnostic.format": "%message [%source]",
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "eslint.autoFixOnSave": true,
+  "eslint.format.enable": true,
+  "eslint.packageManager": "yarn",
+  "extensions.updateCheck": "daily",
+  "suggest.floatConfig": {
+    "border": true
+  },
+  "floatFactory.floatConfig": {
+    "border": true
+  },
+  "go.goplsOptions": {
+    "experimentalPostfixCompletions": true,
+    "hints": {
+      "assignVariableTypes": true,
+      "compositeLiteralFields": true,
+      "compositeLiteralTypes": true,
+      "constantValues": true,
+      "functionTypeParameters": true,
+      "parameterNames": true,
+      "rangeVariableTypes": true
+    },
+    "semanticTokens": true,
+    "staticcheck": true,
+    "usePlaceholders": true
+  },
+  "go.goplsPath": "gopls",
+  "inlayHint.display": false,
+  "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
+  "languageserver": {},
+  "links.highlight": true,
+  "list.insertMappings": {
+    "<C-c>": "do:exit",
+    "<C-n>": "do:previewdown",
+    "<C-p>": "do:previewup"
+  },
+  "list.normalMappings": {
+    "<C-c>": "do:exit",
+    "<C-n>": "do:previewdown",
+    "<C-p>": "do:previewup"
+  },
+  "list.source.grep.defaultArgs": [
+    "--ignore-case"
+  ],
+  "list.source.grep.useLiteral": false,
+  "Lua.completion.callSnippet": "Both",
+  "Lua.completion.postfix": ".",
+  "Lua.diagnostics.globals": [
+    "vim",
+    "jit"
+  ],
+  "Lua.runtime.version": "LuaJIT",
+  "Lua.workspace.checkThirdParty": false,
+  "markdownlint.config": {
+    "default": true,
+    "line-length": false
+  },
+  "notification.statusLineProgress": true,
+  "pullDiagnostic.onChange": false,
+  "pullDiagnostic.onSave": true,
+  "pyright.organizeimports.provider": "pyright",
+  "python.analysis.diagnosticMode": "workspace",
+  "python.analysis.stubPath": "~/src/python-type-stubs",
+  "python.formatting.provider": "ruff",
+  "python.linting.enabled": true,
+  "python.linting.ruffEnabled": true,
+  "semanticTokens.enable": true,
+  "signature.target": "echo",
+  "snippets.snipmate.enable": false,
+  "snippets.ultisnips.enable": false,
+  "suggest.acceptSuggestionOnCommitCharacter": true,
+  "suggest.defaultSortMethod": "none",
+  "suggest.detailField": "abbr",
+  "suggest.selection": "recentlyUsedByPrefix",
+  "sumneko-lua.enableNvimLuaDev": true,
+  "volar.disableCompletion": true,
+  "tsserver.experimental.enableProjectDiagnostics": true,
+  "tsserver.implicitProjectConfig.checkJs": true,
+  "tsserver.useLocalTsdk": true,
+  "typescript.autoClosingTags": true,
+  "typescript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
+  "typescript.format.semicolons": "ignore",
+  "typescript.inlayHints.enumMemberValues.enabled": true,
+  "typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+  "typescript.inlayHints.parameterTypes.enabled": true,
+  "typescript.inlayHints.propertyDeclarationTypes.enabled": true,
+  "typescript.inlayHints.variableTypes.enabled": true,
+  "typescript.preferences.useAliasesForRenames": false,
+  "typescript.referencesCodeLens.showOnAllFunctions": true
+}

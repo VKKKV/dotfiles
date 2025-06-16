@@ -1,15 +1,16 @@
-# Oh-my-zsh installation path
-ZSH=/usr/share/oh-my-zsh/
+# imported in zshenv 
+# plugins=( git sudo zsh-256color zsh-autosuggestions zsh-syntax-highlighting)
+# ZSH=/usr/share/oh-my-zsh/
+# source $ZSH/oh-my-zsh.sh
+
 HISTSIZE=-1
 SAVEHIST=-1
 export CRYPTOGRAPHY_OPENSSL_NO_LEGACY=1
 export PATH="$PATH:./node_modules/.bin:$HOME/.local/bin/:/home/arch/.local/share/gem/ruby/3.3.0/bin"
 export EDITOR=vim
 
-plugins=( git sudo zsh-256color zsh-autosuggestions zsh-syntax-highlighting)
-
-source $ZSH/oh-my-zsh.sh
-
+# alias wps='QT_SCREEN_SCALE_FACTORS=1 QT_FONT_DPI=144 wps'
+# alias news=newsboat
 alias ..='z ..'
 alias ...='z ../..'
 alias .3='z ../../..'
@@ -18,9 +19,7 @@ alias .5='z ../../../../..'
 alias ls='eza --icons=auto'
 alias la='eza -la'
 alias ll='eza -lha --icons=auto --sort=name --group-directories-first' # long list all
-alias wps='QT_SCREEN_SCALE_FACTORS=1 QT_FONT_DPI=144 wps'
 alias vi=vim
-alias news=newsboat
 alias mkdir='mkdir -p'
 alias ta='tmux attach || tmux'
 alias weather='curl wttr.in/Shanghai'
@@ -33,7 +32,6 @@ alias gpg='gpg --pinentry-mode loopback'
 alias zathura='zathura --fork'
 alias cp='cp -r'
 
-# yazi
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
 	yazi "$@" --cwd-file="$tmp"
@@ -45,8 +43,8 @@ function y() {
 
 source ~/.config/zsh/fzf.zsh
 source <(fzf --zsh)
+source /usr/share/nvm/init-nvm.sh
 eval "$(zoxide init zsh)"
-# zoxide with fzf search and change directory
 zf() {
   local dir=$(
     zoxide query --list --score |
@@ -57,7 +55,5 @@ zf() {
 }
 
 ___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
-source /usr/share/nvm/init-nvm.sh
-
 eval "$(atuin init --disable-up-arrow zsh)"
 
