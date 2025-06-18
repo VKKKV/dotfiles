@@ -1,4 +1,0 @@
-#!/usr/bin/zsh
-# @author vkkkv
-QT_SCREEN_SCALE_FACTORS=1 QT_FONT_DPI=144 /home/arch/Downloads/nuke15.1v5/Nuke15.1v5/Nuke15.1 -nc
-
