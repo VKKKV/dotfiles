@@ -54,4 +54,5 @@ if (empty($TMUX) && getenv('TERM_PROGRAM') != 'Apple_Terminal')
 		set termguicolors
 	endif
 endif
-
+" avoid comment continue in o and enter
+au Filetype * :setl fo-=o fo-=r

@@ -68,3 +68,9 @@ let g:coc_global_extensions = [
       \'coc-pyright',
       \'coc-yank',
       \]
+" coc_pairs
+autocmd FileType tex let b:coc_pairs = [["$", "$"]]
+" Highlight the symbol and its references when holding the cursor
+autocmd CursorHold * silent call CocActionAsync('highlight')
+" copilot
+" autocmd VimEnter * Copilot disable

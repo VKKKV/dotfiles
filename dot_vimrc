@@ -1,20 +1,9 @@
 source ~/.vim/basic.vim
-
 call plug#begin()
 source ~/.vim/plugins.vim
 call plug#end()
-
 source ~/.vim/pluginsConf.vim
 source ~/.vim/keymaps.vim
-
-" avoid comment continue in o and enter
-au Filetype * :setl fo-=o fo-=r
-" coc_pairs
-autocmd FileType tex let b:coc_pairs = [["$", "$"]]
-" Highlight the symbol and its references when holding the cursor
-autocmd CursorHold * silent call CocActionAsync('highlight')
-" copilot
-" autocmd VimEnter * Copilot disable
 " theme
 autocmd vimenter * ++nested colorscheme gruvbox
 set background=dark
