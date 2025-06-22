@@ -5,11 +5,11 @@ sort_sensitive = false
 sort_reverse   = false
 sort_dir_first = true
 sort_translit  = false
+mouse_events   = []
 linemode       = "size"
 show_hidden    = false
 show_symlink   = true
 scrolloff      = 5
-mouse_events   = ["click", "scroll"]
 title_format   = "Yazi: {cwd}"
 
 [preview]
@@ -23,14 +23,19 @@ sixel_fraction  = 15
 ueberzug_scale  = 1
 ueberzug_offset = [0, 0, 0, 0]
 
-[plugin]
 [opener]
 play = [
-	{ run = 'mpv "$@"', orphan = true, for = "unix" },
+{ run = 'mpv "$@"', orphan = true, for = "unix" },
 ]
 edit = [
-	{ run = 'vim "$@"', block = true, for = "unix" },
+{ run = 'vim "$@"', block = true, for = "unix" },
 ]
-open = [
-	{ run = 'vim "$@"', block = true, for = "unix" },
+
+[open]
+rules = [
+{ mime = "text/*", use = "edit" },
+{ mime = "video/*", use = "play" },
+{ mime = "audio/*", use = "play" },  
+{ mime = "image/*", use = "play" },
 ]
+
