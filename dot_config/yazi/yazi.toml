@@ -33,9 +33,10 @@ edit = [
 
 [open]
 rules = [
-{ mime = "text/*", use = "edit" },
 { mime = "video/*", use = "play" },
-{ mime = "audio/*", use = "play" },  
+{ mime = "audio/*", use = "play" },
 { mime = "image/*", use = "play" },
+{ mime = "text/*", use = "edit" },
+{ mime = "*", use = "edit" }
 ]
 

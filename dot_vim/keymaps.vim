@@ -20,7 +20,7 @@ nnoremap <silent> <C-Down>  :resize +2<CR>
 nnoremap <silent> <C-Left>  :vertical resize -2<CR>
 nnoremap <silent> <C-Right> :vertical resize +2<CR>
 " date time
-nnoremap <Leader>d "=strftime('%Y-%m-%d %H:%M:%S')<CR>P
+nnoremap <Leader>dt "=strftime('%Y-%m-%d %H:%M:%S')<CR>P
 " markdown
 nnoremap <Leader>mc {O<DOWN>```<DOWN><ESC>}i```<ESC><DOWN>O<ESC>
 nnoremap <Leader>mp :MarkdownPreview<CR>
