@@ -1,0 +1,37 @@
+[window.padding]
+x = 6
+y = 6
+
+[font]
+size = 14.0
+
+[font.normal]
+family = "JetBrains Mono Nerd Font"
+
+[font.bold]
+family = "JetBrains Mono Nerd Font"
+
+[font.italic]
+family = "JetBrains Mono Nerd Font"
+
+[font.bold_italic]
+family = "JetBrains Mono Nerd Font"
+
+[cursor]
+style = "Block"
+blink_interval = 0
+unfocused_hollow = true
+
+[mouse]
+hide_when_typing = false
+
+[colors]
+primary = { foreground = "#ebdbb2", background = "#272727" }
+cursor = { text = "#1E1E2E", cursor = "#F5E0DC" }
+selection = { text = "#655b53", background = "#ebdbb2" }
+
+[[keyboard.bindings]]
+key = "Return"
+mods = "Control | Shift"
+action = "SpawnNewInstance"
+

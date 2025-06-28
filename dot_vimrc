@@ -1,10 +1,5 @@
 source ~/.vim/basic.vim
-call plug#begin()
 source ~/.vim/plugins.vim
-call plug#end()
 source ~/.vim/pluginsConf.vim
 source ~/.vim/keymaps.vim
-" theme
-autocmd vimenter * ++nested colorscheme gruvbox
-set background=dark
 

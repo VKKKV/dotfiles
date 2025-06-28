@@ -1,33 +1,44 @@
-HISTSIZE=-1
-SAVEHIST=-1
+[[ $- != *i* ]] && return
+
+DISABLE_UNTRACKED_FILES_DIRTY="true"
+COMPLETION_WAITING_DOTS="true"
+HISTSIZE=100000
+SAVEHIST=100000
+setopt HIST_IGNORE_DUPS
+setopt HIST_FIND_NO_DUPS
+
+export FORCE_THEME_UPDATE=true
 export CRYPTOGRAPHY_OPENSSL_NO_LEGACY=1
 export PATH="$PATH:./node_modules/.bin:$HOME/.local/bin/:/home/arch/.local/share/gem/ruby/3.3.0/bin"
 export EDITOR=vim
 
-# alias wps='QT_SCREEN_SCALE_FACTORS=1 QT_FONT_DPI=144 wps'
 alias ..='z ..'
 alias ...='z ../..'
 alias .3='z ../../..'
 alias .4='z ../../../..'
 alias .5='z ../../../../..'
 alias ls='eza --icons=auto'
-alias la='eza -la'
-alias ll='eza -lha --icons=auto --sort=name --group-directories-first' # long list all
 alias vi=vim
-alias mkdir='mkdir -p'
+alias v=vim
 alias ta='tmux attach || tmux'
 alias weather='curl wttr.in/Shanghai'
 alias icat="kitten icat"
-alias ci='source  ~/.config/zsh/conda.zsh'
 alias lg='lazygit'
 alias date='date "+%Y-%m-%d %H:%M:%S"'
 alias zvs='cd ~/vspro && yazi'
 alias gpg='gpg --pinentry-mode loopback'
 alias zathura='zathura --fork'
 alias cp='cp -r'
+alias up='paru -Syu'
 
-source ~/.config/zsh/fzf.zsh
+alias _man='command man'
+alias man='vman'
+function vman() {
+  _man "$@" | vim -R +":set ft=man" -
+}
+
 source <(fzf --zsh)
+source ~/.config/zsh/fzf.zsh
 source /usr/share/nvm/init-nvm.sh
 eval "$(zoxide init zsh)"
 
@@ -40,15 +51,32 @@ function y() {
 	rm -f -- "$tmp"
 }
 
-zf() {
-  local dir=$(
-    zoxide query --list --score |
-    fzf --height 40% --layout reverse --info inline \
-        --nth 2.. --tac --sort --query "$*" \
-        --bind 'enter:become:echo {2..}'
-  ) && cd "$dir"
-}
 
 ___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
 eval "$(atuin init zsh)"
+
+
+export CONDA_PATH="/opt/miniconda3/bin/conda"
+_lazy_conda_init() {
+    if [[ -z "${_CONDA_INITIALIZED}" ]]; then
+        eval "$($CONDA_PATH shell.zsh hook)"
+        export _CONDA_INITIALIZED=1
+    fi
+}
+function conda() {
+    _lazy_conda_init
+    command conda "$@"
+}
+function ce() {
+    _lazy_conda_init
+    local envs
+    envs=$(conda info --envs | sed '1,2d' | grep -v '^$')
+    local selected
+    selected=$(echo "$envs" | fzf --height 40% --reverse --header "select conda env")
+    if [[ -n "$selected" ]]; then
+        local env_path
+        env_path=$(echo "$selected" | awk '{print $NF}')
+        conda activate "$env_path"
+    fi
+}
 

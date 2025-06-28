@@ -1,9 +1,4 @@
 #!/usr/bin/zsh
-# @author vkkkv 
-# modify from nate zhou's dotfile
-# open text file with vim using fzf
-
-# FZF_DEFAULT_COMMAND='rg --files --hidden'
 
 search_path=(
 	"$HOME/.config/"
@@ -30,8 +25,6 @@ selected_file=$(find "${search_path[@]}" -type f \
 	| grep -Ev "/\.git/|/gems/|/node_modules/|/OpenTabletDriver/|/discord/|/Code|/GitHub|/cfg" \
 	| fzf)
 
-
-# Don't open vim if no file is selected
 if [ -n "$selected_file" ]; then
 	vim "$selected_file"
 fi
