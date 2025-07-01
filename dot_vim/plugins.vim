@@ -1,27 +1,29 @@
 call plug#begin()
-Plug 'tomtom/tcomment_vim'
+Plug 'christoomey/vim-system-copy'
+Plug 'ferrine/md-img-paste.vim'
 Plug 'github/copilot.vim'
+Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-Plug 'christoomey/vim-tmux-navigator'
-Plug 'psliwka/vim-smoothie'
-Plug 'tpope/vim-surround'
-Plug 'ferrine/md-img-paste.vim'
-Plug 'christoomey/vim-system-copy'
-Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
-Plug 'morhetz/gruvbox'
-Plug 'vim-airline/vim-airline'
-Plug 'vim-airline/vim-airline-themes'
-Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
-Plug 'PhilRunninger/nerdtree-visual-selection', { 'on': 'NERDTreeToggle' }
-Plug 'romainl/vim-cool'
-Plug 'voldikss/vim-floaterm'
 Plug 'kaarmu/typst.vim'
-Plug 'honza/vim-snippets'
+Plug 'PhilRunninger/nerdtree-visual-selection', { 'on': 'NERDTreeToggle' }
+Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
+Plug 'tomtom/tcomment_vim'
+Plug 'tpope/vim-surround'
 
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'yaegassy/coc-volar', { 'do': 'yarn install --frozen-lockfile' }
 Plug 'yaegassy/coc-volar-tools', { 'do': 'yarn install --frozen-lockfile' }
+Plug 'honza/vim-snippets'
+
+Plug 'morhetz/gruvbox'
+Plug 'vim-airline/vim-airline'
+Plug 'vim-airline/vim-airline-themes'
+
+" Plug 'christoomey/vim-tmux-navigator'
+" Plug 'psliwka/vim-smoothie'
+" Plug 'romainl/vim-cool'
+" Plug 'voldikss/vim-floaterm'
 call plug#end()
 
 let g:coc_node_path='/usr/bin/node'

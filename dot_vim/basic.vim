@@ -50,12 +50,11 @@ syntax on
 
 let mapleader=" "
 
-nnoremap <Leader>q :wq<CR>
 nnoremap <leader>s :w<CR>
 nnoremap <Leader>h :bp<CR>
 nnoremap <Leader>l :bn<CR>
 nnoremap <Leader>x :bd<CR>
-nnoremap <leader>i :split<CR>
+nnoremap <leader>S :split<CR>
 nnoremap <leader>v :vsplit<CR>
 
 nnoremap <Leader>dt "=strftime('%Y-%m-%d %H:%M:%S')<CR>P
