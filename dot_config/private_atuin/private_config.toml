@@ -114,10 +114,23 @@ history_filter = [
     "^paru -Syu$", 
     "^mkdir", 
     "^paru -R", 
-    "^tldr", 
-    "^y$",
     "^clear$",               # 忽略 clear 命令
     "^exit$",                # 忽略 exit 命令
+    "^tldr", 
+    "^y$",
+    "^ll$",
+    "^l ",
+    "^la$",
+    "^z ",
+    "^\\. ",
+    "^fdisk",
+    "^df",
+    "^su$",
+    "^ta$",
+    "^v",
+    "^dust$",
+    "^wc$",
+    "^$",
 ]
 
 ## prevent commands run with cwd matching any of these regexes from being written

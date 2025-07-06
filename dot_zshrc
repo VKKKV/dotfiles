@@ -1,28 +1,17 @@
 [[ $- != *i* ]] && return
 
-DISABLE_UNTRACKED_FILES_DIRTY="true"
-COMPLETION_WAITING_DOTS="true"
-HISTSIZE=100000
-SAVEHIST=100000
-setopt HIST_IGNORE_DUPS
-setopt HIST_FIND_NO_DUPS
+source ~/.overthewireEnv
 
-export FORCE_THEME_UPDATE=true
-export CRYPTOGRAPHY_OPENSSL_NO_LEGACY=1
-export PATH="$PATH:./node_modules/.bin:$HOME/.local/bin/:/home/arch/.local/share/gem/ruby/3.3.0/bin"
 export EDITOR=vim
-
+export PATH="$PATH:./node_modules/.bin:$HOME/.local/bin/:/home/arch/.local/share/gem/ruby/3.3.0/bin"
 alias ..='z ..'
-alias ...='z ../..'
-alias .3='z ../../..'
-alias .4='z ../../../..'
-alias .5='z ../../../../..'
+alias zv='z ~/vspro; y'
+alias zd='z ~/Downloads; y'
+alias zc='z ~/code; y'
+alias zct='z ~/ctf; y'
 alias ls='eza --icons=auto'
-alias vi=vim
 alias v=vim
 alias ta='tmux attach || tmux'
-alias weather='curl wttr.in/Shanghai'
-alias icat="kitten icat"
 alias lg='lazygit'
 alias date='date "+%Y-%m-%d %H:%M:%S"'
 alias zvs='cd ~/vspro && yazi'
@@ -30,31 +19,26 @@ alias gpg='gpg --pinentry-mode loopback'
 alias zathura='zathura --fork'
 alias cp='cp -r'
 alias up='paru -Syu'
-
 alias _man='command man'
 alias man='vman'
 function vman() {
   _man "$@" | vim -R +":set ft=man" -
 }
-
+ 
 source <(fzf --zsh)
 source ~/.config/zsh/fzf.zsh
 source /usr/share/nvm/init-nvm.sh
 eval "$(zoxide init zsh)"
+___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
+eval "$(atuin init zsh)"
 
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
 	yazi "$@" --cwd-file="$tmp"
-	if cwd="$(command cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-		builtin cd -- "$cwd"
-	fi
+	IFS= read -r -d '' cwd < "$tmp"
+	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
 	rm -f -- "$tmp"
 }
-
-
-___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
-eval "$(atuin init zsh)"
-
 
 export CONDA_PATH="/opt/miniconda3/bin/conda"
 _lazy_conda_init() {

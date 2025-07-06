@@ -8,3 +8,5 @@ Xft.rgba: rgb
 
 
 
+Xcursor.theme: MacOS-Cursor
+Xcursor.size: 30

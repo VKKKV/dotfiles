@@ -38,6 +38,7 @@ let g:coc_global_extensions = [
                   \'coc-clangd',
                   \'coc-highlight',
                   \'coc-json',
+                  \'@yaegassy/coc-intelephense',
                   \'coc-lists',
                   \'coc-markdownlint',
                   \'coc-mocword',

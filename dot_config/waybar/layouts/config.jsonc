@@ -1,0 +1,75 @@
+{
+    "layer": "top",
+    "position": "top",
+    "mod": "dock",
+    "height": 10,
+    "exclusive": true,
+    "passthrough": false,
+    "gtk-layer-shell": true,
+    "reload_style_on_change": true,
+    "modules-left": [
+        "hyprland/workspaces",
+        "wlr/taskbar"
+    ],
+    "modules-center": [
+        "clock"
+    ],
+    "modules-right": [
+        // "hyprland/window",
+        "tray",
+        // "cpu_text",
+        // "cpu",
+        // "memory",
+        // "network",
+        // "privacy",
+        // "backlight",
+        "pulseaudio"
+    ],
+    "tray": {
+        "spacing": 10,
+        "tooltip": false
+    },
+    "clock": {
+        "format": "{:%a, %d %I:%M}",
+        "tooltip": true
+    },
+    "cpu": {
+        "format": "cpu {usage}%",
+        "interval": 2,
+        "states": {
+            "critical": 90
+        }
+    },
+    "memory": {
+        "format": "mem {percentage}%",
+        "interval": 2,
+        "states": {
+            "critical": 80
+        }
+    },
+    "battery": {
+        "format": "bat {capacity}%",
+        "interval": 5,
+        "states": {
+            "warning": 20,
+            "critical": 10
+        },
+        "tooltip": false
+    },
+    "network": {
+        "format-wifi": "wifi {bandwidthDownBits}",
+        "format-ethernet": "enth {bandwidthDownBits}",
+        "format-disconnected": "no network",
+        "interval": 5,
+        "tooltip": false
+    },
+    "pulseaudio": {
+        "scroll-step": 5,
+        "max-volume": 150,
+        "format": "vol {volume}%",
+        "format-bluetooth": "vol {volume}%",
+        "nospacing": 1,
+        "on-click": "pavucontrol",
+        "tooltip": false
+    }
+}
