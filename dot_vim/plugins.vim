@@ -1,7 +1,7 @@
 call plug#begin()
 Plug 'christoomey/vim-system-copy'
 Plug 'ferrine/md-img-paste.vim'
-Plug 'github/copilot.vim'
+" Plug 'github/copilot.vim'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'

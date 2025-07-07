@@ -1,14 +1,10 @@
-[[ $- != *i* ]] && return
-
 source ~/.overthewireEnv
 
+[[ $- != *i* ]] && return
+
 export EDITOR=vim
-export PATH="$PATH:./node_modules/.bin:$HOME/.local/bin/:/home/arch/.local/share/gem/ruby/3.3.0/bin"
 alias ..='z ..'
 alias zv='z ~/vspro; y'
-alias zd='z ~/Downloads; y'
-alias zc='z ~/code; y'
-alias zct='z ~/ctf; y'
 alias ls='eza --icons=auto'
 alias v=vim
 alias ta='tmux attach || tmux'
@@ -21,16 +17,17 @@ alias cp='cp -r'
 alias up='paru -Syu'
 alias _man='command man'
 alias man='vman'
-function vman() {
-  _man "$@" | vim -R +":set ft=man" -
-}
- 
+alias mkdir='mkdir -p' \
+    df='_df'
+
+eval "$(starship init zsh)"
 source <(fzf --zsh)
 source ~/.config/zsh/fzf.zsh
 source /usr/share/nvm/init-nvm.sh
 eval "$(zoxide init zsh)"
-___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
 eval "$(atuin init zsh)"
+
+___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
 
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
@@ -62,5 +59,16 @@ function ce() {
         env_path=$(echo "$selected" | awk '{print $NF}')
         conda activate "$env_path"
     fi
+}
+_df() {
+    if [[ $# -ge 1 && -e "${@: -1}" ]]; then
+        duf "${@: -1}"
+    else
+        duf
+    fi
+}
+
+vman() {
+  _man "$@" | vim -R +":set ft=man" -
 }
 
