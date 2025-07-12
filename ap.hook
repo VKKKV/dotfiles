@@ -1,0 +1,11 @@
+[Trigger]
+Operation = Install
+Operation = Upgrade
+Type = Package
+Target = *
+
+[Action]
+Description = Adding --enable-wyaland-ime to .desktop files
+When = PostTransaction
+Exec = /home/Kita/.local/bin/ap
+
