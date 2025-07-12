@@ -3,6 +3,7 @@ source ~/.overthewireEnv
 [[ $- != *i* ]] && return
 
 export EDITOR=vim
+export PATH="$PATH:./node_modules/.bin:$HOME/.local/bin/:/home/*/.local/share/gem/ruby/3.3.0/bin"
 alias mpvhdr='ENABLE_HDR_WSI=1 mpv --vo=gpu-next --target-colorspace-hint --gpu-api=vulkan --gpu-context=waylandvk'
 alias ..='z ..'
 alias e='exit'
