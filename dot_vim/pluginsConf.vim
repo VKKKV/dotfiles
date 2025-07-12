@@ -39,6 +39,3 @@ let g:airline_symbols.colnr = ' ℅:'
 " let g:floaterm_rootmarkers   = ['.git']
 " highlight link FloatermBorder Visual
 
-autocmd vimenter * ++nested colorscheme gruvbox
-set background=dark
-

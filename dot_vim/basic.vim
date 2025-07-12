@@ -57,7 +57,6 @@ nnoremap <Leader>x :bd<CR>
 nnoremap <leader>S :split<CR>
 nnoremap <leader>v :vsplit<CR>
 
-nnoremap <Leader>dt "=strftime('%Y-%m-%d %H:%M:%S')<CR>P
 nnoremap <Leader>mc {O<DOWN>```<DOWN><ESC>}i```<ESC><DOWN>O<ESC>
 nnoremap <silent> <C-Up>    :resize -2<CR>
 nnoremap <silent> <C-Down>  :resize +2<CR>

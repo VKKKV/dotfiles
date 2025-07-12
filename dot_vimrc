@@ -3,3 +3,5 @@ source ~/.vim/plugins.vim
 source ~/.vim/pluginsConf.vim
 source ~/.vim/keymaps.vim
 
+autocmd vimenter * ++nested colorscheme gruvbox
+set background=dark

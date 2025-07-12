@@ -3,13 +3,15 @@ source ~/.overthewireEnv
 [[ $- != *i* ]] && return
 
 export EDITOR=vim
+alias mpvhdr='ENABLE_HDR_WSI=1 mpv --vo=gpu-next --target-colorspace-hint --gpu-api=vulkan --gpu-context=waylandvk'
 alias ..='z ..'
+alias e='exit'
 alias zv='z ~/vspro; y'
 alias ls='eza --icons=auto'
 alias v=vim
 alias ta='tmux attach || tmux'
 alias lg='lazygit'
-alias date='date "+%Y-%m-%d %H:%M:%S"'
+alias dt='date "+%Y-%m-%d %H:%M:%S"'
 alias zvs='cd ~/vspro && yazi'
 alias gpg='gpg --pinentry-mode loopback'
 alias zathura='zathura --fork'
@@ -17,8 +19,11 @@ alias cp='cp -r'
 alias up='paru -Syu'
 alias _man='command man'
 alias man='vman'
-alias mkdir='mkdir -p' \
-    df='_df'
+alias diff="diff --color=auto"
+alias grep="grep --color=auto"
+alias ip="ip -color=auto"
+alias mkdir='mkdir -p'
+alias df='_df'
 
 eval "$(starship init zsh)"
 source <(fzf --zsh)
