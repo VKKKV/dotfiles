@@ -7,16 +7,16 @@
     "passthrough": false,
     "gtk-layer-shell": true,
     "reload_style_on_change": true,
-    "modules-left": [
-        "hyprland/workspaces",
-        "wlr/taskbar"
-    ],
+    // "modules-left": [
+        // "hyprland/workspaces",
+        // "wlr/taskbar"
+    // ],
     "modules-center": [
-        "clock"
+        "clock",
+        "pulseaudio",
+        "tray"
     ],
     "modules-right": [
-        "tray",
-        "pulseaudio"
     ],
     "tray": {
         "spacing": 10,
