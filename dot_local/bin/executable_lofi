@@ -1,0 +1,6 @@
+#!/bin/bash
+
+#Taken from jakoolit's hyprland dots
+
+notify-send -u low "Online Music started" && mpv --no-config --shuffle --vid=no --volume=80 "https://play.streamafrica.net/lofiradio"
+
