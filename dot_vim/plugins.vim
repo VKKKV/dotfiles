@@ -34,7 +34,7 @@ let g:coc_global_extensions = [
                   \'@yaegassy/coc-intelephense',
                   \'coc-lists',
                   \'coc-markdownlint',
-                  \'coc-mocword',
+                  \'coc-word',
                   \'coc-pairs',
                   \'coc-sh',
                   \'coc-snippets',
