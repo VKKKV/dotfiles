@@ -151,9 +151,6 @@ toggle_output() {
     select_output "$next_sink"
 }
 
-# Main script logic
-
-# Set default variables
 iconsDir="${iconsDir:-$XDG_DATA_HOME/icons}"
 icodir="${iconsDir}/Wallbash-Icon/media"
 step=${VOLUME_STEPS:-5}

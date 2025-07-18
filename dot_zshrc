@@ -1,19 +1,20 @@
-source ~/.overthewireEnv
-
 [[ $- != *i* ]] && return
 
 export EDITOR=vim
 export PATH="$PATH:./node_modules/.bin:$HOME/.local/bin/:/home/*/.local/share/gem/ruby/3.3.0/bin"
+alias l='eza -lh --icons=auto' \
+    ll='eza -lha --icons=auto --sort=name --group-directories-first' \
+    ld='eza -lhD --icons=auto' \
+    lt='eza --icons=auto --tree'
 alias mpvhdr='ENABLE_HDR_WSI=1 mpv --vo=gpu-next --target-colorspace-hint --gpu-api=vulkan --gpu-context=waylandvk'
 alias ..='z ..'
 alias e='exit'
-alias zv='z ~/vspro; y'
+alias zv='z ~/code/vspro; y'
 alias ls='eza --icons=auto'
 alias v=vim
 alias ta='tmux attach || tmux'
 alias lg='lazygit'
 alias dt='date "+%Y-%m-%d %H:%M:%S"'
-alias zvs='cd ~/vspro && yazi'
 alias gpg='gpg --pinentry-mode loopback'
 alias zathura='zathura --fork'
 alias cp='cp -r'

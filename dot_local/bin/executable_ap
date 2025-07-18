@@ -17,7 +17,7 @@ modify_desktop() {
     fi
 }
 
-for app in $(cat /home/Kita/.local/bin/ap.lst); do
+for app in $(cat /home/kita/.local/bin/ap.lst); do
     desktop_file="/usr/share/applications/$app.desktop"
     if [[ -f "$desktop_file" ]]; then
         modify_desktop "$desktop_file"
