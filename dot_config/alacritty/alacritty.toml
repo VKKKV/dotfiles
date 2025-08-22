@@ -2,6 +2,9 @@
 x = 6
 y = 6
 
+[env]
+TERM = "alacritty"
+
 [font]
 size = 14.0
 

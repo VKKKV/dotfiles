@@ -27,15 +27,3 @@ if !exists('g:airline_symbols')
 endif
 let g:airline_symbols.colnr = ' ℅:'
 
-" let g:floaterm_shell = 'bash'
-" let g:floaterm_title = 'floaterm ($1|$2)'
-" let g:floaterm_width = 0.9
-" let g:floaterm_height = 0.9
-" let g:floaterm_position = 'center'
-" let g:floaterm_opener = 'edit'
-" let g:floaterm_autoclose = 2
-" let g:floaterm_autohide = v:true
-" let g:floaterm_autoinsert = v:false
-" let g:floaterm_rootmarkers   = ['.git']
-" highlight link FloatermBorder Visual
-

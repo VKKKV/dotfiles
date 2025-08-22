@@ -1,4 +1,3 @@
-" basic
 syntax enable
 set title
 set timeoutlen=400
@@ -6,7 +5,7 @@ set fileformat=unix
 set laststatus=2
 set number
 set list
-set listchars=tab:\|·,trail:·,extends:>,precedes:<,nbsp:%
+set listchars=tab:▸\ ,trail:·,extends:❯,precedes:❮,nbsp:%
 set scrolloff=4
 set relativenumber
 set encoding=utf-8
@@ -28,10 +27,9 @@ set hlsearch
 set ignorecase
 set colorcolumn=80
 set textwidth=80
-set wrap
 set breakindent
-set showbreak=↪\
-set formatoptions+=t
+set showbreak=↪
+set wrap
 set splitbelow
 set splitright
 set hidden
@@ -44,10 +42,9 @@ set shortmess+=c
 set updatetime=200
 set cursorline
 set cursorcolumn
+
 filetype indent on
 filetype plugin on
-syntax on
-
 let mapleader=" "
 
 nnoremap <leader>s :w<CR>

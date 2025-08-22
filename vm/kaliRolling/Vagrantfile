@@ -1,5 +1,12 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+# vagrant plugin install vagrant-disksize
 Vagrant.configure("2") do |config|
   config.vm.box = "kalilinux/rolling"
-  config.vm.box_version = "2025.1.0"
+  config.disksize.size = '90GB'
+  config.vm.provider "virtualbox" do |vb|
+    vb.memory = "4096"
+  end
 end
 

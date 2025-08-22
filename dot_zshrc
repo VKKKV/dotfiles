@@ -44,29 +44,6 @@ function y() {
 	rm -f -- "$tmp"
 }
 
-export CONDA_PATH="/opt/miniconda3/bin/conda"
-_lazy_conda_init() {
-    if [[ -z "${_CONDA_INITIALIZED}" ]]; then
-        eval "$($CONDA_PATH shell.zsh hook)"
-        export _CONDA_INITIALIZED=1
-    fi
-}
-function conda() {
-    _lazy_conda_init
-    command conda "$@"
-}
-function ce() {
-    _lazy_conda_init
-    local envs
-    envs=$(conda info --envs | sed '1,2d' | grep -v '^$')
-    local selected
-    selected=$(echo "$envs" | fzf --height 40% --reverse --header "select conda env")
-    if [[ -n "$selected" ]]; then
-        local env_path
-        env_path=$(echo "$selected" | awk '{print $NF}')
-        conda activate "$env_path"
-    fi
-}
 _df() {
     if [[ $# -ge 1 && -e "${@: -1}" ]]; then
         duf "${@: -1}"
