@@ -1,6 +1,6 @@
 call plug#begin()
 Plug 'christoomey/vim-system-copy'
-Plug 'ferrine/md-img-paste.vim'
+" Plug 'ferrine/md-img-paste.vim'
 Plug 'iamcco/markdown-preview.nvim', { 'do': 'cd app && npx --yes yarn install' }
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
@@ -16,7 +16,9 @@ Plug 'honza/vim-snippets'
 Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
-" Plug 'github/copilot.vim'
+Plug 'github/copilot.vim'
+
+" Plug 'Exafunction/windsurf.vim'
 call plug#end()
 
 let g:coc_node_path='/usr/bin/node'

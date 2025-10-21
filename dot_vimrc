@@ -2,8 +2,13 @@ source ~/.vim/basic.vim
 source ~/.vim/plugins.vim
 source ~/.vim/pluginsConf.vim
 source ~/.vim/keymaps.vim
+" source ~/.vim/colemak-dh.vim
 
 " autocmd FileType markdown set formatoptions+=t
 
+autocmd FileType * Copilot disable
+nmap <silent> <leader>, :Copilot enable<CR>
+
 autocmd vimenter * ++nested colorscheme gruvbox
 set background=dark
+

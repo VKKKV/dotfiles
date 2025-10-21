@@ -4,8 +4,6 @@ source "~/.config/vim/open_file_under_cursor.vim"
 autocmd CursorHold * silent call CocActionAsync('highlight')
 
 xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-
 nmap <leader>r  <Plug>(coc-rename)
 nnoremap <Leader>mp :MarkdownPreview<CR>
 nnoremap <Leader>ff :Files<CR>
@@ -47,8 +45,6 @@ inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
 inoremap <silent><expr> <CR> coc#pum#visible() && coc#pum#info()['index'] != -1 ? coc#pum#confirm()
 			\: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 inoremap <silent><expr> <backspace> coc#pum#visible() ? "\<bs>\<c-r>=coc#start()\<CR>" : "\<bs>"
-
-" inoremap <silent><expr> <c-space> coc#refresh()
 
 " Remap <C-f> and <C-b> to scroll float windows/popups
 if has('nvim-0.4.0') || has('patch-8.2.0750')

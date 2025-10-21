@@ -1,4 +1,0 @@
-patch:
-  # 仅使用「白霜拼音」的默认配置，配置此行即可
-  __include: rime_frost_suggestion:/
-  # __include: rime_ice_suggestion:/
