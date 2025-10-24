@@ -47,14 +47,11 @@ filetype indent on
 filetype plugin on
 let mapleader=" "
 
-nnoremap <leader>s :w<CR>
 nnoremap <Leader>h :bp<CR>
 nnoremap <Leader>l :bn<CR>
 nnoremap <Leader>x :bd<CR>
 nnoremap <leader>S :split<CR>
 nnoremap <leader>v :vsplit<CR>
-nnoremap <C-j> 5j
-nnoremap <C-k> 5k
 
 nnoremap <Leader>mc {O<DOWN>```<DOWN><ESC>}i```<ESC><DOWN>O<ESC>
 nnoremap <silent> <C-Up>    :resize -2<CR>
