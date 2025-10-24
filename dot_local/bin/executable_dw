@@ -1,6 +1,0 @@
-#!/bin/bash
-# msg=$(curl -s "wttr.in/Shanghai?format=4")
-# msg=$(curl -s "wttr.in/Nanjing?format=4")
-msg=$(curl -s "wttr.in/Nanjing")
-echo "$msg"
-

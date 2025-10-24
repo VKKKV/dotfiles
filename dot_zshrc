@@ -1,40 +1,34 @@
-[[ $- != *i* ]] && return
-
 export EDITOR=vim
-export PATH="$PATH:./node_modules/.bin:$HOME/.local/bin/:/home/*/.local/share/gem/ruby/3.3.0/bin"
-alias l='eza -lh --icons=auto' \
-    ll='eza -lha --icons=auto --sort=name --group-directories-first' \
-    ld='eza -lhD --icons=auto' \
-    lt='eza --icons=auto --tree'
-alias mpvhdr='ENABLE_HDR_WSI=1 mpv --vo=gpu-next --target-colorspace-hint --gpu-api=vulkan --gpu-context=waylandvk'
-alias ..='z ..'
-alias e='exit'
-alias zv='z ~/code/vspro; y'
-alias ls='eza --icons=auto'
-alias v=vim
-alias ta='tmux attach || tmux'
-alias lg='lazygit'
-alias dt='date "+%Y-%m-%d %H:%M:%S"'
-alias gpg='gpg --pinentry-mode loopback'
-alias zathura='zathura --fork'
+export PATH="$PATH:./node_modules/.bin:$HOME/.local/bin/"
+
+alias ..='cd ..'
 alias cp='cp -r'
-alias up='paru -Syu'
-alias _man='command man'
-alias man='vman'
 alias diff="diff --color=auto"
+alias dt='date "+%Y-%m-%d %H:%M:%S"'
+alias e='exit'
 alias grep="grep --color=auto"
 alias ip="ip -color=auto"
+alias ll='ls -la --color=auto' \
+alias l='ls -l --color=auto' \
 alias mkdir='mkdir -p'
-alias df='_df'
+
+alias gpg='gpg --pinentry-mode loopback'
+alias lg='lazygit'
+alias ta='tmux attach || tmux'
+alias up='paru -Syu'
+alias zathura='zathura --fork'
+alias mpvhdr='ENABLE_HDR_WSI=1 mpv --vo=gpu-next --target-colorspace-hint --gpu-api=vulkan --gpu-context=waylandvk'
 
 eval "$(starship init zsh)"
-source <(fzf --zsh)
-source ~/.config/zsh/fzf.zsh
-source /usr/share/nvm/init-nvm.sh
 eval "$(zoxide init zsh)"
 eval "$(atuin init zsh)"
 
-___MY_VMOPTIONS_SHELL_FILE="${HOME}/.jetbrains.vmoptions.sh"; if [ -f "${___MY_VMOPTIONS_SHELL_FILE}" ]; then . "${___MY_VMOPTIONS_SHELL_FILE}"; fi
+source <(fzf --zsh)
+export FZF_DEFAULT_COMMAND='fd --hidden'
+export FZF_COMPLETION_TRIGGER='\'
+export FZF_TMUX=1
+export FZF_TMUX_HEIGHT='80%'
+export FZF_DEFAULT_OPTS='--preview "[[ $(file --mime {}) =~ binary ]] && echo {} is a binary file || (ccat --color=always {} || highlight -O ansi -l {} || cat {}) 2> /dev/null | head -500"'
 
 function y() {
 	local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
@@ -42,17 +36,5 @@ function y() {
 	IFS= read -r -d '' cwd < "$tmp"
 	[ -n "$cwd" ] && [ "$cwd" != "$PWD" ] && builtin cd -- "$cwd"
 	rm -f -- "$tmp"
-}
-
-_df() {
-    if [[ $# -ge 1 && -e "${@: -1}" ]]; then
-        duf "${@: -1}"
-    else
-        duf
-    fi
-}
-
-vman() {
-  _man "$@" | vim -R +":set ft=man" -
 }
 

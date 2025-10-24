@@ -1,8 +1,0 @@
-# Insert your preferred key mappings here.
-unmap <a-v>
-unmap <a-c>
-
-unmap J
-unmap K
-map J nextTab
-map K previousTab
