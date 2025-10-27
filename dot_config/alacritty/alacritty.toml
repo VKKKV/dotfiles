@@ -1,24 +1,27 @@
 [window.padding]
-x = 6
-y = 6
+x = 4
+y = 4
 
 [env]
 TERM = "alacritty"
 
 [font]
 size = 14.0
-
 [font.normal]
-family = "JetBrains Mono Nerd Font"
+family = "MapleMono NF CN"
+style = "Normal"
 
 [font.bold]
-family = "JetBrains Mono Nerd Font"
+family = "MapleMono NF CN" 
+style = "Bold"
 
 [font.italic]
-family = "JetBrains Mono Nerd Font"
+family = "MapleMono NF CN"
+style = "Italic"
 
 [font.bold_italic]
-family = "JetBrains Mono Nerd Font"
+family = "MapleMono NF CN"
+style = "Bold Italic"
 
 [cursor]
 style = "Block"
