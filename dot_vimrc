@@ -85,7 +85,6 @@ nnoremap <Leader>ff :Files<CR>
 nnoremap <Leader>fr :Rg<CR>
 
 Plug 'kaarmu/typst.vim'
-" g:typst_syntax_highlight: Enable syntax highlighting. Default: 1
 " g:typst_cmd: Specifies the location of the Typst executable. Default: 'typst'
 let g:typst_pdf_viewer = 'zathura'
 " g:typst_conceal: Enable concealment. Default: 0

@@ -35,6 +35,26 @@
         "jit"
     ],
     "Lua.runtime.version": "LuaJIT",
+    "languageserver": {
+        "nix": {
+            "command": "nil",
+            "filetypes": [
+                "nix"
+            ],
+            "rootPatterns": [
+                "flake.nix"
+            ],
+            "settings": {
+                "nil": {
+                    "formatting": {
+                        "command": [
+                            "nixfmt"
+                        ]
+                    }
+                }
+            }
+        }
+    },
     "python.linting.enabled": true,
     "python.analysis.diagnosticMode": "workspace",
     "python.formatting.provider": "ruff",
