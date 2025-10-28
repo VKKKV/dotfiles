@@ -1,8 +1,7 @@
-set -U fish_greeting ""
-set -gx EDITOR vim
-set -gx PATH $PATH ./node_modules/.bin $HOME/.local/bin
-
 if status is-interactive
+    set -U fish_greeting ""
+    set -gx EDITOR vim
+    set -gx PATH $PATH ./node_modules/.bin $HOME/.local/bin
     alias cp='cp -r'
     alias diff="diff --color=auto"
     alias dt='date "+%Y-%m-%d %H:%M:%S"'
@@ -17,6 +16,7 @@ if status is-interactive
     alias up='paru -Syu'
     alias zathura='zathura --fork'
     alias mpvhdr='ENABLE_HDR_WSI=1 mpv --vo=gpu-next --target-colorspace-hint --gpu-api=vulkan --gpu-context=waylandvk'
+    alias dd='dd bs=4M conv=fsync oflag=direct status=progress'
 
     starship init fish | source
     zoxide init fish | source
