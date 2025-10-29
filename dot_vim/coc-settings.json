@@ -14,8 +14,13 @@
         "c",
         "cpp",
         "java",
-        "json"
+        "json",
+        "nix"
     ],
+    "[yaml]": {
+        "coc.preferences.formatterExtension": "coc-yaml"
+    },
+    "yaml.format.enable": true,
     "editor.formatOnSave": true,
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true,
@@ -23,9 +28,6 @@
         "source.fixAll": true
     },
     "coc.source.file.ignoreHidden": false,
-    "editor.codeActionsOnSave": {
-        "source.fixAll.eslint": true
-    },
     "eslint.autoFixOnSave": true,
     "eslint.format.enable": true,
     "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
@@ -78,8 +80,7 @@
     "suggest.floatConfig": {
         "border": true,
         "rounded": true,
-        "maxWidth": 80,
-        "maxHeight": 20
+        "maxWidth": 80
     },
     "signature.enable": true,
     "signature.target": "float",
@@ -88,7 +89,6 @@
     "suggest.noselect": false,
     "suggest.timeout": 3000,
     "suggest.enablePreselect": true,
-    "suggest.disableDeprecated": true,
     "floatFactory.floatConfig": {
         "border": true
     },
