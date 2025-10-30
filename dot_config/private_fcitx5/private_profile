@@ -22,7 +22,7 @@ Layout=us
 # Name
 Name=mozc
 # Layout
-Layout=us-colemak_dh
+Layout=
 
 [GroupOrder]
 0=Default
