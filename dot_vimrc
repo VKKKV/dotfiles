@@ -87,7 +87,6 @@ nnoremap <Leader>fr :Rg<CR>
 Plug 'kaarmu/typst.vim'
 let g:typst_pdf_viewer = 'zathura'
 
-Plug 'PhilRunninger/nerdtree-visual-selection', { 'on': 'NERDTreeToggle' }
 Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
 nnoremap <Leader>n :NERDTreeToggle<CR>
 let NERDTreeShowHidden=1
