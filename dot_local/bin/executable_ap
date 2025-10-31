@@ -1,0 +1,26 @@
+#!/bin/bash
+PARAM="--enable-wayland-ime"
+
+modify_desktop() {
+    local file="$1"
+
+    if grep -q "Exec=.*$PARAM" "$file"; then
+        return 0
+    fi
+
+    local exec_line=$(grep -m1 '^Exec=' "$file")
+
+    if [[ "$exec_line" =~ [[:space:]] ]]; then
+        sudo sed -i "0,/^Exec=/s|\(Exec=[^[:space:]]*[[:space:]]\)|\1$PARAM |" "$file"
+    else
+        sudo sed -i "0,/^Exec=/s|^Exec=.*|& $PARAM|" "$file"
+    fi
+}
+
+for app in $(cat /home/kita/.local/bin/ap.lst); do
+    desktop_file="/usr/share/applications/$app.desktop"
+    if [[ -f "$desktop_file" ]]; then
+        modify_desktop "$desktop_file"
+    fi
+done
+

@@ -60,7 +60,7 @@
     "python.linting.enabled": true,
     "python.analysis.diagnosticMode": "workspace",
     "python.formatting.provider": "ruff",
-    "snippets.ultisnips.enable": false,
+    "snippets.ultisnips.enable": true,
     "tsserver.useLocalTsdk": true,
     "tsserver.enable": true,
     "tsserver.log": "verbose",

@@ -70,7 +70,7 @@ autocmd Filetype markdown setlocal colorcolumn=80
 autocmd Filetype markdown setlocal textwidth=80
 autocmd Filetype * :setlocal fo-=o fo-=r
 autocmd BufWritePre * :%s/\s\+$//e
-autocmd InsertLeave *.md,*.typ silent update
+" autocmd InsertLeave *.md,*.typ silent update
 
 " vim plug
 call plug#begin()
