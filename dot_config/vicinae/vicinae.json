@@ -14,7 +14,7 @@
     },
     "theme": {
         "iconTheme": "Papirus-Dark",
-        "name": "gruvbox-dark-hard.toml"
+        "name": "gruvbox-dark"
     },
     "window": {
         "csd": true,

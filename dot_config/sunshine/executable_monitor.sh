@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-set -x
+[[ "$2" == "--debug" ]] && set -x
 
 _seat_display=DP-1
 _stream_display=HDMI-A-1

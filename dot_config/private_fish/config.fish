@@ -27,7 +27,7 @@ if status is-interactive
     set -gx FZF_COMPLETION_TRIGGER '\\'
     set -gx FZF_TMUX 1
     set -gx FZF_TMUX_HEIGHT '80%'
-    set -gx FZF_DEFAULT_OPTS '--preview "[[ (file --mime {}) =~ binary ]] && echo {} is a binary file || (ccat --color=always {} || highlight -O ansi -l {} || cat {}) 2> /dev/null | head -500"'
+    set -gx FZF_DEFAULT_OPTS ' --preview "[[ (file --mime {}) =~ binary ]] && echo {} is a binary file || (bat --theme=gruvbox-dark --color=always {} || cat {}) 2> /dev/null | head -250" --color fg:#ebdbb2,bg:#282828,hl:#fabd2f,fg+:#ebdbb2,bg+:#3c3836,hl+:#fabd2f --color info:#83a598,prompt:#bdae93,spinner:#fabd2f,pointer:#83a598,marker:#fe8019,header:#665c54'
 
     # yazi
     function y

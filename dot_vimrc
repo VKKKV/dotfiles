@@ -46,31 +46,30 @@ let mapleader=" "
 nnoremap <silent> <Leader>w :w<CR>
 nnoremap <silent> <Leader>tn :tabn<CR>
 nnoremap <silent> <Leader>tp :tabp<CR>
-nnoremap <silent> <Leader>h :bp<CR>
-nnoremap <silent> <Leader>l :bn<CR>
+nnoremap <silent> <Leader>p :bp<CR>
+nnoremap <silent> <Leader>n :bn<CR>
 nnoremap <silent> <Leader>x :bd<CR>
-nnoremap <silent> <leader>s :split<CR>
-nnoremap <silent> <leader>v :vsplit<CR>
+nnoremap <silent> <Leader>q :q<CR>
+nnoremap <silent> <Leader>v :vsplit<CR>
 nnoremap <silent> <C-Up>    :resize -2<CR>
 nnoremap <silent> <C-Down>  :resize +2<CR>
 nnoremap <silent> <C-Left>  :vertical resize -2<CR>
 nnoremap <silent> <C-Right> :vertical resize +2<CR>
-nnoremap <silent> <C-h> :wincmd h<CR>
-nnoremap <silent> <C-j> :wincmd j<CR>
-nnoremap <silent> <C-k> :wincmd k<CR>
-nnoremap <silent> <C-l> :wincmd l<CR>
-
+nnoremap <silent> <Leader>h :wincmd h<CR>
+nnoremap <silent> <Leader>j :wincmd j<CR>
+nnoremap <silent> <Leader>k :wincmd k<CR>
+nnoremap <silent> <Leader>l :wincmd l<CR>
 " system copy need wl-clipboard
 xnoremap <silent> cp :w !wl-copy<CR><CR>
+nnoremap <C-L> :nohlsearch<CR><C-L>
 
 filetype plugin indent on
 
-autocmd FileType markdown setlocal wrap linebreak
+autocmd Filetype markdown setlocal wrap linebreak
 autocmd Filetype markdown setlocal colorcolumn=80
 autocmd Filetype markdown setlocal textwidth=80
 autocmd Filetype * :setlocal fo-=o fo-=r
 autocmd BufWritePre * :%s/\s\+$//e
-" autocmd InsertLeave *.md,*.typ silent update
 
 " vim plug
 call plug#begin()
@@ -85,18 +84,22 @@ let g:instant_markdown_autostart = 0
 let g:instant_markdown_autoscroll = 1
 let g:instant_markdown_port = 13487
 let g:instant_markdown_theme = 'dark'
-nnoremap <Leader>p :InstantMarkdownPreview<CR>
+nnoremap <Leader>i :InstantMarkdownPreview<CR>
 
 Plug 'junegunn/fzf', { 'do': { -> fzf#install() } }
 Plug 'junegunn/fzf.vim'
-nnoremap <Leader>ff :Files<CR>
-nnoremap <Leader>fr :Rg<CR>
+nnoremap <Leader>ff :Files!<CR>
+nnoremap <Leader>fr :Rg!<CR>
+nnoremap <Leader>fh :History!<CR>
+nnoremap <Leader>fb :Buffers!<CR>
+nnoremap <Leader>/ :Lines!<CR>
+nnoremap <Leader>fh :History!<CR>
 
 Plug 'kaarmu/typst.vim'
 let g:typst_pdf_viewer = 'zathura'
 
 Plug 'preservim/nerdtree', { 'on': 'NERDTreeToggle' }
-nnoremap <Leader>n :NERDTreeToggle<CR>
+nnoremap <Leader>e :NERDTreeToggle<CR>
 let NERDTreeShowHidden=1
 let NERDTreeQuitOnOpen=1
 let NERDTreeAutoDeleteBuffer=1
@@ -124,25 +127,32 @@ if !exists('g:airline_symbols')
 endif
 let g:airline_symbols.colnr = ' ℅:'
 
-" Plug 'github/copilot.vim'
-" autocmd FileType * Copilot disable
-" nmap <silent> <leader>, :Copilot enable<CR>
 " Plug 'Exafunction/windsurf.vim'
+" let g:codeium_no_map_tab = 1
+" inoremap <silent><expr> <C-a> codeium#Accept()
+
+Plug 'github/copilot.vim'
+autocmd FileType *.md Copilot disable
+let g:copilot_no_tab_map = v:true
+imap <silent><script><expr> <C-a> copilot#Accept("\<CR>")
+imap <silent> <C-r> <Plug>(copilot-suggest)
+nmap <silent> <leader>, :Copilot enable<CR>
+nmap <silent> <leader>. :Copilot enable<CR>
+
+Plug 'tpope/vim-fugitive'
+
 call plug#end()
 
 let g:coc_node_path='/usr/bin/node'
 let g:coc_global_extensions = [
                   \'coc-marketplace',
                   \'coc-dictionary',
-                  \'coc-ecdict',
                   \'coc-biome',
                   \'coc-eslint',
-                  \'coc-git',
                   \'coc-go',
                   \'coc-clangd',
                   \'coc-highlight',
                   \'coc-json',
-                  \'@yaegassy/coc-intelephense',
                   \'coc-lists',
                   \'coc-markdownlint',
                   \'coc-word',
@@ -154,17 +164,30 @@ let g:coc_global_extensions = [
                   \'coc-tsserver',
                   \'coc-typos',
                   \'coc-xml',
-                  \'coc-yaml',
                   \'coc-css',
                   \'coc-yaml',
                   \'coc-pyright',
                   \]
 
+                " \'coc-git',
+                " \'coc-ecdict',
 " coc conf
 let g:coc_snippet_next = '<tab>'
 
-nnoremap <silent> <Leader>d :CocDiagnostics<CR>
-nnoremap <silent> <Leader>o :CocOutline<CR>
+inoremap <silent><expr> <Tab>
+			\ coc#pum#visible() ? coc#pum#next(1):
+			\ CheckBackspace() ? "\<Tab>" :
+			\ coc#expandableOrJumpable() ?
+            \"\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
+			\ NextCharIsPair() ? "\<Right>" :
+            \ <SID>check_back_space() ?
+            \"\<TAB>" :
+			\ coc#refresh()
+inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
+
+nnoremap <silent><nowait> <Leader>d :<C-u>CocDiagnostics<CR>
+nnoremap <silent><nowait> <Leader>o :<C-u>CocOutline<CR>
+nnoremap <silent><nowait> <Leader>s :<C-u>CocList -I symbols<cr>
 
 nmap <silent> gd <Plug>(coc-definition)
 nmap <silent> gy <Plug>(coc-type-definition)
@@ -198,9 +221,6 @@ omap ic <Plug>(coc-classobj-i)
 xmap ac <Plug>(coc-classobj-a)
 omap ac <Plug>(coc-classobj-a)
 
-nmap gs <Plug>(coc-git-chunkinfo)
-nmap gc <Plug>(coc-git-commit)
-
 nnoremap <silent> K :call ShowDocumentation()<CR>
 function! ShowDocumentation()
   if CocAction('hasProvider', 'hover')
@@ -222,27 +242,9 @@ augroup mygroup
   autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
 augroup end
 
-inoremap <silent><expr> <Tab>
-			"\ exists('b:_copilot.suggestions') ? copilot#Accept("\<CR>") :
-			\ coc#pum#visible() ? coc#pum#next(1):
-			\ CheckBackspace() ? "\<Tab>" :
-			\ coc#expandableOrJumpable() ? "\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-			\ NextCharIsPair() ? "\<Right>" :
-			\ coc#refresh()
-inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
-
 inoremap <silent><expr> <CR> coc#pum#visible() && coc#pum#info()['index'] != -1 ? coc#pum#confirm()
 			\: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
 inoremap <silent><expr> <backspace> coc#pum#visible() ? "\<bs>\<c-r>=coc#start()\<CR>" : "\<bs>"
-
-if has('nvim-0.4.0') || has('patch-8.2.0750')
-  nnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-  nnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-  inoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(1)\<cr>" : "\<Right>"
-  inoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? "\<c-r>=coc#float#scroll(0)\<cr>" : "\<Left>"
-  vnoremap <silent><nowait><expr> <C-f> coc#float#has_scroll() ? coc#float#scroll(1) : "\<C-f>"
-  vnoremap <silent><nowait><expr> <C-b> coc#float#has_scroll() ? coc#float#scroll(0) : "\<C-b>"
-endif
 
 " Use CTRL-S for selections ranges
 " Requires 'textDocument/selectionRange' support of language server
@@ -269,19 +271,6 @@ command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.org
 
 set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
-" Mappings for CoCList
-" Show all diagnostics
-nnoremap <silent><nowait> <space>a  :<C-u>CocList diagnostics<cr>
-" Find symbol of current document
-nnoremap <silent><nowait> <space>o  :<C-u>CocList outline<cr>
-" Search workspace symbols
-nnoremap <silent><nowait> <space>s  :<C-u>CocList -I symbols<cr>
-" Do default action for next item
-nnoremap <silent><nowait> <space>j  :<C-u>CocNext<CR>
-" Do default action for previous item
-nnoremap <silent><nowait> <space>k  :<C-u>CocPrev<CR>
-
 autocmd vimenter * ++nested colorscheme gruvbox
 set background=dark
 
-" source ~/.vim/colemak-dh.vim

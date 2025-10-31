@@ -117,9 +117,6 @@ punctuator:
 
 key_binder:
   bindings:
-    # - { when: has_menu, accept: semicolon, send: 2 }
-    # - { when: has_menu, accept: slash, send: 3 } # 用/进行选3
-
     # for colemak layout
     - { when: has_menu, accept: o, send: 2 }
     - { when: has_menu, accept: slash, send: 3 }
