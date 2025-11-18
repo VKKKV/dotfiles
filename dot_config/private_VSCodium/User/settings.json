@@ -1,4 +1,5 @@
 {
+  "nix.formatterPath": "nixfmt",
   "workbench.colorTheme": "Gruvbox Dark Hard",
   "editor.lineNumbers": "relative",
   "editor.fontFamily": "'Maple Mono NF CN', 'JetBrains Mono', Consolas, monospace",
@@ -231,5 +232,5 @@
     "#1d2021",
     "#d65d0e"
   ],
-  "tabnine.experimentalAutoImports": true
+  "tabnine.experimentalAutoImports": true,
 }

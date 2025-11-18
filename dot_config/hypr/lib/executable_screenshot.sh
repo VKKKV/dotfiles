@@ -108,3 +108,4 @@ esac
 if [ -f "${save_dir}/${save_file}" ]; then
 	notify-send -a -i "${save_dir}/${save_file}" "saved in ${save_dir}"
 fi
+
