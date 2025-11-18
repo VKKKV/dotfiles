@@ -1,18 +1,25 @@
 {
+    "include": [
+        "modules-dividers.jsonc"
+    ],
     "layer": "top",
     "position": "top",
+    "margin-top": 0,
     "mod": "dock",
     "height": 10,
-    "exclusive": true,
+    "exclusive": false,
+    "fixed-center": true,
     "passthrough": false,
     "gtk-layer-shell": true,
     "reload_style_on_change": true,
+
     "modules-center": [
+        "custom/left_div#4",
         "clock",
         "pulseaudio",
-        "tray"
+        "tray",
+        "custom/right_div#4"
     ],
-    "modules-right": [],
     "tray": {
         "spacing": 10,
         "tooltip": false
@@ -20,29 +27,6 @@
     "clock": {
         "format": "{:%a, %d %I:%M}",
         "tooltip": true
-    },
-    "cpu": {
-        "format": "cpu {usage}%",
-        "interval": 2,
-        "states": {
-            "critical": 90
-        }
-    },
-    "memory": {
-        "format": "mem {percentage}%",
-        "interval": 2,
-        "states": {
-            "critical": 80
-        }
-    },
-    "battery": {
-        "format": "bat {capacity}%",
-        "interval": 5,
-        "states": {
-            "warning": 20,
-            "critical": 10
-        },
-        "tooltip": false
     },
     "pulseaudio": {
         "scroll-step": 5,
