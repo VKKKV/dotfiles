@@ -3,7 +3,7 @@
         "modules-dividers.jsonc"
     ],
     "layer": "top",
-    "position": "top",
+    "position": "bottom",
     "margin-top": 0,
     "mod": "dock",
     "height": 10,
