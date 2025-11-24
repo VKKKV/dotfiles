@@ -233,4 +233,5 @@
     "#d65d0e"
   ],
   "tabnine.experimentalAutoImports": true,
+  "git.autofetch": true,
 }
