@@ -1,50 +1,32 @@
 {
+    "extensions.updateCheck": "weekly",
+    "extensions.updateUIInTab": true,
     "coc.preferences.autoApplySingleQuickfix": false,
     "coc.preferences.enableLinkedEditing": true,
-    "coc.preferences.formatOnType": true,
     "coc.preferences.useQuickfixForLocations": true,
-    "coc.preferences.enableMessageDialog": false,
+    "coc.preferences.messageDialogKind": "notification",
     "coc.preferences.willSaveHandlerTimeout": 500,
-    "coc.preferences.formatOnSaveFiletypes": [
-        "javascript",
-        "typescript",
-        "python",
-        "go",
-        "lua",
-        "c",
-        "cpp",
-        "java",
-        "json",
-        "nix"
-    ],
-    "[yaml]": {
-        "coc.preferences.formatterExtension": "coc-yaml"
-    },
-    "yaml.format.enable": true,
-    "editor.formatOnSave": true,
+    "coc.preferences.formatOnSave": true,
+    "coc.preferences.formatOnType": true,
+    "coc.preferences.maxFileSize": "20MB",
     "editor.codeActionsOnSave": {
         "source.fixAll.eslint": true,
         "source.organizeImports": true,
         "source.fixAll": true
     },
-    "coc.source.file.ignoreHidden": false,
-    "eslint.autoFixOnSave": true,
-    "eslint.format.enable": true,
-    "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
-    "Lua.completion.callSnippet": "Both",
-    "Lua.diagnostics.globals": [
-        "vim",
-        "jit"
-    ],
-    "Lua.runtime.version": "LuaJIT",
+    "floatFactory.floatConfig": {
+        "border": true,
+        "rounded": true
+    },
+    "npm.binPath": "npm",
     "languageserver": {
         "nix": {
             "command": "nil",
-            "filetypes": [
-                "nix"
-            ],
             "rootPatterns": [
                 "flake.nix"
+            ],
+            "filetypes": [
+                "nix"
             ],
             "settings": {
                 "nil": {
@@ -57,10 +39,31 @@
             }
         }
     },
+    "colors.enable": true,
+    "diagnostic.displayByVimDiagnostic": false,
+    "pullDiagnostic.onChange": true,
+    "pullDiagnostic.onSave": true,
+    "snippets.ultisnips.enable": true,
+    "suggest.floatConfig": {
+        "border": true,
+        "rounded": true,
+        "maxWidth": 80
+    },
+    "suggest.timeout": 2000,
+    "suggest.enablePreselect": true,
+    "coc.source.file.ignoreHidden": false,
+    "eslint.autoFixOnSave": true,
+    "eslint.format.enable": true,
+    "javascript.format.insertSpaceAfterOpeningAndBeforeClosingNonemptyBraces": true,
+    "Lua.completion.callSnippet": "Both",
+    "Lua.diagnostics.globals": [
+        "vim",
+        "jit"
+    ],
+    "Lua.runtime.version": "LuaJIT",
     "python.linting.enabled": true,
     "python.analysis.diagnosticMode": "workspace",
     "python.formatting.provider": "ruff",
-    "snippets.ultisnips.enable": true,
     "tsserver.useLocalTsdk": true,
     "tsserver.enable": true,
     "tsserver.log": "verbose",
@@ -70,28 +73,8 @@
     "typescript.inlayHints.parameterNames.enabled": "all",
     "typescript.inlayHints.variableTypes.enabled": true,
     "typescript.preferences.useAliasesForRenames": false,
-    "codeLens.enable": true,
-    "colors.enable": true,
     "notification.statusLineProgress": true,
     "semanticTokens.enable": true,
-    "diagnostic.displayByVimDiagnostic": false,
-    "pullDiagnostic.onChange": true,
-    "pullDiagnostic.onSave": true,
-    "suggest.floatConfig": {
-        "border": true,
-        "rounded": true,
-        "maxWidth": 80
-    },
-    "signature.enable": true,
-    "signature.target": "float",
-    "signature.preferShownAbove": true,
-    "suggest.minTriggerInputLength": 1,
-    "suggest.noselect": false,
-    "suggest.timeout": 3000,
-    "suggest.enablePreselect": true,
-    "floatFactory.floatConfig": {
-        "border": true
-    },
     "list.source.files.defaultOptions": [
         "--number-select"
     ]
