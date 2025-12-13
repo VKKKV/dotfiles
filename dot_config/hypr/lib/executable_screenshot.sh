@@ -87,13 +87,16 @@ m) # print focused monitor
 	take_screenshot "output"
 	;;
 sc) #? 󱉶 Use 'tesseract' to scan image then add to clipboard
-	check_package tesseract-data-eng tesseract
+	pacman -Qe tesseract-data-eng tesseract imagemagick || {
+        notify-send -a "OCR preview: Missing dependencies" -e -i "dialog-error" "Please install 'tesseract' and 'imagemagick'"
+        exit 1
+    }
 	if ! GEOM=$(slurp); then
 		notify-send -a "OCR preview: Invalid geometry" -e -i "dialog-error"
 		exit 1
 	fi
 	grim -g "${GEOM}" "${temp_screenshot}"
-	pkg_installed imagemagick && magick "${temp_screenshot}" -sigmoidal-contrast 10,50% "${temp_screenshot}"
+    magick "${temp_screenshot}" -sigmoidal-contrast 10,50% "${temp_screenshot}"
 	tesseract "${temp_screenshot}" - | wl-copy
 	notify-send -a "OCR preview" -i "${temp_screenshot}" -e
 	rm -f "${temp_screenshot}"
