@@ -1,0 +1,121 @@
+# Rime default settings
+# encoding: utf-8
+
+config_version: "0.40"
+
+schema_list:
+  - schema: moqi_wan_flypymo_colemak # 墨奇万象·小鹤+Colemak键位
+  - schema: moqi_wan_flypymo # 墨奇万象·小鹤+墨奇形
+  - schema: moqi_single_xh # 墨奇码·顶屏版·小鹤双拼，为了4码自动上屏 只收录了8000字
+
+switcher:
+  caption: options
+  hotkeys:
+    - F4
+  save_options:
+    - ascii_mode
+    - full_shape
+    - traditionalization
+    - emoji
+    - chaifen
+    - big_char_set # 大字集 小字集
+    - mars
+    - ascii_punct
+  fold_options: true
+  abbreviate_options: true
+  option_list_separator: "／"
+
+key_binder:
+  bindings:
+
+menu:
+  page_size: 9 #候选项数
+
+style:
+  horizontal: false #横排为true
+
+punctuator:
+  full_shape:
+    " ": { commit: "　" }
+    ",": { commit: ， }
+    ".": { commit: 。 }
+    "<": [《, 〈, «, ‹]
+    ">": [》, 〉, », ›]
+    "/": [／, ÷]
+    "?": { commit: ？ }
+    ";": { commit: ； }
+    ":": { commit: ： }
+    "'": { pair: ["‘", "’"] }
+    '"': { pair: ["“", "”"] }
+    '\': [、, ＼]
+    "|": [·, ｜, "§", "¦"]
+    "`": ｀
+    "~": ～
+    "!": { commit: ！ }
+    "@": [＠, ☯]
+    "#": [＃, ⌘]
+    "%": [％, "°", "℃"]
+    "$": [￥, "$", "€", "£", "¥", "¢", "¤"]
+    "^": { commit: …… }
+    "&": ＆
+    "*": [＊, ·, ・, ×, ※, ❂]
+    "(": （
+    ")": ）
+    "-": －
+    "_": ——
+    "+": ＋
+    "=": ＝
+    "[": [「, 【, 〔, ［]
+    "]": [」, 】, 〕, ］]
+    "{": [『, 〖, ｛]
+    "}": [』, 〗, ｝]
+  half_shape:
+    ",": "，"
+    ".": "。"
+    "<": "《"
+    ">": "》"
+    "/": [/, ÷]
+    "?": "？"
+    ";": "；"
+    ":": "："
+    "'": { pair: ["‘", "’"] }
+    '"': { pair: ["“", "”"] }
+    # '"' : { commit: '“”' } # 直接输出一对引号
+    '\': "、"
+    "|": ["·", "|", "｜", "§", "¦"]
+    "`": "、"
+    "~": "~"
+    "!": "！"
+    "@": "@"
+    "#": "#"
+    "%": "%"
+    "$": "¥"
+    "^": "……"
+    "&": "&"
+    "*": "*"
+    "(": "（"
+    ")": "）"
+    "-": "-"
+    "_": ——
+    "+": "+"
+    "=": "="
+    "[": "【"
+    "]": "】"
+    "{": "「"
+    "}": "」"
+
+recognizer:
+  patterns:
+    email: "^[A-Za-z][-_.0-9A-Za-z]*@.*$"
+    uppercase: "[A-Z][-_+.'0-9A-Za-z]*$"
+    url: "^(www[.]|https?:|ftp[.:]|mailto:|file:).*$|^[a-z]+[.].+$"
+
+ascii_composer:
+  good_old_caps_lock: true
+  switch_key:
+    Shift_L: commit_code
+    Shift_R: commit_code
+    Control_L: noop
+    Control_R: noop
+    Caps_Lock: clear
+    Eisu_toggle: clear
