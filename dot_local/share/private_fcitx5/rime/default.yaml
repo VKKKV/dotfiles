@@ -117,31 +117,6 @@ punctuator:
 
 key_binder:
   bindings:
-    # for colemak layout
-    - { when: has_menu, accept: o, send: 2 }
-    - { when: has_menu, accept: slash, send: 3 }
-
-    - { when: always, accept: f, send: e }
-    - { when: always, accept: p, send: r }
-    - { when: always, accept: b, send: t }
-    - { when: always, accept: j, send: y }
-    - { when: always, accept: l, send: u }
-    - { when: always, accept: u, send: i }
-    - { when: always, accept: y, send: o }
-    - { when: always, accept: semicolon, send: p }
-    - { when: always, accept: r, send: s }
-    - { when: always, accept: s, send: d }
-    - { when: always, accept: t, send: f }
-    - { when: always, accept: m, send: h }
-    - { when: always, accept: n, send: j }
-    - { when: always, accept: e, send: k }
-    - { when: always, accept: i, send: l }
-    - { when: always, accept: o, send: semicolon }
-    - { when: always, accept: d, send: v }
-    - { when: always, accept: v, send: b }
-    - { when: always, accept: k, send: n }
-    - { when: always, accept: h, send: m }
-
     # Tab / Shift+Tab 切换光标至下/上一个拼音
     # - { when: composing, accept: Shift+Tab, send: Shift+Left }
     # - { when: composing, accept: Tab, send: Shift+Right }
