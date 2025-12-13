@@ -60,7 +60,7 @@ nnoremap <silent> <Leader>j :wincmd j<CR>
 nnoremap <silent> <Leader>k :wincmd k<CR>
 nnoremap <silent> <Leader>l :wincmd l<CR>
 " system copy need wl-clipboard
-xnoremap <silent> cp :w !wl-copy<CR><CR>
+xnoremap <silent> <leader>y :w !wl-copy<CR><CR>
 nnoremap <C-L> :nohlsearch<CR><C-L>
 
 filetype plugin indent on
@@ -92,7 +92,7 @@ nnoremap <Leader>ff :Files!<CR>
 nnoremap <Leader>fr :Rg!<CR>
 nnoremap <Leader>fh :History!<CR>
 nnoremap <Leader>fb :Buffers!<CR>
-nnoremap <Leader>/ :Lines!<CR>
+nnoremap <Leader>ft :Lines!<CR>
 nnoremap <Leader>fh :History!<CR>
 
 Plug 'kaarmu/typst.vim'
@@ -137,7 +137,7 @@ let g:copilot_no_tab_map = v:true
 imap <silent><script><expr> <C-a> copilot#Accept("\<CR>")
 imap <silent> <C-r> <Plug>(copilot-suggest)
 nmap <silent> <leader>, :Copilot enable<CR>
-nmap <silent> <leader>. :Copilot enable<CR>
+nmap <silent> <leader>. :Copilot disable<CR>
 
 Plug 'tpope/vim-fugitive'
 
