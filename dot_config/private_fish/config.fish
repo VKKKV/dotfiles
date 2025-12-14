@@ -1,6 +1,6 @@
 if status is-interactive
     set -U fish_greeting ""
-    set -gx EDITOR vim
+    set -gx EDITOR nvim
     set -gx PATH $PATH ./node_modules/.bin $HOME/.local/bin
     alias cp='cp -r'
     alias diff="diff --color=auto"
@@ -9,6 +9,7 @@ if status is-interactive
     alias grep="grep --color=auto"
     alias ip="ip -color=auto"
     alias mkdir='mkdir -p'
+    alias vim='nvim'
 
     alias gpg='gpg --pinentry-mode loopback'
     alias lg='lazygit'
