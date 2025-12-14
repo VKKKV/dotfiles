@@ -1,6 +1,4 @@
--- ========================================================================== --
---  BOOTSTRAP LAZY.NVIM
--- ========================================================================== --
+-- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
     vim.fn.system({
@@ -14,17 +12,14 @@ if not vim.loop.fs_stat(lazypath) then
 end
 vim.opt.rtp:prepend(lazypath)
 
--- Leader must be set before loading lazy
 vim.g.mapleader = " "
 
--- ========================================================================== --
 --  PLUGINS
--- ========================================================================== --
 require("lazy").setup({
     -- CORE: Icons (Required by many plugins)
     "nvim-tree/nvim-web-devicons",
 
-    -- CORE: Syntax Highlighting (Replaces simple syntax)
+    -- CORE: Syntax Highlighting
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
@@ -32,16 +27,21 @@ require("lazy").setup({
         config = function()
             require("nvim-treesitter.configs").setup({
                 ensure_installed = {
-                "vimdoc", "javascript", "typescript", "c", "lua", "rust",
-                "jsdoc", "bash", "typst", "svelte", "python",
+                    "bash",
+                    "c",
+                    "javascript",
+                    "jsdoc",
                     "lua",
-                    "vim",
-                    "vimdoc",
                     "markdown",
                     "markdown_inline",
-                    "vue",
-                    "javascript",
+                    "python",
+                    "rust",
                     "typescript",
+                    "typst",
+                    "vim",
+                    "vimdoc",
+                    "vue",
+                    "glsl",
                 },
                 auto_install = true,
                 indent = { enable = true },
@@ -69,38 +69,26 @@ require("lazy").setup({
         end,
     },
 
-    -- bufferline
-    {
-        "akinsho/bufferline.nvim",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        config = function()
-            require("bufferline").setup({
-                options = {
-                    offsets = {
-                        {
-                            filetype = "NvimTree",
-                            text = "File Explorer",
-                            text_align = "left",
-                            separator = true,
-                        },
-                    },
-                },
-            })
-        end,
-    },
-
-    -- UI: Status Line (Replaces Airline)
+    -- UI: Status Line
     {
         "nvim-lualine/lualine.nvim",
         dependencies = { "nvim-tree/nvim-web-devicons" },
         config = function()
             require("lualine").setup({
                 options = { theme = "gruvbox" },
+                tabline = {
+                  lualine_a = {'buffers'},
+                  lualine_b = {'branch'},
+                  lualine_c = {'filename'},
+                  lualine_x = {},
+                  lualine_y = {},
+                  lualine_z = {'tabs'}
+                }
             })
         end,
     },
 
-    -- UI: File Explorer (Replaces NERDTree)
+    -- UI: File Explorer
     {
         "nvim-tree/nvim-tree.lua",
         keys = { { "<leader>e", ":NvimTreeToggle<CR>" } },
@@ -113,7 +101,7 @@ require("lazy").setup({
         end,
     },
 
-    -- UI: Fuzzy Finder (Replaces FZF)
+    -- UI: Fuzzy Finder
     {
         "nvim-telescope/telescope.nvim",
         dependencies = { "nvim-lua/plenary.nvim" },
@@ -125,21 +113,21 @@ require("lazy").setup({
         },
     },
 
-    -- UI: Indent Guides (Replaces vim-indent-guides)
+    -- UI: Indent Guides
     {
         "lukas-reineke/indent-blankline.nvim",
         main = "ibl",
         opts = {},
     },
 
-    -- EDITOR: Commenting (Replaces tcomment_vim)
+    -- EDITOR: Commenting
     {
         "numToStr/Comment.nvim",
         opts = {},
         lazy = false,
     },
 
-    -- EDITOR: Surround (Replaces vim-surround)
+    -- EDITOR: Surround
     {
         "kylechui/nvim-surround",
         event = "VeryLazy",
@@ -151,7 +139,7 @@ require("lazy").setup({
     -- EDITOR: Multi Cursor (Kept vim-visual-multi as it has no equal pure-lua replacement yet)
     { "mg979/vim-visual-multi", branch = "master" },
 
-    -- EDITOR: Auto Pairs (Replaces auto-closing manually)
+    -- EDITOR: Auto Pairs
     {
         "windwp/nvim-autopairs",
         event = "InsertEnter",
@@ -167,7 +155,7 @@ require("lazy").setup({
         end,
     },
 
-    -- LSP: Native LSP Config (Replaces CoC)
+    -- LSP: Native LSP Config
     {
         "neovim/nvim-lspconfig",
         dependencies = {
@@ -190,7 +178,6 @@ require("lazy").setup({
             require("conform").setup({
                 formatters_by_ft = {
                     nix = { "alejandra" },
-                    lua = { "stylua" },
                 },
                 -- format_on_save = {
                 --     timeout_ms = 300,
@@ -207,6 +194,7 @@ require("lazy").setup({
                     "rust_analyzer",
                     "nil_ls",
                     "marksman",
+                    "glsl_analyzer",
                 },
                 handlers = {
                     function(server_name)
@@ -245,6 +233,8 @@ require("lazy").setup({
                     ["<C-f>"] = cmp.mapping.scroll_docs(4),
                     ["<C-Space>"] = cmp.mapping.complete(),
                     ["<C-e>"] = cmp.mapping.abort(),
+                    ["<Tab>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+                    ["<S-Tab>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
                     ["<CR>"] = cmp.mapping.confirm({ select = true }),
                 }),
                 window = {
@@ -314,7 +304,7 @@ require("lazy").setup({
         end,
     },
 
-    -- TYPST PREVIEW (Replaces kaarmu/typst.vim)
+    -- TYPST PREVIEW
     {
         "chomosuke/typst-preview.nvim",
         ft = "typst",
@@ -323,7 +313,7 @@ require("lazy").setup({
         end,
     },
 
-    -- COPILOT (Replaces copilot.vim with lua version for better speed)
+    -- COPILOT
     {
         "zbirenbaum/copilot.lua",
         cmd = "Copilot",
@@ -344,9 +334,7 @@ require("lazy").setup({
     },
 })
 
--- ========================================================================== --
---  OPTIONS & KEYMAPS
--- ========================================================================== --
+-- Keymaps
 local opt = vim.opt
 
 -- Settings
@@ -371,7 +359,6 @@ opt.list = true
 opt.incsearch = true
 opt.hlsearch = true
 
-opt.guicursor = ""
 opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20" -- Keymaps
 opt.ignorecase = true
 opt.smartcase = true
@@ -380,9 +367,6 @@ opt.undofile = true
 opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 
 opt.foldopen = "mark,percent,quickfix,search,tag,undo"
-
--- opt.swapfile = false
--- opt.backup = false
 
 local keymap = vim.keymap.set
 
@@ -396,7 +380,7 @@ keymap("n", "<leader>p", ":bp<CR>")
 
 -- System clipboard
 keymap({ "n", "v" }, "<leader>y", '"+y')
-keymap({ "n", "v" }, "<leader>d", '"+d')
+-- keymap({ "n", "v" }, "<leader>d", '"+d')
 
 -- Window navigation
 keymap("n", "<leader>h", "<C-w>h")
@@ -405,10 +389,10 @@ keymap("n", "<leader>k", "<C-w>k")
 keymap("n", "<leader>l", "<C-w>l")
 
 -- Resize
--- keymap("n", "<C-Left>", ":resize -2<CR>")
--- keymap("n", "<C-Right>", ":resize +2<CR>")
--- keymap("n", "<C-Up>", ":vertical resize -2<CR>")
--- keymap("n", "<C-Down>", ":vertical resize +2<CR>")
+keymap("n", "<C-Left>", ":resize -2<CR>")
+keymap("n", "<C-Right>", ":resize +2<CR>")
+keymap("n", "<C-Up>", ":vertical resize -2<CR>")
+keymap("n", "<C-Down>", ":vertical resize +2<CR>")
 
 -- Autocommands
 local autocmd = vim.api.nvim_create_autocmd
@@ -430,7 +414,7 @@ autocmd("LspAttach", {
 
         -- vim.keymap.set("n", "<leader>p", ":TypstPreview<CR>", opts)
         -- vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-        -- vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
-        -- vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
+        vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
+        vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
     end,
 })
