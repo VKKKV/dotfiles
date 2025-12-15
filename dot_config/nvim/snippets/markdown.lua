@@ -19,6 +19,9 @@ local conds = require("luasnip.extras.expand_conditions")
 local events = require("luasnip.util.events")
 
 return {
+    -- delete line
+    s("~~", fmt([[~~{}~~{}]], { i(1), i(0) })),
+
     -- Italics
     s({ trig = "*", priority = -50 }, {
         t("*"),
@@ -26,6 +29,7 @@ return {
         t("*"),
         i(0),
     }),
+
     -- Bold
     s({ trig = "**", priority = -50 }, {
         t("**"),
