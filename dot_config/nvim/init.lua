@@ -13,33 +13,27 @@ end
 vim.opt.rtp:prepend(lazypath)
 
 vim.g.mapleader = " "
-
 --  PLUGINS
 require("lazy").setup({
-    -- CORE: Icons (Required by many plugins)
+    -- CORE: Icons
     "nvim-tree/nvim-web-devicons",
-
     -- CORE: Syntax Highlighting
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
-
         config = function()
             require("nvim-treesitter.configs").setup({
                 ensure_installed = {
                     "bash",
                     "c",
                     "javascript",
-                    "jsdoc",
                     "lua",
                     "markdown",
-                    "markdown_inline",
                     "python",
                     "rust",
                     "typescript",
                     "typst",
                     "vim",
-                    "vimdoc",
                     "vue",
                     "glsl",
                 },
@@ -68,7 +62,6 @@ require("lazy").setup({
             })
         end,
     },
-
     -- UI: Status Line
     {
         "nvim-lualine/lualine.nvim",
@@ -77,30 +70,90 @@ require("lazy").setup({
             require("lualine").setup({
                 options = { theme = "gruvbox" },
                 tabline = {
-                  lualine_a = {'buffers'},
-                  lualine_b = {'branch'},
-                  lualine_c = {'filename'},
-                  lualine_x = {},
-                  lualine_y = {},
-                  lualine_z = {'tabs'}
-                }
+                    lualine_a = { "buffers" },
+                    lualine_b = { "branch" },
+                    lualine_c = { "filename" },
+                    lualine_x = {},
+                    lualine_y = {},
+                    lualine_z = { "tabs" },
+                },
             })
         end,
     },
-
     -- UI: File Explorer
     {
-        "nvim-tree/nvim-tree.lua",
-        keys = { { "<leader>e", ":NvimTreeToggle<CR>" } },
+        "nvim-neo-tree/neo-tree.nvim",
+        branch = "v3.x",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "MunifTanjim/nui.nvim",
+            "nvim-tree/nvim-web-devicons",
+        },
+        keys = { { "<leader>e", ":Neotree toggle<CR>" } },
         config = function()
-            require("nvim-tree").setup({
-                view = { width = 30 },
-                renderer = { group_empty = true },
-                filters = { dotfiles = false },
+            require("neo-tree").setup({
+                filesystem = {
+                    commands = {
+                        avante_add_files = function(state)
+                            local node = state.tree:get_node()
+                            local filepath = node:get_id()
+                            local relative_path = require("avante.utils").relative_path(filepath)
+
+                            local sidebar = require("avante").get()
+
+                            local open = sidebar:is_open()
+                            -- 确保 avante 侧边栏已打开
+                            if not open then
+                                require("avante.api").ask()
+                                sidebar = require("avante").get()
+                            end
+
+                            sidebar.file_selector:add_selected_file(relative_path)
+
+                            -- 删除 neo tree 缓冲区
+                            if not open then
+                                sidebar.file_selector:remove_selected_file("neo-tree filesystem [1]")
+                            end
+                        end,
+                    },
+                    window = {
+                        mappings = {
+                            ["oa"] = "avante_add_files",
+                        },
+                    },
+                },
             })
         end,
     },
-
+    {
+        "antosha417/nvim-lsp-file-operations",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-neo-tree/neo-tree.nvim", -- makes sure that this loads after Neo-tree.
+        },
+        config = function()
+            require("lsp-file-operations").setup()
+        end,
+    },
+    {
+        "s1n7ax/nvim-window-picker",
+        version = "2.*",
+        config = function()
+            require("window-picker").setup({
+                filter_rules = {
+                    include_current_win = false,
+                    autoselect_one = true,
+                    -- filter using buffer options
+                    bo = {
+                        -- if the file type is one of following, the window will be ignored
+                        filetype = { "neo-tree", "neo-tree-popup", "notify" },
+                        -- if the buffer type is one of following, the window will be ignored
+                        buftype = { "terminal", "quickfix" },
+                    },
+                },
+            })
+        end,
+    },
     -- UI: Fuzzy Finder
     {
         "nvim-telescope/telescope.nvim",
@@ -112,21 +165,18 @@ require("lazy").setup({
             { "<leader>fh", "<cmd>Telescope help_tags<cr>" },
         },
     },
-
     -- UI: Indent Guides
     {
         "lukas-reineke/indent-blankline.nvim",
         main = "ibl",
         opts = {},
     },
-
     -- EDITOR: Commenting
     {
         "numToStr/Comment.nvim",
         opts = {},
         lazy = false,
     },
-
     -- EDITOR: Surround
     {
         "kylechui/nvim-surround",
@@ -135,17 +185,14 @@ require("lazy").setup({
             require("nvim-surround").setup({})
         end,
     },
-
     -- EDITOR: Multi Cursor (Kept vim-visual-multi as it has no equal pure-lua replacement yet)
     { "mg979/vim-visual-multi", branch = "master" },
-
     -- EDITOR: Auto Pairs
     {
         "windwp/nvim-autopairs",
         event = "InsertEnter",
         opts = {},
     },
-
     -- THEME: Gruvbox
     {
         "ellisonleao/gruvbox.nvim",
@@ -154,11 +201,22 @@ require("lazy").setup({
             vim.cmd.colorscheme("gruvbox")
         end,
     },
+    -- SNIPPETS: LuaSnip
+    {
+        "L3MON4D3/LuaSnip",
+        version = "v2.*",
+        build = "make install_jsregexp",
 
+        config = function()
+            -- require("luasnip").setup({ enable_autosnippets = true })
+            require("luasnip.loaders.from_lua").load({ paths = "./snippets" })
+        end,
+    },
     -- LSP: Native LSP Config
     {
         "neovim/nvim-lspconfig",
         dependencies = {
+            "stevearc/conform.nvim",
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
             "hrsh7th/cmp-nvim-lsp",
@@ -166,33 +224,36 @@ require("lazy").setup({
             "hrsh7th/cmp-path",
             "hrsh7th/cmp-cmdline",
             "hrsh7th/nvim-cmp",
-            "L3MON4D3/LuaSnip",
             "saadparwaiz1/cmp_luasnip",
-            -- Formatting engine
-            "stevearc/conform.nvim",
         },
         config = function()
             local cmp = require("cmp")
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
 
+            -- formatter settings
             require("conform").setup({
                 formatters_by_ft = {
                     nix = { "alejandra" },
+                    lua = { "mystylua" },
+                    python = { "isort", "black" },
                 },
-                -- format_on_save = {
-                --     timeout_ms = 300,
-                --     lsp_format = "fallback",
-                -- },
+                formatters = {
+                    mystylua = {
+                        command = "stylua",
+                        args = { "--indent-type", "Spaces", "--indent-width", "4", "-" },
+                    },
+                },
+                format_on_save = { timeout_ms = 500, lsp_fallback = true },
             })
 
             -- Setup Mason (Installer for LSPs)
             require("mason").setup()
             require("mason-lspconfig").setup({
                 ensure_installed = {
+                    "nil_ls",
                     "lua_ls",
                     "tinymist",
                     "rust_analyzer",
-                    "nil_ls",
                     "marksman",
                     "glsl_analyzer",
                 },
@@ -205,21 +266,23 @@ require("lazy").setup({
 
                     ["lua_ls"] = function()
                         local lspconfig = require("lspconfig")
-                        lspconfig.lua_ls.setup {
+                        lspconfig.lua_ls.setup({
                             capabilities = capabilities,
                             settings = {
                                 Lua = {
                                     runtime = { version = "Lua 5.1" },
                                     diagnostics = {
                                         globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
-                                    }
-                                }
-                            }
-                        }
+                                    },
+                                },
+                            },
+                        })
                     end,
-
                 },
             })
+
+            local luasnip = require("luasnip")
+            local cmp_select = { behavior = cmp.SelectBehavior.Select }
 
             -- Autocomplete setup
             cmp.setup({
@@ -229,26 +292,42 @@ require("lazy").setup({
                     end,
                 },
                 mapping = cmp.mapping.preset.insert({
-                    ["<C-b>"] = cmp.mapping.scroll_docs(-4),
-                    ["<C-f>"] = cmp.mapping.scroll_docs(4),
+                    ["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
+                    ["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
+
                     ["<C-Space>"] = cmp.mapping.complete(),
-                    ["<C-e>"] = cmp.mapping.abort(),
-                    ["<Tab>"] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
-                    ["<S-Tab>"] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-                    ["<CR>"] = cmp.mapping.confirm({ select = true }),
+                    ["<CR>"] = cmp.mapping(function(fallback)
+                        if cmp.visible() then
+                            if luasnip.expandable() then
+                                luasnip.expand()
+                            else
+                                cmp.confirm({
+                                    select = true,
+                                })
+                            end
+                        else
+                            fallback()
+                        end
+                    end),
+                    ["<Tab>"] = cmp.mapping(function(fallback)
+                        if cmp.visible() then
+                            cmp.select_next_item()
+                        elseif luasnip.locally_jumpable(1) then
+                            luasnip.jump(1)
+                        else
+                            fallback()
+                        end
+                    end, { "i", "s" }),
+                    ["<S-Tab>"] = cmp.mapping(function(fallback)
+                        if cmp.visible() then
+                            cmp.select_prev_item()
+                        elseif luasnip.locally_jumpable(-1) then
+                            luasnip.jump(-1)
+                        else
+                            fallback()
+                        end
+                    end, { "i", "s" }),
                 }),
-                window = {
-                    completion = {
-                        scrollbar = false,
-                        border = "rounded",
-                        winhighlight = "Normal:CmpNormal",
-                    },
-                    documentation = {
-                        scrollbar = false,
-                        border = "rounded",
-                        winhighlight = "Normal:CmpNormal",
-                    }
-                },
                 sources = cmp.config.sources({
                     { name = "nvim_lsp" },
                     { name = "luasnip" },
@@ -258,7 +337,6 @@ require("lazy").setup({
             })
         end,
     },
-
     -- Trouble
     {
         "folke/trouble.nvim",
@@ -282,13 +360,12 @@ require("lazy").setup({
             },
         },
         config = function()
-            require("trouble").setup {
+            require("trouble").setup({
                 focus = true,
                 warn_no_results = false,
-            }
-        end
+            })
+        end,
     },
-
     -- MARKDOWN PREVIEW
     {
         "iamcco/markdown-preview.nvim",
@@ -303,7 +380,6 @@ require("lazy").setup({
             vim.g.mkdp_auto_close = 1
         end,
     },
-
     -- TYPST PREVIEW
     {
         "chomosuke/typst-preview.nvim",
@@ -312,7 +388,6 @@ require("lazy").setup({
             require("typst-preview").update()
         end,
     },
-
     -- COPILOT
     {
         "zbirenbaum/copilot.lua",
@@ -324,13 +399,74 @@ require("lazy").setup({
                     enabled = true,
                     auto_trigger = true,
                     keymap = {
-                        accept = "<C-A>", -- Ctrl+A to accept
+                        accept = "<C-A>",
                     },
                 },
                 panel = { enabled = false },
-                filetypes = { markdown = false, help = false }, -- disable for markdown
+                filetypes = { markdown = false, help = false },
             })
         end,
+    },
+    -- AI
+    {
+        "yetone/avante.nvim",
+        build = "make",
+        event = "VeryLazy",
+        version = false, -- 永远不要将此值设置为 "*"！永远不要！
+        ---@module 'avante'
+        ---@type avante.Config
+        opts = {
+            provider = "siliconflow",
+            providers = {
+                claude = {
+                    endpoint = "https://api.anthropic.com",
+                    model = "claude-sonnet-4-20250514",
+                    timeout = 30000,
+                    extra_request_body = {
+                        temperature = 0.75,
+                        max_tokens = 20480,
+                    },
+                },
+                siliconflow = {
+                    __inherited_from = "openai",
+                    endpoint = "https://api.siliconflow.cn/v1",
+                    api_key_name = "SILICONFLOW_API_KEY",
+                    model = "MiniMaxAI/MiniMax-M2",
+                },
+                openrouter = {
+                    __inherited_from = "openai",
+                    endpoint = "https://openrouter.ai/api/v1",
+                    api_key_name = "OPENROUTER_API_KEY",
+                    model = "deepseek/deepseek-r1",
+                },
+            },
+        },
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "MunifTanjim/nui.nvim",
+            --- 以下依赖项是可选的，
+            "echasnovski/mini.pick", -- 用于文件选择器提供者 mini.pick
+            "nvim-telescope/telescope.nvim", -- 用于文件选择器提供者 telescope
+            "hrsh7th/nvim-cmp", -- avante 命令和提及的自动完成
+            "ibhagwan/fzf-lua", -- 用于文件选择器提供者 fzf
+            "nvim-tree/nvim-web-devicons", -- 或 echasnovski/mini.icons
+            "zbirenbaum/copilot.lua", -- 用于 providers='copilot'
+            {
+                -- 支持图像粘贴
+                "HakonHarnes/img-clip.nvim",
+                event = "VeryLazy",
+                opts = {
+                    -- 推荐设置
+                    default = {
+                        embed_image_as_base64 = false,
+                        prompt_for_file_name = false,
+                        drag_and_drop = {
+                            insert_mode = true,
+                        },
+                    },
+                },
+            },
+        },
     },
 })
 
@@ -338,28 +474,31 @@ require("lazy").setup({
 local opt = vim.opt
 
 -- Settings
+opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20" -- Keymaps
 opt.number = true
 opt.relativenumber = true
 opt.shiftwidth = 4
-
-opt.tabstop = 4
-opt.softtabstop = 4
-opt.expandtab = true
-
-opt.smartindent = true
-opt.wrap = true
 opt.scrolloff = 4
 opt.termguicolors = true
 opt.signcolumn = "yes"
+opt.smartindent = true
+opt.wrap = true
 opt.updatetime = 50
+opt.list = true
+
+opt.cursorcolumn = true
+opt.cursorline = true
+
+opt.tabstop = 4
+opt.expandtab = true
+opt.softtabstop = 4
+
 opt.splitbelow = true
 opt.splitright = true
-opt.list = true
 
 opt.incsearch = true
 opt.hlsearch = true
 
-opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20" -- Keymaps
 opt.ignorecase = true
 opt.smartcase = true
 
@@ -380,13 +519,6 @@ keymap("n", "<leader>p", ":bp<CR>")
 
 -- System clipboard
 keymap({ "n", "v" }, "<leader>y", '"+y')
--- keymap({ "n", "v" }, "<leader>d", '"+d')
-
--- Window navigation
-keymap("n", "<leader>h", "<C-w>h")
-keymap("n", "<leader>j", "<C-w>j")
-keymap("n", "<leader>k", "<C-w>k")
-keymap("n", "<leader>l", "<C-w>l")
 
 -- Resize
 keymap("n", "<C-Left>", ":resize -2<CR>")
@@ -394,7 +526,17 @@ keymap("n", "<C-Right>", ":resize +2<CR>")
 keymap("n", "<C-Up>", ":vertical resize -2<CR>")
 keymap("n", "<C-Down>", ":vertical resize +2<CR>")
 
--- Autocommands
+-- Comment
+-- Use Ctrl+/ to toggle comments in normal and visual mode
+keymap("n", "<C-_>", function()
+    vim.api.nvim_feedkeys("gcc", "x", true)
+end, { desc = "Toggle Line Comment" })
+
+keymap("v", "<C-_>", function()
+    vim.api.nvim_feedkeys("gb", "v", true)
+end, { desc = "Toggle Line Comment" })
+
+-- Auto Commands
 local autocmd = vim.api.nvim_create_autocmd
 
 autocmd("BufWritePre", {
@@ -405,16 +547,24 @@ autocmd("BufWritePre", {
 autocmd("LspAttach", {
     callback = function(e)
         local opts = { buffer = e.buf }
-        vim.keymap.set("n", "gd", function() vim.lsp.buf.definition() end, opts)
-        vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
+        vim.keymap.set("n", "<leader>d", function()
+            vim.lsp.buf.definition()
+        end, opts)
+        vim.keymap.set("n", "K", function()
+            vim.lsp.buf.hover()
+        end, opts)
 
         vim.keymap.set("n", "<leader>=", vim.lsp.buf.format)
-        vim.keymap.set("n", "<leader>la", function() vim.lsp.buf.code_action() end, opts)
-        vim.keymap.set("n", "<leader>lr", function() vim.lsp.buf.rename() end, opts)
+        vim.keymap.set("n", "<leader>la", function()
+            vim.lsp.buf.code_action()
+        end, opts)
+        vim.keymap.set("n", "<leader>lr", function()
+            vim.lsp.buf.rename()
+        end, opts)
 
+        -- vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
+        -- vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
         -- vim.keymap.set("n", "<leader>p", ":TypstPreview<CR>", opts)
         -- vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
-        vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
-        vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
     end,
 })
