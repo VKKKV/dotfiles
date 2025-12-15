@@ -11,7 +11,7 @@ if not vim.loop.fs_stat(lazypath) then
     })
 end
 vim.opt.rtp:prepend(lazypath)
-
+-- Set leader key
 vim.g.mapleader = " "
 --  PLUGINS
 require("lazy").setup({
@@ -20,26 +20,14 @@ require("lazy").setup({
     -- CORE: Syntax Highlighting
     {
         "nvim-treesitter/nvim-treesitter",
+        lazy = false,
         build = ":TSUpdate",
         config = function()
-            require("nvim-treesitter.configs").setup({
-                ensure_installed = {
-                    "bash",
-                    "c",
-                    "javascript",
-                    "lua",
-                    "markdown",
-                    "python",
-                    "rust",
-                    "typescript",
-                    "typst",
-                    "vim",
-                    "vue",
-                    "glsl",
-                },
+            require("nvim-treesitter").setup({
+                ensure_installed = { "bash", "c", "javascript", "lua", "markdown", "python", "rust", "typescript", "typst", "vim", "vue", "glsl", },
+                sync_install = false,
                 auto_install = true,
                 indent = { enable = true },
-
                 highlight = {
                     enable = true,
                     disable = function(lang, buf)
@@ -47,7 +35,7 @@ require("lazy").setup({
                             print("disabled treesitter for html")
                             return true
                         end
-                        local max_filesize = 100 * 1024 -- 100 KB
+                        local max_filesize = 233 * 1024 -- 233 KB
                         local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
                         if ok and stats and stats.size > max_filesize then
                             vim.notify(
@@ -185,7 +173,10 @@ require("lazy").setup({
             require("nvim-surround").setup({})
         end,
     },
-    -- EDITOR: Multi Cursor (Kept vim-visual-multi as it has no equal pure-lua replacement yet)
+    -- EDITOR: Multi Cursor
+    -- default keymaps:
+    -- Ctrl-n to select word and add cursorcolumn
+    -- Ctrl-Down / Ctrl-Up to add cursor below/above
     { "mg979/vim-visual-multi", branch = "master" },
     -- EDITOR: Auto Pairs
     {
@@ -208,7 +199,7 @@ require("lazy").setup({
         build = "make install_jsregexp",
 
         config = function()
-            -- require("luasnip").setup({ enable_autosnippets = true })
+            require("luasnip").setup({ enable_autosnippets = true })
             require("luasnip.loaders.from_lua").load({ paths = "./snippets" })
         end,
     },
@@ -235,7 +226,7 @@ require("lazy").setup({
                 formatters_by_ft = {
                     nix = { "alejandra" },
                     lua = { "mystylua" },
-                    python = { "isort", "black" },
+                    python = { "ruff", "black" },
                 },
                 formatters = {
                     mystylua = {
@@ -243,20 +234,13 @@ require("lazy").setup({
                         args = { "--indent-type", "Spaces", "--indent-width", "4", "-" },
                     },
                 },
-                format_on_save = { timeout_ms = 500, lsp_fallback = true },
+                -- format_on_save = { timeout_ms = 500, lsp_fallback = true },
             })
 
             -- Setup Mason (Installer for LSPs)
             require("mason").setup()
             require("mason-lspconfig").setup({
-                ensure_installed = {
-                    "nil_ls",
-                    "lua_ls",
-                    "tinymist",
-                    "rust_analyzer",
-                    "marksman",
-                    "glsl_analyzer",
-                },
+                ensure_installed = { "nil_ls", "lua_ls", "tinymist", "rust_analyzer", "marksman", "glsl_analyzer", },
                 handlers = {
                     function(server_name)
                         require("lspconfig")[server_name].setup({
@@ -291,6 +275,7 @@ require("lazy").setup({
                         require("luasnip").lsp_expand(args.body)
                     end,
                 },
+                -- Autocomplete keymaps
                 mapping = cmp.mapping.preset.insert({
                     ["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
                     ["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
@@ -366,15 +351,13 @@ require("lazy").setup({
             })
         end,
     },
+    -- PREVIEW
     -- MARKDOWN PREVIEW
     {
         "iamcco/markdown-preview.nvim",
         cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
         ft = { "markdown" },
-        build = function()
-            vim.fn["mkdp#util#install"]()
-        end,
-        keys = { { "<leader>o", "<cmd>MarkdownPreviewToggle<cr>" } },
+        build = function() vim.fn["mkdp#util#install"]() end,
         config = function()
             vim.g.mkdp_auto_start = 0
             vim.g.mkdp_auto_close = 1
@@ -384,9 +367,7 @@ require("lazy").setup({
     {
         "chomosuke/typst-preview.nvim",
         ft = "typst",
-        build = function()
-            require("typst-preview").update()
-        end,
+        build = function() require("typst-preview").update() end,
     },
     -- COPILOT
     {
@@ -398,6 +379,7 @@ require("lazy").setup({
                 suggestion = {
                     enabled = true,
                     auto_trigger = true,
+                    -- keymap to accept suggestion
                     keymap = {
                         accept = "<C-A>",
                     },
@@ -412,7 +394,7 @@ require("lazy").setup({
         "yetone/avante.nvim",
         build = "make",
         event = "VeryLazy",
-        version = false, -- 永远不要将此值设置为 "*"！永远不要！
+        version = false,
         ---@module 'avante'
         ---@type avante.Config
         opts = {
@@ -470,7 +452,6 @@ require("lazy").setup({
     },
 })
 
--- Keymaps
 local opt = vim.opt
 
 -- Settings
@@ -507,6 +488,7 @@ opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
 
 opt.foldopen = "mark,percent,quickfix,search,tag,undo"
 
+-- Keymaps
 local keymap = vim.keymap.set
 
 keymap("n", "<leader>w", "<CMD>write<CR>", { silent = true })
@@ -521,18 +503,18 @@ keymap("n", "<leader>p", ":bp<CR>")
 keymap({ "n", "v" }, "<leader>y", '"+y')
 
 -- Resize
-keymap("n", "<C-Left>", ":resize -2<CR>")
-keymap("n", "<C-Right>", ":resize +2<CR>")
-keymap("n", "<C-Up>", ":vertical resize -2<CR>")
-keymap("n", "<C-Down>", ":vertical resize +2<CR>")
+keymap("n", "<leader>h", ":resize -2<CR>")
+keymap("n", "<leader>l", ":resize +2<CR>")
+keymap("n", "<leader>k", ":vertical resize -2<CR>")
+keymap("n", "<leader>j", ":vertical resize +2<CR>")
 
 -- Comment
 -- Use Ctrl+/ to toggle comments in normal and visual mode
-keymap("n", "<C-_>", function()
+keymap("n", "<C-/>", function()
     vim.api.nvim_feedkeys("gcc", "x", true)
 end, { desc = "Toggle Line Comment" })
 
-keymap("v", "<C-_>", function()
+keymap("v", "<C-/>", function()
     vim.api.nvim_feedkeys("gb", "v", true)
 end, { desc = "Toggle Line Comment" })
 
@@ -541,7 +523,29 @@ local autocmd = vim.api.nvim_create_autocmd
 
 autocmd("BufWritePre", {
     pattern = "*",
-    command = ":%s/\\s\\+$//e", -- Remove trailing whitespace
+    command = ":%s/\\s\\+$//e",
+})
+
+autocmd("FileType", {
+  pattern = "typst",
+  callback = function()
+    vim.keymap.set("n", "<leader>o", ":TypstPreviewToggle<CR>", {
+        noremap = true,
+        silent = true,
+        desc = "Toggle Typst Preview",
+    })
+  end,
+})
+
+autocmd("FileType", {
+  pattern = "markdown",
+  callback = function()
+    vim.keymap.set("n", "<leader>o", ":MarkdownPreviewToggle<CR>", {
+        noremap = true,
+        silent = true,
+        desc = "Start Markdown Preview",
+    })
+  end,
 })
 
 autocmd("LspAttach", {
@@ -554,7 +558,17 @@ autocmd("LspAttach", {
             vim.lsp.buf.hover()
         end, opts)
 
-        vim.keymap.set("n", "<leader>=", vim.lsp.buf.format)
+        -- format key
+        -- vim.keymap.set("n", "<leader>=", vim.lsp.buf.format)
+
+        -- Use conform.nvim for formatting
+        vim.keymap.set({ "n", "v" }, "<leader>=", function()
+            require("conform").format({
+                async = true,
+                lsp_fallback = true, -- Fallback to LSP formatting if no CLI formatter is found
+            })
+        end, { desc = "Format code" })
+
         vim.keymap.set("n", "<leader>la", function()
             vim.lsp.buf.code_action()
         end, opts)
