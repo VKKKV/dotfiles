@@ -510,13 +510,9 @@ keymap("n", "<leader>j", ":vertical resize +2<CR>")
 
 -- Comment
 -- Use Ctrl+/ to toggle comments in normal and visual mode
-keymap("n", "<C-/>", function()
-    vim.api.nvim_feedkeys("gcc", "x", true)
-end, { desc = "Toggle Line Comment" })
+keymap("n", "<C-/>", function() vim.api.nvim_feedkeys("gcc", "x", true) end, { desc = "Toggle Line Comment" })
 
-keymap("v", "<C-/>", function()
-    vim.api.nvim_feedkeys("gb", "v", true)
-end, { desc = "Toggle Line Comment" })
+keymap("v", "<C-/>", function() vim.api.nvim_feedkeys("gb", "v", true) end, { desc = "Toggle Line Comment" })
 
 -- Auto Commands
 local autocmd = vim.api.nvim_create_autocmd
@@ -529,34 +525,22 @@ autocmd("BufWritePre", {
 autocmd("FileType", {
   pattern = "typst",
   callback = function()
-    vim.keymap.set("n", "<leader>o", ":TypstPreviewToggle<CR>", {
-        noremap = true,
-        silent = true,
-        desc = "Toggle Typst Preview",
-    })
+    vim.keymap.set("n", "<leader>o", ":TypstPreviewToggle<CR>", { noremap = true, silent = true, })
   end,
 })
 
 autocmd("FileType", {
   pattern = "markdown",
   callback = function()
-    vim.keymap.set("n", "<leader>o", ":MarkdownPreviewToggle<CR>", {
-        noremap = true,
-        silent = true,
-        desc = "Start Markdown Preview",
-    })
+    vim.keymap.set("n", "<leader>o", ":MarkdownPreviewToggle<CR>", { noremap = true, silent = true, })
   end,
 })
 
 autocmd("LspAttach", {
     callback = function(e)
         local opts = { buffer = e.buf }
-        vim.keymap.set("n", "<leader>d", function()
-            vim.lsp.buf.definition()
-        end, opts)
-        vim.keymap.set("n", "K", function()
-            vim.lsp.buf.hover()
-        end, opts)
+        vim.keymap.set("n", "<leader>d", function() vim.lsp.buf.definition() end, opts)
+        vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
 
         -- format key
         -- vim.keymap.set("n", "<leader>=", vim.lsp.buf.format)
@@ -569,16 +553,11 @@ autocmd("LspAttach", {
             })
         end, { desc = "Format code" })
 
-        vim.keymap.set("n", "<leader>la", function()
-            vim.lsp.buf.code_action()
-        end, opts)
-        vim.keymap.set("n", "<leader>lr", function()
-            vim.lsp.buf.rename()
-        end, opts)
+        vim.keymap.set("n", "<leader>la", function() vim.lsp.buf.code_action() end, opts)
+        vim.keymap.set("n", "<leader>lr", function() vim.lsp.buf.rename() end, opts)
 
         -- vim.keymap.set("n", "[d", function() vim.diagnostic.goto_next() end, opts)
         -- vim.keymap.set("n", "]d", function() vim.diagnostic.goto_prev() end, opts)
-        -- vim.keymap.set("n", "<leader>p", ":TypstPreview<CR>", opts)
         -- vim.keymap.set("i", "<C-h>", function() vim.lsp.buf.signature_help() end, opts)
     end,
 })
