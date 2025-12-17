@@ -15,7 +15,7 @@ vim.opt.rtp:prepend(lazypath)
 vim.g.mapleader = " "
 --  PLUGINS
 require("lazy").setup({
-    -- CORE: Icons
+    -- UI: Icons
     "nvim-tree/nvim-web-devicons",
     -- CORE: Syntax Highlighting
     {
@@ -30,18 +30,11 @@ require("lazy").setup({
             highlight = {
                 enable = true,
                 disable = function(lang, buf)
-                    if lang == "html" then
-                        print("disabled treesitter for html")
-                        return true
-                    end
+                    if lang == "html" then return true end
                     local max_filesize = 233 * 1024 -- 233 KB
                     local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
                     if ok and stats and stats.size > max_filesize then
-                        vim.notify(
-                            "File larger than 100KB treesitter disabled for performance",
-                            vim.log.levels.WARN,
-                            { title = "Treesitter" }
-                        )
+                        vim.notify("File too large, Treesitter disabled", vim.log.levels.WARN)
                         return true
                     end
                 end,
@@ -54,14 +47,7 @@ require("lazy").setup({
         dependencies = { "nvim-tree/nvim-web-devicons" },
         opts = {
             options = { theme = "gruvbox" },
-            tabline = {
-                lualine_a = { "buffers" },
-                lualine_b = { "branch" },
-                lualine_c = { "filename" },
-                lualine_x = {},
-                lualine_y = {},
-                lualine_z = { "tabs" },
-            },
+            tabline = { lualine_a = { "buffers" } },
         },
     },
     -- UI: File Explorer
@@ -72,9 +58,7 @@ require("lazy").setup({
             view_options = { show_hidden = true, },
         },
         dependencies = { "nvim-tree/nvim-web-devicons" },
-        config = function() require("oil").setup({})
-            vim.keymap.set({ "n", "x" }, "<leader>e", "<CMD>Oil<CR>", { silent = true })
-        end,
+        keys = { { "<leader>e", "<CMD>Oil<CR>", desc = "Open File Explorer" } },
     },
     -- UI: Fuzzy Finder
     {
@@ -89,6 +73,7 @@ require("lazy").setup({
     },
     -- UI: Indent Guides
     { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+
     -- EDITOR: Commenting
     { "numToStr/Comment.nvim", lazy = false, opts = {} },
     -- EDITOR: Surround
@@ -243,12 +228,7 @@ require("lazy").setup({
             { "<leader>ls", "<cmd>Trouble symbols toggle focus=false<cr>", },
             { "<leader>la", "<cmd>Trouble qflist toggle<cr>", },
         },
-        config = function()
-            require("trouble").setup({
-                focus = true,
-                warn_no_results = false,
-            })
-        end,
+        opts = { focus = true, warn_no_results = false },
     },
     -- PREVIEW
     -- MARKDOWN PREVIEW
@@ -257,18 +237,12 @@ require("lazy").setup({
         cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
         ft = { "markdown" },
         build = function() vim.fn["mkdp#util#install"]() end,
-        config = function()
-            vim.g.mkdp_auto_start = 0
-            vim.g.mkdp_auto_close = 1
-        end,
     },
     -- TYPST PREVIEW
     {
         "chomosuke/typst-preview.nvim",
         ft = "typst",
-        build = function()
-            require("typst-preview").update()
-        end,
+        build = function() require("typst-preview").update() end,
     },
     -- AI TOOLS
     {
