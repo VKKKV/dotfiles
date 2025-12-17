@@ -17,13 +17,14 @@ vim.g.mapleader = " "
 require("lazy").setup({
     -- UI: Icons
     "nvim-tree/nvim-web-devicons",
+    { "karb94/neoscroll.nvim", opts = {}, },
     -- CORE: Syntax Highlighting
     {
         "nvim-treesitter/nvim-treesitter",
         lazy = false,
         build = ":TSUpdate",
         opts = {
-            ensure_installed = { "bash", "c", "javascript", "lua", "markdown", "python", "rust", "typescript", "typst", "vim", "vue", "glsl", },
+            ensure_installed = { "bash", "c", "javascript", "lua", "markdown", "python", "rust", "typescript", "typst", "vim", "vue", "glsl", "java"},
             sync_install = false,
             auto_install = true,
             indent = { enable = true },
@@ -62,18 +63,18 @@ require("lazy").setup({
     },
     -- UI: Fuzzy Finder
     {
-        "nvim-telescope/telescope.nvim",
-        dependencies = { "nvim-lua/plenary.nvim" },
+        "ibhagwan/fzf-lua",
+        dependencies = { "nvim-tree/nvim-web-devicons" },
+        config = function() require("fzf-lua").setup({ "fzf-native", }) end,
         keys = {
-            { "<leader>ff", "<cmd>Telescope find_files<cr>" },
-            { "<leader>fr", "<cmd>Telescope live_grep<cr>" },
-            { "<leader>fb", "<cmd>Telescope buffers<cr>" },
-            { "<leader>fh", "<cmd>Telescope help_tags<cr>" },
+            { "<leader>ff", "<cmd>FzfLua files<cr>", desc = "Fzf Files" },
+            { "<leader>fr", "<cmd>FzfLua live_grep<cr>", desc = "Fzf Live Grep" },
+            { "<leader>fb", "<cmd>FzfLua buffers<cr>", desc = "Fzf Buffers" },
+            { "<leader>fh", "<cmd>FzfLua help_tags<cr>", desc = "Fzf Help Tags" },
         },
     },
     -- UI: Indent Guides
     { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
-
     -- EDITOR: Commenting
     { "numToStr/Comment.nvim", lazy = false, opts = {} },
     -- EDITOR: Surround
@@ -101,6 +102,13 @@ require("lazy").setup({
     },
     -- LSP: Native LSP Config
     {
+        "nvim-java/nvim-java",
+        config = function()
+            -- require("java").setup()
+            vim.lsp.enable("jdtls")
+        end,
+    },
+    {
         "neovim/nvim-lspconfig",
         dependencies = {
             "stevearc/conform.nvim",
@@ -116,13 +124,13 @@ require("lazy").setup({
         config = function()
             local cmp = require("cmp")
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
-
             -- formatter settings
             require("conform").setup({
                 formatters_by_ft = {
                     nix = { "alejandra" },
                     lua = { "mystylua" },
                     python = { "ruff", "black" },
+                    java = { "google-java-format" },
                 },
                 formatters = {
                     mystylua = {
@@ -130,9 +138,7 @@ require("lazy").setup({
                         args = { "--indent-type", "Spaces", "--indent-width", "4", "-" },
                     },
                 },
-                -- format_on_save = { timeout_ms = 500, lsp_fallback = true },
             })
-
             -- Setup Mason (Installer for LSPs)
             require("mason").setup()
             require("mason-lspconfig").setup({
@@ -143,6 +149,22 @@ require("lazy").setup({
                             capabilities = capabilities,
                         })
                     end,
+                    -- java language server setup
+                    ["jdtls"] = function()
+                        require("lspconfig").jdtls.setup({
+                            capabilities = capabilities,
+                            settings = { java = { configuration = { runtimes = {
+                                            {
+                                                --[[ name = "JavaSE-21",
+                                                path = "/opt/jdk-21",
+                                                default = true, ]]
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        })
+                    end,
 
                     ["lua_ls"] = function()
                         local lspconfig = require("lspconfig")
@@ -150,9 +172,9 @@ require("lazy").setup({
                             capabilities = capabilities,
                             settings = {
                                 Lua = {
-                                    runtime = { version = "Lua 5.1" },
+                                    runtime = { version = "LuaJIT" },
                                     diagnostics = {
-                                        globals = { "bit", "vim", "it", "describe", "before_each", "after_each" },
+                                        globals = { "vim" },
                                     },
                                 },
                             },
@@ -161,10 +183,9 @@ require("lazy").setup({
                 },
             })
 
+            -- Autocomplete setup
             local luasnip = require("luasnip")
             local cmp_select = { behavior = cmp.SelectBehavior.Select }
-
-            -- Autocomplete setup
             cmp.setup({
                 snippet = {
                     expand = function(args)
@@ -224,11 +245,32 @@ require("lazy").setup({
         dependencies = { "nvim-tree/nvim-web-devicons" },
         cmd = "Trouble",
         keys = {
-            { "<leader>ld", "<cmd>Trouble diagnostics toggle<cr>", },
-            { "<leader>ls", "<cmd>Trouble symbols toggle focus=false<cr>", },
-            { "<leader>la", "<cmd>Trouble qflist toggle<cr>", },
+            { "<leader>ld", "<cmd>Trouble diagnostics toggle<cr>", desc = "Project Diagnostics" },
+            { "<leader>ls", "<cmd>Trouble symbols toggle focus=false<cr>", desc = "Symbols" },
+            { "<leader>lq", "<cmd>Trouble qflist toggle<cr>", desc = "Quickfix List" },
         },
-        opts = { focus = true, warn_no_results = false },
+        opts = {
+            focus = true,
+            -- warn_no_results = false,
+            modes = {
+                symbols = { win = { position = "right", size = 0.3, }, },
+                lsp = { win = { position = "right", size = 0.3, }, },
+            },
+        },
+    },
+    {
+        "rachartier/tiny-inline-diagnostic.nvim",
+        event = "VeryLazy",
+        priority = 1000,
+        config = function()
+            require("tiny-inline-diagnostic").setup({
+                options = {
+                    multilines = { enabled = false, },
+                    show_source = { enabled = true },
+                },
+            })
+            vim.diagnostic.config({ virtual_text = false })
+        end,
     },
     -- PREVIEW
     -- MARKDOWN PREVIEW
@@ -262,13 +304,6 @@ require("lazy").setup({
                     require("sidekick.cli").select()
                 end,
                 desc = "Select CLI",
-            },
-            {
-                "<leader>ad",
-                function()
-                    require("sidekick.cli").close()
-                end,
-                desc = "Detach a CLI Session",
             },
             {
                 "<leader>at",
@@ -386,10 +421,10 @@ keymap("v", "<C-_>", function() vim.api.nvim_feedkeys("gb", "v", true) end, { de
 local autocmd = vim.api.nvim_create_autocmd
 autocmd("BufWritePre", { pattern = "*", command = ":%s/\\s\\+$//e", })
 autocmd("FileType", {
-  pattern = "typst",
-  callback = function()
-    vim.keymap.set("n", "<leader>o", ":TypstPreviewToggle<CR>", { noremap = true, silent = true, })
-  end,
+    pattern = "typst",
+    callback = function()
+        vim.keymap.set("n", "<leader>o", ":TypstPreviewToggle<CR>", { noremap = true, silent = true })
+    end,
 })
 autocmd("FileType", {
   pattern = "markdown",
