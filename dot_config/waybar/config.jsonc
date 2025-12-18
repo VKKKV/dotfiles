@@ -1,7 +1,4 @@
 {
-    "include": [
-        "modules-dividers.jsonc"
-    ],
     "layer": "top",
     "position": "bottom",
     "margin-top": 0,
@@ -20,6 +17,14 @@
         "tray",
         "custom/right_div#4"
     ],
+    "custom/left_div#4": {
+        "format": "",
+        "tooltip": false
+    },
+    "custom/right_div#4": {
+        "format": "",
+        "tooltip": false
+    },
     "tray": {
         "spacing": 10,
         "tooltip": false
