@@ -1,2 +1,2 @@
 [general]
-drivers=pipewire
+drivers=pulse

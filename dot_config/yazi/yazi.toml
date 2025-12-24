@@ -32,10 +32,14 @@ play = [
 edit = [
 { run = 'nvim "$@"', block = true, for = "unix" },
 ]
+doc = [
+{ run = 'zathura "$@"', block = true, for = "unix" },
+]
 
 [open]
 rules = [
 { mime = "text/*", use = "edit" },
+{ mime = "application/pdf", use = "edit" },
 { mime = "*", use = "edit" }
 ]
 
