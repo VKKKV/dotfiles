@@ -17,31 +17,22 @@ vim.g.mapleader = " "
 require("lazy").setup({
     -- UI: Icons
     "nvim-tree/nvim-web-devicons",
+    -- UI: Indent Guides
+    { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
+    -- EDITOR: Commenting
+    { "numToStr/Comment.nvim", lazy = false, opts = {} },
+    -- EDITOR: Surround
+    { "kylechui/nvim-surround", event = "VeryLazy" },
+    -- EDITOR: Multi Cursor
+    -- default keymaps:
+    -- Ctrl-n to select word and add cursorcolumn
+    -- Ctrl-Down / Ctrl-Up to add cursor below/above
+    { "mg979/vim-visual-multi", branch = "master" },
+    -- EDITOR: Auto Pairs
+    { "windwp/nvim-autopairs", event = "InsertEnter" },
+    -- THEME: Gruvbox
+    { "ellisonleao/gruvbox.nvim", priority = 1000, config = function() vim.cmd.colorscheme("gruvbox") end},
     { "karb94/neoscroll.nvim", opts = {}, },
-    -- CORE: Syntax Highlighting
-    {
-        "nvim-treesitter/nvim-treesitter",
-        lazy = false,
-        build = ":TSUpdate",
-        opts = {
-            ensure_installed = { "bash", "c", "javascript", "lua", "markdown", "python", "rust", "typescript", "typst", "vim", "vue", "glsl", "java"},
-            sync_install = false,
-            auto_install = true,
-            indent = { enable = true },
-            highlight = {
-                enable = true,
-                disable = function(lang, buf)
-                    if lang == "html" then return true end
-                    local max_filesize = 233 * 1024 -- 233 KB
-                    local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
-                    if ok and stats and stats.size > max_filesize then
-                        vim.notify("File too large, Treesitter disabled", vim.log.levels.WARN)
-                        return true
-                    end
-                end,
-            },
-        },
-    },
     -- UI: Status Line
     {
         "nvim-lualine/lualine.nvim",
@@ -49,6 +40,14 @@ require("lazy").setup({
         opts = {
             options = { theme = "gruvbox" },
             tabline = { lualine_a = { "buffers" } },
+            sections = {
+                lualine_c = {
+                    {
+                        "filename",
+                        path = 1, -- 0: 只显示文件名, 1: 相对路径, 2: 绝对路径, 3: 绝对路径并显示 ~
+                    },
+                },
+            },
         },
     },
     -- UI: File Explorer
@@ -73,32 +72,29 @@ require("lazy").setup({
             { "<leader>fh", "<cmd>FzfLua help_tags<cr>", desc = "Fzf Help Tags" },
         },
     },
-    -- UI: Indent Guides
-    { "lukas-reineke/indent-blankline.nvim", main = "ibl", opts = {} },
-    -- EDITOR: Commenting
-    { "numToStr/Comment.nvim", lazy = false, opts = {} },
-    -- EDITOR: Surround
-    { "kylechui/nvim-surround", event = "VeryLazy" },
-    -- EDITOR: Multi Cursor
-    -- default keymaps:
-    -- Ctrl-n to select word and add cursorcolumn
-    -- Ctrl-Down / Ctrl-Up to add cursor below/above
-    { "mg979/vim-visual-multi", branch = "master" },
-    -- EDITOR: Auto Pairs
-    { "windwp/nvim-autopairs", event = "InsertEnter" },
-    -- THEME: Gruvbox
-    { "ellisonleao/gruvbox.nvim", priority = 1000, config = function() vim.cmd.colorscheme("gruvbox") end},
-    -- SNIPPETS: LuaSnip
+    -- CORE: Syntax Highlighting
     {
-        "L3MON4D3/LuaSnip",
-        version = "v2.*",
-        dependencies = { "rafamadriz/friendly-snippets" },
-        build = "make install_jsregexp",
-        config = function()
-            require("luasnip").setup({ enable_autosnippets = true })
-            require("luasnip.loaders.from_vscode").lazy_load()
-            require("luasnip.loaders.from_lua").load({ paths = "./snippets" })
-        end,
+        "nvim-treesitter/nvim-treesitter",
+        lazy = false,
+        build = ":TSUpdate",
+        opts = {
+            ensure_installed = { "bash", "c", "javascript", "lua", "markdown", "python", "rust", "typescript", "typst", "vim", "vue", "glsl", "java"},
+            sync_install = false,
+            auto_install = true,
+            indent = { enable = true },
+            highlight = {
+                enable = true,
+                disable = function(lang, buf)
+                    if lang == "html" then return true end
+                    local max_filesize = 233 * 1024 -- 233 KB
+                    local ok, stats = pcall(vim.loop.fs_stat, vim.api.nvim_buf_get_name(buf))
+                    if ok and stats and stats.size > max_filesize then
+                        vim.notify("File too large, Treesitter disabled", vim.log.levels.WARN)
+                        return true
+                    end
+                end,
+            },
+        },
     },
     -- LSP: Native LSP Config
     {
@@ -142,7 +138,7 @@ require("lazy").setup({
             -- Setup Mason (Installer for LSPs)
             require("mason").setup()
             require("mason-lspconfig").setup({
-                ensure_installed = { "nil_ls", "lua_ls", "tinymist", "rust_analyzer", "marksman", "glsl_analyzer", },
+                ensure_installed = { "nil_ls", "lua_ls", "tinymist", "rust_analyzer", "marksman", "glsl_analyzer", "vtsls", "biome", },
                 handlers = {
                     function(server_name)
                         require("lspconfig")[server_name].setup({
@@ -237,6 +233,18 @@ require("lazy").setup({
                     { name = "buffer" },
                 }),
             })
+        end,
+    },
+    -- SNIPPETS: LuaSnip
+    {
+        "L3MON4D3/LuaSnip",
+        version = "v2.*",
+        dependencies = { "rafamadriz/friendly-snippets" },
+        build = "make install_jsregexp",
+        config = function()
+            require("luasnip").setup({ enable_autosnippets = true })
+            require("luasnip.loaders.from_vscode").lazy_load()
+            require("luasnip.loaders.from_lua").load({ paths = "./snippets" })
         end,
     },
     -- Trouble
@@ -411,6 +419,10 @@ keymap("n", "<leader>h", ":resize -2<CR>")
 keymap("n", "<leader>l", ":resize +2<CR>")
 keymap("n", "<leader>k", ":vertical resize -2<CR>")
 keymap("n", "<leader>j", ":vertical resize +2<CR>")
+
+-- Insert newline and keep cursor at current position
+keymap('n', '<leader>o', 'm`o<Esc>``', { desc = 'Insert newline below (stay)' })
+keymap('n', '<leader>O', 'm`O<Esc>``', { desc = 'Insert newline above (stay)' })
 
 -- Comment
 -- Use Ctrl+/ to toggle comments in normal and visual mode
