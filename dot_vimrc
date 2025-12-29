@@ -59,7 +59,6 @@ nnoremap <silent> <Leader>h :wincmd h<CR>
 nnoremap <silent> <Leader>j :wincmd j<CR>
 nnoremap <silent> <Leader>k :wincmd k<CR>
 nnoremap <silent> <Leader>l :wincmd l<CR>
-" system copy need wl-clipboard
 xnoremap <silent> <leader>y :w !wl-copy<CR><CR>
 nnoremap <C-L> :nohlsearch<CR><C-L>
 
@@ -76,9 +75,7 @@ call plug#begin()
 Plug 'preservim/vim-indent-guides'
 let g:indent_guides_enable_on_vim_startup = 1
 
-" ctrl-n ctrl-down ctrl-up
 Plug 'mg979/vim-visual-multi', {'branch': 'master'}
-
 Plug 'instant-markdown/vim-instant-markdown', {'for': 'markdown', 'do': 'npm install'}
 let g:instant_markdown_autostart = 0
 let g:instant_markdown_autoscroll = 1
@@ -109,11 +106,9 @@ let NERDTreeConfirmRename='yes'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-surround'
 Plug 'honza/vim-snippets'
-
 Plug 'neoclide/coc.nvim', { 'branch': 'release' }
 Plug 'yaegassy/coc-volar', { 'do': 'yarn install --frozen-lockfile' }
 Plug 'yaegassy/coc-volar-tools', { 'do': 'yarn install --frozen-lockfile' }
-
 Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -127,20 +122,7 @@ if !exists('g:airline_symbols')
 endif
 let g:airline_symbols.colnr = ' ℅:'
 
-" Plug 'Exafunction/windsurf.vim'
-" let g:codeium_no_map_tab = 1
-" inoremap <silent><expr> <C-a> codeium#Accept()
-
-Plug 'github/copilot.vim'
-autocmd FileType *.md Copilot disable
-let g:copilot_no_tab_map = v:true
-imap <silent><script><expr> <C-a> copilot#Accept("\<CR>")
-imap <silent> <C-r> <Plug>(copilot-suggest)
-nmap <silent> <leader>, :Copilot enable<CR>
-nmap <silent> <leader>. :Copilot disable<CR>
-
 Plug 'tpope/vim-fugitive'
-
 call plug#end()
 
 let g:coc_node_path='/usr/bin/node'
