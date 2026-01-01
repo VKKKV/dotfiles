@@ -1,36 +1,18 @@
 #!/usr/bin/env bash
 
 USAGE() {
-	cat <<"USAGE"
+cat <<"USAGE"
 
-	Usage: $(basename "$0") [option]
-	Options:
-		p     Print all outputs
-		s     Select area or window to screenshot
-		sf    Select area or window with frozen screen
-		m     Screenshot focused monitor
-		sc    Use tesseract to scan image, then add to clipboard
+Usage: $(basename "$0") [option]
+Options:
+    p     Print all outputs
+    s     Select area or window to screenshot
+    sf    Select area or window with frozen screen
+    m     Screenshot focused monitor
+    sc    Use tesseract to scan image, then add to clipboard
+    sq    Scan QR code
 
 USAGE
-}
-
-SCREENSHOT_POST_COMMAND+=(
-)
-
-SCREENSHOT_PRE_COMMAND+=(
-)
-
-pre_cmd() {
-	for cmd in "${SCREENSHOT_PRE_COMMAND[@]}"; do
-		eval "$cmd"
-	done
-	trap 'post_cmd' EXIT
-}
-
-post_cmd() {
-	for cmd in "${SCREENSHOT_POST_COMMAND[@]}"; do
-		eval "$cmd"
-	done
 }
 
 # Create secure temporary file
@@ -50,9 +32,6 @@ mkdir -p "$save_dir"
 annotation_tool="satty"
 annotation_args+=("--copy-command" "wl-copy")
 
-# Add any additional annotation arguments
-[[ -n "${SCREENSHOT_ANNOTATION_ARGS[*]}" ]] && annotation_args+=("${SCREENSHOT_ANNOTATION_ARGS[@]}")
-
 # screenshot function, globbing was difficult to read and maintain
 take_screenshot() {
 	local mode=$1
@@ -71,8 +50,6 @@ take_screenshot() {
 	fi
 }
 
-pre_cmd
-
 case $1 in
 p) # print all outputs
 	take_screenshot "screen"
@@ -86,21 +63,28 @@ sf) # frozen screen, drag to manually snip an area / click on a window to print 
 m) # print focused monitor
 	take_screenshot "output"
 	;;
-sc) #? 󱉶 Use 'tesseract' to scan image then add to clipboard
-	pacman -Qe tesseract-data-eng tesseract imagemagick || {
-        notify-send -a "OCR preview: Missing dependencies" -e -i "dialog-error" "Please install 'tesseract' and 'imagemagick'"
-        exit 1
-    }
+sc) #? 󱉶 Use 'tesseract' to scan image then add to clipboard need tesseract installed
 	if ! GEOM=$(slurp); then
 		notify-send -a "OCR preview: Invalid geometry" -e -i "dialog-error"
 		exit 1
 	fi
 	grim -g "${GEOM}" "${temp_screenshot}"
     magick "${temp_screenshot}" -sigmoidal-contrast 10,50% "${temp_screenshot}"
-	tesseract "${temp_screenshot}" - | wl-copy
+	tesseract --psm 6 --oem 3 "${temp_screenshot}" - | wl-copy
 	notify-send -a "OCR preview" -i "${temp_screenshot}" -e
 	rm -f "${temp_screenshot}"
 	;;
+sq) # 󱉶 Scan QR code need zbar installed
+    if ! GEOM=$(slurp); then
+        notify-send -a "QR preview: Invalid geometry" -e -i "dialog-error"
+        exit 1
+	fi
+	grim -g "${GEOM}" "${temp_screenshot}"
+    magick "${temp_screenshot}" -sigmoidal-contrast 10,50% "${temp_screenshot}"
+    qr_output=$(zbarimg -q --raw --oneshot "${temp_screenshot}" 2>/dev/null | sed 's/\n$//')
+    printf "%s" "$qr_output" | wl-copy
+    notify-send -r 9 -a "QR Scan" "QR: successfully recognized" -i "$image_path" -e -r 9
+    ;;
 *) # invalid option
 	USAGE
 	;;
