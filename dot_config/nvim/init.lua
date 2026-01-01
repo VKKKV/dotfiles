@@ -138,7 +138,7 @@ require("lazy").setup({
             -- Setup Mason (Installer for LSPs)
             require("mason").setup()
             require("mason-lspconfig").setup({
-                ensure_installed = { "nil_ls", "lua_ls", "tinymist", "rust_analyzer", "marksman", "glsl_analyzer", "vtsls", "biome", },
+                ensure_installed = { "nil_ls", "lua_ls", "tinymist", "rust_analyzer", "marksman", "glsl_analyzer", "vtsls", "biome", "bashls"},
                 handlers = {
                     function(server_name)
                         require("lspconfig")[server_name].setup({
