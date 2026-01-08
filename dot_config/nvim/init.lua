@@ -29,7 +29,7 @@ require("lazy").setup({
     -- Ctrl-Down / Ctrl-Up to add cursor below/above
     { "mg979/vim-visual-multi", branch = "master" },
     -- EDITOR: Auto Pairs
-    { "windwp/nvim-autopairs", event = "InsertEnter" },
+    { "windwp/nvim-autopairs", event = "InsertEnter", config = true },
     -- THEME: Gruvbox
     { "ellisonleao/gruvbox.nvim", priority = 1000, config = function() vim.cmd.colorscheme("gruvbox") end},
     { "karb94/neoscroll.nvim", opts = {}, },
@@ -78,7 +78,7 @@ require("lazy").setup({
         lazy = false,
         build = ":TSUpdate",
         opts = {
-            ensure_installed = { "bash", "c", "javascript", "lua", "markdown", "python", "rust", "typescript", "typst", "vim", "vue", "glsl", "java"},
+            ensure_installed = { "bash", "c", "javascript", "lua", "markdown", "python", "rust", "typescript", "typst", "vim", "vue", "glsl", "java", "json"},
             sync_install = false,
             auto_install = true,
             indent = { enable = true },
@@ -119,6 +119,10 @@ require("lazy").setup({
         },
         config = function()
             local cmp = require("cmp")
+
+            local cmp_autopairs = require("nvim-autopairs.completion.cmp")
+            cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
+
             local capabilities = require("cmp_nvim_lsp").default_capabilities()
             -- formatter settings
             require("conform").setup({
@@ -145,23 +149,6 @@ require("lazy").setup({
                             capabilities = capabilities,
                         })
                     end,
-                    -- java language server setup
-                    ["jdtls"] = function()
-                        require("lspconfig").jdtls.setup({
-                            capabilities = capabilities,
-                            settings = { java = { configuration = { runtimes = {
-                                            {
-                                                --[[ name = "JavaSE-21",
-                                                path = "/opt/jdk-21",
-                                                default = true, ]]
-                                            },
-                                        },
-                                    },
-                                },
-                            },
-                        })
-                    end,
-
                     ["lua_ls"] = function()
                         local lspconfig = require("lspconfig")
                         lspconfig.lua_ls.setup({
@@ -233,6 +220,15 @@ require("lazy").setup({
                     { name = "buffer" },
                 }),
             })
+        end,
+    },
+    -- Signature Help
+    {
+        "ray-x/lsp_signature.nvim",
+        event = "InsertEnter",
+        opts = { },
+        config = function(_, opts)
+            require("lsp_signature").setup(opts)
         end,
     },
     -- SNIPPETS: LuaSnip
@@ -420,10 +416,6 @@ keymap("n", "<leader>l", ":resize +2<CR>")
 keymap("n", "<leader>k", ":vertical resize -2<CR>")
 keymap("n", "<leader>j", ":vertical resize +2<CR>")
 
--- Insert newline and keep cursor at current position
-keymap('n', '<leader>o', 'm`o<Esc>``', { desc = 'Insert newline below (stay)' })
-keymap('n', '<leader>O', 'm`O<Esc>``', { desc = 'Insert newline above (stay)' })
-
 -- Comment
 -- Use Ctrl+/ to toggle comments in normal and visual mode
 keymap("n", "<C-_>", function() vim.api.nvim_feedkeys("gcc", "x", true) end, { desc = "Toggle Line Comment" })
@@ -447,10 +439,24 @@ autocmd("FileType", {
 autocmd("LspAttach", {
     callback = function(e)
         local opts = { buffer = e.buf }
-        vim.keymap.set("n", "<leader>la", function() vim.lsp.buf.code_action() end, opts)
-        vim.keymap.set("n", "<leader>lr", function() vim.lsp.buf.rename() end, opts)
-        vim.keymap.set("n", "<leader>d", function() vim.lsp.buf.definition() end, opts)
-        vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
+        vim.keymap.set({ "n" }, "<C-k>", function()
+            require("lsp_signature").toggle_float_win()
+        end, { silent = true, noremap = true, desc = "toggle signature" })
+        vim.keymap.set({ "i" }, "<C-k>", function()
+            require("lsp_signature").toggle_float_win()
+        end, { silent = true, noremap = true, desc = "toggle signature" })
+        vim.keymap.set("n", "<leader>la", function()
+            vim.lsp.buf.code_action()
+        end, opts)
+        vim.keymap.set("n", "<leader>lr", function()
+            vim.lsp.buf.rename()
+        end, opts)
+        vim.keymap.set("n", "<leader>d", function()
+            vim.lsp.buf.definition()
+        end, opts)
+        vim.keymap.set("n", "K", function()
+            vim.lsp.buf.hover()
+        end, opts)
         vim.keymap.set({ "n", "v" }, "<leader>=", function()
             require("conform").format({
                 async = true,
