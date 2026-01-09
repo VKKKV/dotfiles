@@ -1,3 +1,5 @@
+vim.env.JAVA_HOME = "/usr/lib/jvm/java-21-openjdk"
+vim.env.PATH = "/usr/lib/jvm/java-21-openjdk/bin:" .. vim.env.PATH
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -53,9 +55,12 @@ require("lazy").setup({
     -- UI: File Explorer
     {
         "stevearc/oil.nvim",
+        main = "oil",
+        lazy = false,
+        priority = 900,
         opts = {
             delete_to_trash = true,
-            view_options = { show_hidden = true, },
+            view_options = { show_hidden = true },
         },
         dependencies = { "nvim-tree/nvim-web-devicons" },
         keys = { { "<leader>e", "<CMD>Oil<CR>", desc = "Open File Explorer" } },
@@ -64,12 +69,32 @@ require("lazy").setup({
     {
         "ibhagwan/fzf-lua",
         dependencies = { "nvim-tree/nvim-web-devicons" },
-        config = function() require("fzf-lua").setup({ "fzf-native", }) end,
+        config = function()
+            require("fzf-lua").setup({
+                files = {
+                    formatter = "path.filename_first",
+                },
+                grep = {
+                    formatter = "path.filename_first",
+                },
+                winopts = {
+                    border = "rounded",
+                },
+            })
+        end,
         keys = {
             { "<leader>ff", "<cmd>FzfLua files<cr>", desc = "Fzf Files" },
             { "<leader>fr", "<cmd>FzfLua live_grep<cr>", desc = "Fzf Live Grep" },
             { "<leader>fb", "<cmd>FzfLua buffers<cr>", desc = "Fzf Buffers" },
+            { "<leader>ft", "<cmd>FzfLua tabs<cr>", desc = "Fzf Tabs" },
             { "<leader>fh", "<cmd>FzfLua help_tags<cr>", desc = "Fzf Help Tags" },
+            { "<leader>fk", "<cmd>FzfLua keymaps<cr>", desc = "Fzf Keymaps" },
+            { "<leader>fm", "<cmd>FzfLua marks<cr>", desc = "Fzf Marks" },
+
+            { "gd", "<cmd>FzfLua lsp_definitions<cr>", desc = "Go to Definition" },
+            { "gi", "<cmd>FzfLua lsp_implementations<cr>", desc = "Go to Implementation" },
+            { "gr", "<cmd>FzfLua lsp_references<cr>", desc = "Go to References" },
+            { "gs", "<cmd>FzfLua lsp_workspace_symbols<cr>", desc = "Go to Symbols" },
         },
     },
     -- CORE: Syntax Highlighting
@@ -96,14 +121,8 @@ require("lazy").setup({
             },
         },
     },
-    -- LSP: Native LSP Config
-    {
-        "nvim-java/nvim-java",
-        config = function()
-            -- require("java").setup()
-            vim.lsp.enable("jdtls")
-        end,
-    },
+    -- LSP
+    { "mfussenegger/nvim-jdtls" },
     {
         "neovim/nvim-lspconfig",
         dependencies = {
@@ -142,7 +161,13 @@ require("lazy").setup({
             -- Setup Mason (Installer for LSPs)
             require("mason").setup()
             require("mason-lspconfig").setup({
-                ensure_installed = { "nil_ls", "lua_ls", "tinymist", "rust_analyzer", "marksman", "glsl_analyzer", "vtsls", "biome", "bashls"},
+                automatic_enable = {
+                    exclude = {
+                        --needs external plugin
+                        "jdtls",
+                    },
+                },
+                ensure_installed = { "nil_ls", "lua_ls", "ts_ls", "tinymist", "rust_analyzer", "marksman", "glsl_analyzer", "bashls"},
                 handlers = {
                     function(server_name)
                         require("lspconfig")[server_name].setup({
@@ -295,51 +320,12 @@ require("lazy").setup({
         "qapquiz/sidekick.nvim",
         opts = { cli = { mux = { backend = "tmux", enabled = true, }, }, },
         keys = {
-            {
-                "<leader>ao",
-                function()
-                    require("sidekick.cli").toggle({ name = "opencode", focus = true })
-                end,
-                desc = "Sidekick Toggle opencode",
-            },
-            {
-                "<leader>as",
-                function()
-                    require("sidekick.cli").select()
-                end,
-                desc = "Select CLI",
-            },
-            {
-                "<leader>at",
-                function()
-                    require("sidekick.cli").send({ msg = "{this}" })
-                end,
-                mode = { "x", "n" },
-                desc = "Send This",
-            },
-            {
-                "<leader>af",
-                function()
-                    require("sidekick.cli").send({ msg = "{file}" })
-                end,
-                desc = "Send File",
-            },
-            {
-                "<leader>av",
-                function()
-                    require("sidekick.cli").send({ msg = "{selection}" })
-                end,
-                mode = { "x" },
-                desc = "Send Visual Selection",
-            },
-            {
-                "<leader>ap",
-                function()
-                    require("sidekick.cli").prompt()
-                end,
-                mode = { "n", "x" },
-                desc = "Sidekick Select Prompt",
-            },
+            { "<leader>ao", function() require("sidekick.cli").toggle({ name = "opencode", focus = true }) end, desc = "Sidekick Toggle opencode", },
+            { "<leader>as", function() require("sidekick.cli").select() end, desc = "Select CLI", },
+            { "<leader>at", function() require("sidekick.cli").send({ msg = "{this}" }) end, mode = { "x", "n" }, desc = "Send This", },
+            { "<leader>af", function() require("sidekick.cli").send({ msg = "{file}" }) end, desc = "Send File", },
+            { "<leader>av", function() require("sidekick.cli").send({ msg = "{selection}" }) end, mode = { "x" }, desc = "Send Visual Selection", },
+            { "<leader>ap", function() require("sidekick.cli").prompt() end, mode = { "n", "x" }, desc = "Sidekick Select Prompt", },
         },
     },
     -- COPILOT
@@ -351,7 +337,6 @@ require("lazy").setup({
             suggestion = {
                 enabled = true,
                 auto_trigger = true,
-                -- keymap to accept suggestion
                 keymap = {
                     accept = "<C-a>",
                 },
@@ -410,12 +395,6 @@ keymap("n", "<leader>p", ":bp<CR>")
 -- System clipboard
 keymap({ "n", "v" }, "<leader>y", '"+y')
 
--- Resize
-keymap("n", "<leader>h", ":resize -2<CR>")
-keymap("n", "<leader>l", ":resize +2<CR>")
-keymap("n", "<leader>k", ":vertical resize -2<CR>")
-keymap("n", "<leader>j", ":vertical resize +2<CR>")
-
 -- Comment
 -- Use Ctrl+/ to toggle comments in normal and visual mode
 keymap("n", "<C-_>", function() vim.api.nvim_feedkeys("gcc", "x", true) end, { desc = "Toggle Line Comment" })
@@ -437,31 +416,64 @@ autocmd("FileType", {
   end,
 })
 autocmd("LspAttach", {
-    callback = function(e)
-        local opts = { buffer = e.buf }
-        vim.keymap.set({ "n" }, "<C-k>", function()
-            require("lsp_signature").toggle_float_win()
-        end, { silent = true, noremap = true, desc = "toggle signature" })
-        vim.keymap.set({ "i" }, "<C-k>", function()
-            require("lsp_signature").toggle_float_win()
-        end, { silent = true, noremap = true, desc = "toggle signature" })
-        vim.keymap.set("n", "<leader>la", function()
-            vim.lsp.buf.code_action()
-        end, opts)
-        vim.keymap.set("n", "<leader>lr", function()
-            vim.lsp.buf.rename()
-        end, opts)
-        vim.keymap.set("n", "<leader>d", function()
-            vim.lsp.buf.definition()
-        end, opts)
-        vim.keymap.set("n", "K", function()
-            vim.lsp.buf.hover()
-        end, opts)
-        vim.keymap.set({ "n", "v" }, "<leader>=", function()
-            require("conform").format({
-                async = true,
-                lsp_fallback = true, -- Fallback to LSP formatting if no CLI formatter is found
-            })
-        end, { desc = "Format code" })
+    callback = function(event)
+        local opts = { buffer = event.buf }
+        vim.keymap.set({ "n", "i" }, "<C-k>", function() require("lsp_signature").toggle_float_win() end, { silent = true, noremap = true, desc = "toggle signature" })
+        vim.keymap.set({ "n", "v" }, "<leader>=", function() require("conform").format({ async = true, lsp_fallback = true, }) end, { desc = "Format code" })
+
+        vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
+        vim.keymap.set("n", "<leader>r", function() vim.lsp.buf.rename() end, opts)
+        vim.keymap.set("n", "<leader>la", function() vim.lsp.buf.code_action() end, opts)
+
+        vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
+        vim.keymap.set("n", "g]", '<cmd>lua vim.diagnostic.jump({count=1, float=true})<cr>', opts)
+        vim.keymap.set("n", "g[", '<cmd>lua vim.diagnostic.jump({count=-1, float=true})<cr>', opts)
+    end,
+})
+autocmd("FileType", {
+    pattern = "java",
+    callback = function()
+        local root_dir = vim.fs.root(0, { "gradlew", ".git", "mvnw" })
+        local project_name = vim.fn.fnamemodify(root_dir or vim.fn.getcwd(), ":p:h:t")
+        local workspace_dir = vim.fn.stdpath("data") .. "/jdtls-workspace/" .. project_name
+
+        -- paru -S java-lombok
+        local lombok_path = "/usr/share/java/lombok/lombok.jar"
+
+        local opts = { buffer = 0 }
+        vim.keymap.set("n", "<A-o>", "<Cmd>lua require'jdtls'.organize_imports()<CR>", opts)
+        vim.keymap.set("n", "crv", "<Cmd>lua require('jdtls').extract_variable()<CR>", opts)
+        vim.keymap.set("v", "crv", "<Esc><Cmd>lua require('jdtls').extract_variable(true)<CR>", opts)
+        vim.keymap.set("n", "crc", "<Cmd>lua require('jdtls').extract_constant()<CR>", opts)
+        vim.keymap.set("v", "crc", "<Esc><Cmd>lua require('jdtls').extract_constant(true)<CR>", opts)
+        vim.keymap.set("v", "crm", "<Esc><Cmd>lua require('jdtls').extract_method(true)<CR>", opts)
+
+        require("jdtls").start_or_attach({
+            cmd = {
+                "jdtls",
+                "-data", workspace_dir,
+                "--jvm-arg=-javaagent:" .. lombok_path,
+            },
+            root_dir = root_dir,
+            settings = {
+                java = {
+                    configuration = {
+                        runtimes = {
+                            {
+                                name = "JavaSE-21",
+                                path = "/usr/lib/jvm/java-21-openjdk/",
+                            },
+                            {
+                                name = "JavaSE-17",
+                                path = "/usr/lib/jvm/java-17-openjdk/",
+                            },
+                        },
+                    },
+                }
+            },
+            init_options = {
+                bundles = {}
+            },
+        })
     end,
 })
