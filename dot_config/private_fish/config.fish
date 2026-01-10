@@ -42,5 +42,13 @@ if status is-interactive
         end
         rm -f -- "$tmp"
     end
+
+    # is.gd URL Shortener
+    function shorten
+        set -l short_url (curl -s "https://is.gd/create.php?format=simple&url=$argv[1]")
+        echo $short_url
+        echo -n $short_url | wl-copy
+        echo "[Copied to clipboard]"
+    end
 end
 
