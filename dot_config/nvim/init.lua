@@ -408,6 +408,8 @@ keymap({ "n", "v" }, "<leader>y", '"+y')
 keymap("n", "<C-_>", function() vim.api.nvim_feedkeys("gcc", "x", true) end, { desc = "Toggle Line Comment" })
 keymap("v", "<C-_>", function() vim.api.nvim_feedkeys("gb", "v", true) end, { desc = "Toggle Line Comment" })
 
+keymap('t', '<esc>', [[<C-\><C-n>]])
+
 -- Auto Commands
 local autocmd = vim.api.nvim_create_autocmd
 autocmd("BufWritePre", { pattern = "*", command = ":%s/\\s\\+$//e", })
