@@ -1,5 +1,3 @@
-vim.env.JAVA_HOME = "/usr/lib/jvm/java-21-openjdk"
-vim.env.PATH = "/usr/lib/jvm/java-21-openjdk/bin:" .. vim.env.PATH
 -- Bootstrap lazy.nvim
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not vim.loop.fs_stat(lazypath) then
@@ -43,12 +41,7 @@ require("lazy").setup({
             options = { theme = "gruvbox" },
             tabline = { lualine_a = { "buffers" } },
             sections = {
-                lualine_c = {
-                    {
-                        "filename",
-                        path = 1, -- 0: 只显示文件名, 1: 相对路径, 2: 绝对路径, 3: 绝对路径并显示 ~
-                    },
-                },
+                lualine_c = { { "filename" } },
             },
         },
     },
@@ -71,30 +64,25 @@ require("lazy").setup({
         dependencies = { "nvim-tree/nvim-web-devicons" },
         config = function()
             require("fzf-lua").setup({
-                files = {
-                    formatter = "path.filename_first",
-                },
-                grep = {
-                    formatter = "path.filename_first",
-                },
-                winopts = {
-                    border = "rounded",
-                },
+                files = { formatter = "path.filename_first" },
+                grep = { formatter = "path.filename_first" },
             })
         end,
         keys = {
+            -- File Mappings
             { "<leader>ff", "<cmd>FzfLua files<cr>", desc = "Fzf Files" },
             { "<leader>fr", "<cmd>FzfLua live_grep<cr>", desc = "Fzf Live Grep" },
             { "<leader>fb", "<cmd>FzfLua buffers<cr>", desc = "Fzf Buffers" },
+            { "<leader>fl", "<cmd>FzfLua blines<cr>", desc = "Fzf Current Buffer Lines" },
             { "<leader>ft", "<cmd>FzfLua tabs<cr>", desc = "Fzf Tabs" },
             { "<leader>fh", "<cmd>FzfLua help_tags<cr>", desc = "Fzf Help Tags" },
             { "<leader>fk", "<cmd>FzfLua keymaps<cr>", desc = "Fzf Keymaps" },
             { "<leader>fm", "<cmd>FzfLua marks<cr>", desc = "Fzf Marks" },
-
+            -- LSP Mappings
             { "gd", "<cmd>FzfLua lsp_definitions<cr>", desc = "Go to Definition" },
             { "gi", "<cmd>FzfLua lsp_implementations<cr>", desc = "Go to Implementation" },
             { "gr", "<cmd>FzfLua lsp_references<cr>", desc = "Go to References" },
-            { "gs", "<cmd>FzfLua lsp_workspace_symbols<cr>", desc = "Go to Symbols" },
+            { "gs", "<cmd>FzfLua lsp_live_workspace_symbols<cr>", desc = "Go to Symbols" },
         },
     },
     -- Git
@@ -184,7 +172,6 @@ require("lazy").setup({
             require("mason-lspconfig").setup({
                 automatic_enable = {
                     exclude = {
-                        --needs external plugin
                         "jdtls",
                     },
                 },
@@ -323,14 +310,12 @@ require("lazy").setup({
         end,
     },
     -- PREVIEW
-    -- MARKDOWN PREVIEW
     {
         "iamcco/markdown-preview.nvim",
         cmd = { "MarkdownPreviewToggle", "MarkdownPreview", "MarkdownPreviewStop" },
         ft = { "markdown" },
         build = function() vim.fn["mkdp#util#install"]() end,
     },
-    -- TYPST PREVIEW
     {
         "chomosuke/typst-preview.nvim",
         ft = "typst",
@@ -407,11 +392,13 @@ opt.foldopen = "mark,percent,quickfix,search,tag,undo"
 local keymap = vim.keymap.set
 keymap("n", "<leader>w", "<CMD>write<CR>", { silent = true })
 keymap("n", "<leader>q", ":q<CR>")
-keymap("n", "<leader>x", ":bd<CR>")
 keymap("n", "<C-L>", ":nohlsearch<CR>")
 
 keymap("n", "<leader>n", ":bn<CR>")
 keymap("n", "<leader>p", ":bp<CR>")
+keymap("n", "<leader>x", ":bd<CR>")
+
+keymap('n', '<leader>c', ":%bd|e#|bd#<CR>", { desc = 'Close all buffers except current' })
 
 -- System clipboard
 keymap({ "n", "v" }, "<leader>y", '"+y')
@@ -449,52 +436,57 @@ autocmd("LspAttach", {
         vim.keymap.set('n', 'gD', vim.lsp.buf.declaration, opts)
         vim.keymap.set("n", "g]", '<cmd>lua vim.diagnostic.jump({count=1, float=true})<cr>', opts)
         vim.keymap.set("n", "g[", '<cmd>lua vim.diagnostic.jump({count=-1, float=true})<cr>', opts)
+
+        local client = vim.lsp.get_client_by_id(event.data.client_id)
+        if client.name == "jdtls" then
+            local opts = { buffer = event.buf, silent = true }
+            vim.keymap.set("n", "<A-o>", function() require('jdtls').organize_imports() end, opts)
+            vim.keymap.set("n", "crv", function() require('jdtls').extract_variable() end, opts)
+            vim.keymap.set("v", "crv", [[<Esc><Cmd>lua require('jdtls').extract_variable(true)<CR>]], opts)
+            vim.keymap.set("n", "crc", function() require('jdtls').extract_constant() end, opts)
+            vim.keymap.set("v", "crc", [[<Esc><Cmd>lua require('jdtls').extract_constant(true)<CR>]], opts)
+            vim.keymap.set("v", "crm", [[<Esc><Cmd>lua require('jdtls').extract_method(true)<CR>]], opts)
+        end
     end,
 })
+
 autocmd("FileType", {
+    group = vim.api.nvim_create_augroup("jdtls_setup", { clear = true }),
     pattern = "java",
     callback = function()
-        local root_dir = vim.fs.root(0, { "gradlew", ".git", "mvnw" })
-        local project_name = vim.fn.fnamemodify(root_dir or vim.fn.getcwd(), ":p:h:t")
-        local workspace_dir = vim.fn.stdpath("data") .. "/jdtls-workspace/" .. project_name
+        -- Determine the root directory for the multi modules project
+        local root_path = vim.fs.find({
+            "CTNH-Modules",
+        }, { upward = true, type = "directory" })[1]
 
-        -- paru -S java-lombok
+        local root_dir
+        if root_path then
+            root_dir = root_path
+        else
+            root_dir = vim.fs.root(0, { ".git", "mvnw", "gradlew" }) or vim.fn.getcwd()
+        end
+
+        local project_name = vim.fn.fnamemodify(root_dir, ":p:h:t")
+        local workspace_dir = vim.fn.expand("~/.cache/jdtls/") .. project_name
+
+        if vim.fn.isdirectory(workspace_dir) == 0 then
+            vim.fn.mkdir(workspace_dir, "p")
+        end
+
         local lombok_path = "/usr/share/java/lombok/lombok.jar"
-
-        local opts = { buffer = 0 }
-        vim.keymap.set("n", "<A-o>", "<Cmd>lua require'jdtls'.organize_imports()<CR>", opts)
-        vim.keymap.set("n", "crv", "<Cmd>lua require('jdtls').extract_variable()<CR>", opts)
-        vim.keymap.set("v", "crv", "<Esc><Cmd>lua require('jdtls').extract_variable(true)<CR>", opts)
-        vim.keymap.set("n", "crc", "<Cmd>lua require('jdtls').extract_constant()<CR>", opts)
-        vim.keymap.set("v", "crc", "<Esc><Cmd>lua require('jdtls').extract_constant(true)<CR>", opts)
-        vim.keymap.set("v", "crm", "<Esc><Cmd>lua require('jdtls').extract_method(true)<CR>", opts)
+        vim.env.JAVA_HOME = "/usr/lib/jvm/java-21-openjdk"
+        vim.env.PATH = vim.env.JAVA_HOME .. "/bin:" .. vim.env.PATH
 
         require("jdtls").start_or_attach({
+            name = "jdtls",
             cmd = {
                 "jdtls",
-                "-data", workspace_dir,
+                "-data",
+                workspace_dir,
                 "--jvm-arg=-javaagent:" .. lombok_path,
+                "--jvm-arg=-Xmx2G",
             },
             root_dir = root_dir,
-            settings = {
-                java = {
-                    configuration = {
-                        runtimes = {
-                            {
-                                name = "JavaSE-21",
-                                path = "/usr/lib/jvm/java-21-openjdk/",
-                            },
-                            {
-                                name = "JavaSE-17",
-                                path = "/usr/lib/jvm/java-17-openjdk/",
-                            },
-                        },
-                    },
-                }
-            },
-            init_options = {
-                bundles = {}
-            },
         })
     end,
 })
