@@ -181,6 +181,7 @@ require("lazy").setup({
                     lua = { "mystylua" },
                     python = { "ruff", "black" },
                     java = { "spotless_gradle", "spotless_maven", "google-java-format" },
+                    groovy = { "npm-groovy-lint" },
                 },
                 formatters = {
                     mystylua = {
@@ -463,16 +464,7 @@ autocmd("FileType", {
     pattern = "java",
     callback = function()
         -- Determine the root directory for the multi modules project
-        local git = vim.fs.find({
-            ".git",
-        }, { upward = true, type = "directory", stop = vim.uv.os_homedir() })[1]
-
-        local root_dir
-        if git then
-            root_dir = vim.fs.dirname(git)
-        else
-            root_dir = vim.fs.root(0, { "mvnw", "gradlew" }) or vim.fn.getcwd()
-        end
+        local root_dir = vim.fs.root(0, { { ".git/" }, "mvnw", "gradlew" }) or vim.fn.getcwd()
 
         local project_name = vim.fn.fnamemodify(root_dir, ":p:h:t")
         local workspace_dir = vim.fn.expand("~/.cache/jdtls/") .. project_name
