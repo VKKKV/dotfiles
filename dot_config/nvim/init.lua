@@ -112,7 +112,7 @@ require("lazy").setup({
         lazy = false,
         build = ":TSUpdate",
         opts = {
-            ensure_installed = { "bash", "c", "javascript", "lua", "markdown", "python", "rust", "typescript", "typst", "vim", "vue", "glsl", "java", "json"},
+            ensure_installed = { "bash", "c", "javascript", "lua", "markdown", "python", "rust", "typescript", "typst", "vim", "vue", "glsl", "java", "json", "groovy", "html", "css", "yaml", "toml", "nix", "kotlin", "go", },
             sync_install = false,
             auto_install = true,
             indent = { enable = true },
@@ -132,6 +132,28 @@ require("lazy").setup({
     },
     -- LSP
     { "mfussenegger/nvim-jdtls" },
+    -- LazyDev: Enhance Lua development experience
+    {
+        "folke/lazydev.nvim",
+        ft = "lua", -- only load on lua files
+        opts = {
+            library = {
+                -- See the configuration section for more details
+                -- Load luvit types when the `vim.uv` word is found
+                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
+            },
+        },
+    },
+    { -- optional cmp completion source for require statements and module annotations
+        "hrsh7th/nvim-cmp",
+        opts = function(_, opts)
+            opts.sources = opts.sources or {}
+            table.insert(opts.sources, {
+                name = "lazydev",
+                group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+            })
+        end,
+    },
     {
         "neovim/nvim-lspconfig",
         dependencies = {
@@ -158,7 +180,7 @@ require("lazy").setup({
                     nix = { "alejandra" },
                     lua = { "mystylua" },
                     python = { "ruff", "black" },
-                    java = { "google-java-format" },
+                    java = { "spotless_gradle", "spotless_maven", "google-java-format" },
                 },
                 formatters = {
                     mystylua = {
@@ -182,23 +204,8 @@ require("lazy").setup({
                             capabilities = capabilities,
                         })
                     end,
-                    ["lua_ls"] = function()
-                        local lspconfig = require("lspconfig")
-                        lspconfig.lua_ls.setup({
-                            capabilities = capabilities,
-                            settings = {
-                                Lua = {
-                                    runtime = { version = "LuaJIT" },
-                                    diagnostics = {
-                                        globals = { "vim" },
-                                    },
-                                },
-                            },
-                        })
-                    end,
                 },
             })
-
             -- Autocomplete setup
             local luasnip = require("luasnip")
             local cmp_select = { behavior = cmp.SelectBehavior.Select }
@@ -288,12 +295,11 @@ require("lazy").setup({
         },
         opts = {
             focus = true,
-            -- warn_no_results = false,
             modes = {
                 symbols = { win = { position = "right", size = 0.3, }, },
                 lsp = { win = { position = "right", size = 0.3, }, },
             },
-        },
+        }
     },
     {
         "rachartier/tiny-inline-diagnostic.nvim",
@@ -457,15 +463,15 @@ autocmd("FileType", {
     pattern = "java",
     callback = function()
         -- Determine the root directory for the multi modules project
-        local root_path = vim.fs.find({
-            "CTNH-Modules",
-        }, { upward = true, type = "directory" })[1]
+        local git = vim.fs.find({
+            ".git",
+        }, { upward = true, type = "directory", stop = vim.uv.os_homedir() })[1]
 
         local root_dir
-        if root_path then
-            root_dir = root_path
+        if git then
+            root_dir = vim.fs.dirname(git)
         else
-            root_dir = vim.fs.root(0, { ".git", "mvnw", "gradlew" }) or vim.fn.getcwd()
+            root_dir = vim.fs.root(0, { "mvnw", "gradlew" }) or vim.fn.getcwd()
         end
 
         local project_name = vim.fn.fnamemodify(root_dir, ":p:h:t")
@@ -482,13 +488,21 @@ autocmd("FileType", {
         require("jdtls").start_or_attach({
             name = "jdtls",
             cmd = {
-                "jdtls",
-                "-data",
-                workspace_dir,
+                "jdtls", "-data", workspace_dir,
                 "--jvm-arg=-javaagent:" .. lombok_path,
                 "--jvm-arg=-Xmx2G",
             },
             root_dir = root_dir,
+            settings = {
+                java = {
+                    configuration = {
+                        runtimes = {
+                            { name = "JavaSE-17", path = "/usr/lib/jvm/java-17-openjdk/", default = true, },
+                            { name = "JavaSE-21", path = "/usr/lib/jvm/java-21-openjdk/", }
+                        },
+                    },
+                },
+            },
         })
     end,
 })
