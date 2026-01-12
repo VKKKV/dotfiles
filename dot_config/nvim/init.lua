@@ -56,7 +56,42 @@ require("lazy").setup({
             view_options = { show_hidden = true },
         },
         dependencies = { "nvim-tree/nvim-web-devicons" },
-        keys = { { "<leader>e", "<CMD>Oil<CR>", desc = "Open File Explorer" } },
+        keys = { { "<leader>e",function() require("oil").toggle_float() end, desc = "Open File Explorer" } },
+        config =function()
+            -- Declare a global function to retrieve the current directory
+            function _G.get_oil_winbar()
+                local bufnr = vim.api.nvim_win_get_buf(vim.g.statusline_winid)
+                local dir = require("oil").get_current_dir(bufnr)
+                if dir then
+                    return vim.fn.fnamemodify(dir, ":~")
+                else
+                    -- If there is no current directory (e.g. over ssh), just show the buffer name
+                    return vim.api.nvim_buf_get_name(0)
+                end
+            end
+            require("oil").setup({
+                float = {
+                    padding = 2,
+                    max_width = 0.8,
+                    max_height = 0.8,
+                    border = "rounded",
+                    win_options = {
+                        winblend = 10,
+                    },
+                },
+                win_options = {
+                    winbar = "%!v:lua.get_oil_winbar()",
+                },
+                default_file_explorer = true,
+                columns = {
+                    "icon",
+                    "permissions",
+                    "size",
+                    "mtime",
+                },
+                skip_confirm_for_simple_edits = true,
+            })
+        end,
     },
     -- UI: Fuzzy Finder
     {
@@ -78,12 +113,79 @@ require("lazy").setup({
             { "<leader>fh", "<cmd>FzfLua help_tags<cr>", desc = "Fzf Help Tags" },
             { "<leader>fk", "<cmd>FzfLua keymaps<cr>", desc = "Fzf Keymaps" },
             { "<leader>fm", "<cmd>FzfLua marks<cr>", desc = "Fzf Marks" },
+            { "<leader>fo", "<cmd>FzfLua oldfiles<cr>", desc = "Fzf Oldfiles" },
+            { "<leader>fz", "<cmd>FzfLua zoxide<cr>", desc = "Fzf Zoxide" },
             -- LSP Mappings
             { "gd", "<cmd>FzfLua lsp_definitions<cr>", desc = "Go to Definition" },
             { "gi", "<cmd>FzfLua lsp_implementations<cr>", desc = "Go to Implementation" },
             { "gr", "<cmd>FzfLua lsp_references<cr>", desc = "Go to References" },
             { "gs", "<cmd>FzfLua lsp_live_workspace_symbols<cr>", desc = "Go to Symbols" },
         },
+    },
+    -- UI ENHANCE
+    -- useless but coollll
+    {
+        "folke/noice.nvim",
+        event = "VeryLazy",
+        dependencies = {
+            "MunifTanjim/nui.nvim",
+            "rcarriga/nvim-notify",
+        },
+        init = function ()
+            vim.opt.showmode = false
+            vim.opt.cmdheight = 0
+        end,
+        config = function()
+            require("noice").setup({
+                lsp = {
+                    override = {
+                        ["vim.lsp.util.convert_input_to_markdown_lines"] = true,
+                        ["vim.lsp.util.stylize_markdown"] = true,
+                        ["cmp.entry.get_documentation"] = true,
+                    },
+                    hover = {
+                        enabled = true,
+                        silent = false,
+                        view = nil,
+                        opts = {},
+                    },
+                    signature = {
+                        enabled = true,
+                        auto_open = {
+                            enabled = true,
+                            trigger = true,
+                            luasnip = true,
+                            throttle = 50,
+                        },
+                        view = nil,
+                        opts = {},
+                    },
+                    message = {
+                        enabled = true,
+                        view = "notify",
+                        opts = {},
+                    },
+                },
+                presets = {
+                    bottom_search = false,
+                    command_palette = true,
+                    long_message_to_split = true,
+                    lsp_doc_border = true,
+                },
+                views = {
+                    cmdline_popup = {
+                        position = {
+                            row = "40%",
+                            col = "50%",
+                        },
+                        size = {
+                            width = 60,
+                            height = "auto",
+                        },
+                    },
+                },
+            })
+        end,
     },
     -- Git
     {
@@ -112,7 +214,7 @@ require("lazy").setup({
         lazy = false,
         build = ":TSUpdate",
         opts = {
-            ensure_installed = { "bash", "c", "javascript", "lua", "markdown", "python", "rust", "typescript", "typst", "vim", "vue", "glsl", "java", "json", "groovy", "html", "css", "yaml", "toml", "nix", "kotlin", "go", },
+            ensure_installed = { "bash", "c", "javascript", "lua", "markdown", "python", "rust", "typescript", "typst", "vim", "vue", "glsl", "java", "json", "groovy", "html", "css", "yaml", "toml", "nix", "kotlin", "go", "javadoc", "regex", "markdown_inline", },
             sync_install = false,
             auto_install = true,
             indent = { enable = true },
@@ -130,67 +232,125 @@ require("lazy").setup({
             },
         },
     },
+    -- DOCS: Documentation generation
+    { "danymat/neogen", config = true, },
     -- LSP
     { "mfussenegger/nvim-jdtls" },
-    -- LazyDev: Enhance Lua development experience
+    -- Gradle Support
     {
-        "folke/lazydev.nvim",
-        ft = "lua", -- only load on lua files
-        opts = {
-            library = {
-                -- See the configuration section for more details
-                -- Load luvit types when the `vim.uv` word is found
-                { path = "${3rd}/luv/library", words = { "vim%.uv" } },
-            },
+        "oclay1st/gradle.nvim",
+        cmd = { "Gradle", "GradleExec", "GradleInit", "GradleFavorites" },
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "MunifTanjim/nui.nvim"
+        },
+        opts = {},
+        keys = {
+            { '<leader>g', '<cmd>Gradle<cr>', desc = 'Gradle Projects' },
         },
     },
-    { -- optional cmp completion source for require statements and module annotations
-        "hrsh7th/nvim-cmp",
-        opts = function(_, opts)
-            opts.sources = opts.sources or {}
-            table.insert(opts.sources, {
-                name = "lazydev",
-                group_index = 0, -- set group index to 0 to skip loading LuaLS completions
+    -- FORMATTING: Conform
+    {
+        "stevearc/conform.nvim",
+        init = function ()
+            vim.o.formatexpr = "v:lua.require'conform'.formatexpr()"
+        end,
+        config = function()
+            require("conform").setup({
+                formatters_by_ft = {
+                    nix = { "alejandra" },
+                    lua = { "mylua" },
+                    python = { "ruff" },
+                    java = { "myjava" },
+                    groovy = { "npm-groovy-lint" },
+                    json = { "jq" },
+                    ["_"] = { "trim_whitespace" },
+                },
+                formatters = {
+                    mylua = {
+                        command = vim.fn.stdpath("data") .. "/mason/bin/stylua",
+                        args = { "--indent-type", "Spaces", "--indent-width", "4", "-" },
+                    },
+                    myjava = {
+                        command = vim.fn.stdpath("data") .. "/mason/bin/google-java-format",
+                        args = { "--aosp", "-" },
+                    },
+                },
             })
         end,
+    },
+    -- LINTING: nvim-lint
+    {
+        "mfussenegger/nvim-lint",
+        event = { "BufReadPre", "BufNewFile" },
+        config = function()
+            local lint = require("lint")
+
+            lint.linters_by_ft = {
+                -- Shell
+                bash = { "shellcheck" },
+                sh = { "shellcheck" },
+                nix = { "statix" },
+                dockerfile = { "hadolint" },
+                make = { "checkmake" },
+
+                -- Web
+                javascript = { "eslint_d" },
+                typescript = { "eslint_d" },
+                javascriptreact = { "eslint_d" },
+                typescriptreact = { "eslint_d" },
+                vue = { "eslint_d" },
+                css = { "stylelint" },
+                html = { "tidy" },
+
+                -- Programming Languages
+                python = { "ruff" },
+                go = { "golangcilint" },
+                lua = { "luacheck" },
+                groovy = { "npm-groovy-lint" },
+                kotlin = { "ktlint" },
+
+                -- Documentation
+                markdown = { "markdownlint" },
+                text = { "vale" },
+                typst = { "vale" },
+            }
+
+            vim.api.nvim_create_autocmd({ "BufEnter", "BufWritePost", "InsertLeave" }, {
+                callback = function()
+                    lint.try_lint()
+                end,
+            })
+        end,
+    },
+    -- COMPLETION: blink.cmp (Modern, Fast, Rust-based)
+    {
+        "saghen/blink.cmp",
+        version = "*",
+        dependencies = {
+            "L3MON4D3/LuaSnip",
+            "rafamadriz/friendly-snippets",
+        },
+        opts = {
+            keymap = { preset = "enter" },
+            appearance = {
+                use_nvim_cmp_as_default = true,
+                nerd_font_variant = "mono",
+            },
+            sources = {
+                default = { "lsp", "path", "snippets", "buffer" },
+            },
+            signature = { enabled = true },
+        },
     },
     {
         "neovim/nvim-lspconfig",
         dependencies = {
-            "stevearc/conform.nvim",
             "williamboman/mason.nvim",
             "williamboman/mason-lspconfig.nvim",
-            "hrsh7th/cmp-nvim-lsp",
-            "hrsh7th/cmp-buffer",
-            "hrsh7th/cmp-path",
-            "hrsh7th/cmp-cmdline",
-            "hrsh7th/nvim-cmp",
-            "saadparwaiz1/cmp_luasnip",
         },
         config = function()
-            local cmp = require("cmp")
-
-            local cmp_autopairs = require("nvim-autopairs.completion.cmp")
-            cmp.event:on("confirm_done", cmp_autopairs.on_confirm_done())
-
-            local capabilities = require("cmp_nvim_lsp").default_capabilities()
-            -- formatter settings
-            require("conform").setup({
-                formatters_by_ft = {
-                    nix = { "alejandra" },
-                    lua = { "mystylua" },
-                    python = { "ruff", "black" },
-                    java = { "spotless_gradle", "spotless_maven", "google-java-format" },
-                    groovy = { "npm-groovy-lint" },
-                },
-                formatters = {
-                    mystylua = {
-                        command = "stylua",
-                        args = { "--indent-type", "Spaces", "--indent-width", "4", "-" },
-                    },
-                },
-            })
-            -- Setup Mason (Installer for LSPs)
+            local capabilities = require("blink.cmp").get_lsp_capabilities()
             require("mason").setup()
             require("mason-lspconfig").setup({
                 automatic_enable = {
@@ -198,7 +358,7 @@ require("lazy").setup({
                         "jdtls",
                     },
                 },
-                ensure_installed = { "nil_ls", "lua_ls", "ts_ls", "tinymist", "rust_analyzer", "marksman", "glsl_analyzer", "bashls"},
+                ensure_installed = { "nil_ls", "lua_ls", "lua", "ts_ls", "tinymist", "rust_analyzer", "marksman", "glsl_analyzer", "bashls", "gradle_ls", "gopls", "jsonls", "html", "cssls", "pyright", "yamlls", "kotlin_language_server", },
                 handlers = {
                     function(server_name)
                         require("lspconfig")[server_name].setup({
@@ -206,60 +366,6 @@ require("lazy").setup({
                         })
                     end,
                 },
-            })
-            -- Autocomplete setup
-            local luasnip = require("luasnip")
-            local cmp_select = { behavior = cmp.SelectBehavior.Select }
-            cmp.setup({
-                snippet = {
-                    expand = function(args)
-                        require("luasnip").lsp_expand(args.body)
-                    end,
-                },
-                -- Autocomplete keymaps
-                mapping = cmp.mapping.preset.insert({
-                    ["<C-p>"] = cmp.mapping.select_prev_item(cmp_select),
-                    ["<C-n>"] = cmp.mapping.select_next_item(cmp_select),
-
-                    ["<C-Space>"] = cmp.mapping.complete(),
-                    ["<CR>"] = cmp.mapping(function(fallback)
-                        if cmp.visible() then
-                            if luasnip.expandable() then
-                                luasnip.expand()
-                            else
-                                cmp.confirm({
-                                    select = true,
-                                })
-                            end
-                        else
-                            fallback()
-                        end
-                    end),
-                    ["<Tab>"] = cmp.mapping(function(fallback)
-                        if cmp.visible() then
-                            cmp.select_next_item()
-                        elseif luasnip.locally_jumpable(1) then
-                            luasnip.jump(1)
-                        else
-                            fallback()
-                        end
-                    end, { "i", "s" }),
-                    ["<S-Tab>"] = cmp.mapping(function(fallback)
-                        if cmp.visible() then
-                            cmp.select_prev_item()
-                        elseif luasnip.locally_jumpable(-1) then
-                            luasnip.jump(-1)
-                        else
-                            fallback()
-                        end
-                    end, { "i", "s" }),
-                }),
-                sources = cmp.config.sources({
-                    { name = "nvim_lsp" },
-                    { name = "luasnip" },
-                }, {
-                    { name = "buffer" },
-                }),
             })
         end,
     },
@@ -280,7 +386,6 @@ require("lazy").setup({
         build = "make install_jsregexp",
         config = function()
             require("luasnip").setup({ enable_autosnippets = true })
-            require("luasnip.loaders.from_vscode").lazy_load()
             require("luasnip.loaders.from_lua").load({ paths = "./snippets" })
         end,
     },
@@ -333,12 +438,13 @@ require("lazy").setup({
         "qapquiz/sidekick.nvim",
         opts = { cli = { mux = { backend = "tmux", enabled = true, }, }, },
         keys = {
-            { "<leader>ao", function() require("sidekick.cli").toggle({ name = "opencode", focus = true }) end, desc = "Sidekick Toggle opencode", },
-            { "<leader>as", function() require("sidekick.cli").select() end, desc = "Select CLI", },
-            { "<leader>at", function() require("sidekick.cli").send({ msg = "{this}" }) end, mode = { "x", "n" }, desc = "Send This", },
-            { "<leader>af", function() require("sidekick.cli").send({ msg = "{file}" }) end, desc = "Send File", },
-            { "<leader>av", function() require("sidekick.cli").send({ msg = "{selection}" }) end, mode = { "x" }, desc = "Send Visual Selection", },
-            { "<leader>ap", function() require("sidekick.cli").prompt() end, mode = { "n", "x" }, desc = "Sidekick Select Prompt", },
+            { "<leader>ao", function() require("sidekick.cli").toggle({ name = "opencode", focus = true }) end, desc = "Sidekick Toggle opencode" },
+            { "<leader>ag", function() require("sidekick.cli").toggle({ name = "gemini", focus = true }) end, desc = "Sidekick Toggle gemini" },
+            { "<leader>as", function() require("sidekick.cli").select() end, desc = "Select CLI" },
+            { "<leader>at", function() require("sidekick.cli").send({ msg = "{this}" }) end, mode = { "x", "n" }, desc = "Send This" },
+            { "<leader>af", function() require("sidekick.cli").send({ msg = "{file}" }) end, desc = "Send File" },
+            { "<leader>av", function() require("sidekick.cli").send({ msg = "{selection}" }) end, mode = { "x" }, desc = "Send Visual Selection" },
+            { "<leader>ap", function() require("sidekick.cli").prompt() end, mode = { "n", "x" }, desc = "Sidekick Select Prompt" },
         },
     },
     -- COPILOT
@@ -391,21 +497,21 @@ opt.ignorecase = true
 opt.smartcase = true
 
 opt.undofile = true
-opt.undodir = os.getenv("HOME") .. "/.vim/undodir"
+opt.undodir = vim.fn.stdpath("state") .. "/undo"
 
 opt.foldopen = "mark,percent,quickfix,search,tag,undo"
 
 -- Keymaps
 local keymap = vim.keymap.set
 keymap("n", "<leader>w", "<CMD>write<CR>", { silent = true })
-keymap("n", "<leader>q", ":q<CR>")
-keymap("n", "<C-L>", ":nohlsearch<CR>")
+keymap("n", "<leader>q", "<CMD>q<CR>")
+keymap("n", "<C-L>", "<CMD>nohlsearch<CR>")
 
-keymap("n", "<leader>n", ":bn<CR>")
-keymap("n", "<leader>p", ":bp<CR>")
-keymap("n", "<leader>x", ":bd<CR>")
+keymap("n", "<leader>n", "<CMD>bn<CR>")
+keymap("n", "<leader>p", "<CMD>bp<CR>")
+keymap("n", "<leader>x", "<CMD>bd<CR>")
 
-keymap('n', '<leader>c', ":%bd|e#|bd#<CR>", { desc = 'Close all buffers except current' })
+keymap('n', '<leader>c', "<CMD>%bd|e#|bd#<CR>", { desc = 'Close all buffers except current' })
 
 -- System clipboard
 keymap({ "n", "v" }, "<leader>y", '"+y')
@@ -415,28 +521,90 @@ keymap({ "n", "v" }, "<leader>y", '"+y')
 keymap("n", "<C-_>", function() vim.api.nvim_feedkeys("gcc", "x", true) end, { desc = "Toggle Line Comment" })
 keymap("v", "<C-_>", function() vim.api.nvim_feedkeys("gb", "v", true) end, { desc = "Toggle Line Comment" })
 
-keymap('t', '<esc>', [[<C-\><C-n>]])
+keymap('t', '<C-t>', [[<C-\><C-n>]])
 
 -- Auto Commands
 local autocmd = vim.api.nvim_create_autocmd
+
 autocmd("BufWritePre", { pattern = "*", command = ":%s/\\s\\+$//e", })
+
 autocmd("FileType", {
     pattern = "typst",
     callback = function()
-        vim.keymap.set("n", "<leader>o", ":TypstPreviewToggle<CR>", { noremap = true, silent = true })
+        vim.keymap.set("n", "<leader>o", "<CMD>TypstPreviewToggle<CR>", { noremap = true, silent = true })
     end,
 })
 autocmd("FileType", {
-  pattern = "markdown",
-  callback = function()
-    vim.keymap.set("n", "<leader>o", ":MarkdownPreviewToggle<CR>", { noremap = true, silent = true, })
-  end,
+    pattern = "markdown",
+    callback = function()
+        vim.keymap.set("n", "<leader>o", "<CMD>MarkdownPreviewToggle<CR>", { noremap = true, silent = true })
+    end,
 })
+
+autocmd("TextYankPost", {
+    desc = "Highlight when yanking (copying) text",
+    callback = function()
+        vim.highlight.on_yank()
+    end,
+})
+
+autocmd("BufReadPost", {
+    callback = function()
+        local mark = vim.api.nvim_buf_get_mark(0, '"')
+        local lcount = vim.api.nvim_buf_line_count(0)
+        if mark[1] > 0 and mark[1] <= lcount then
+            pcall(vim.api.nvim_win_set_cursor, 0, mark)
+        end
+    end,
+})
+
+autocmd("TermOpen", {
+    callback = function()
+        vim.opt_local.number = false
+        vim.opt_local.relativenumber = false
+    end,
+})
+
+autocmd("VimResized", {
+    callback = function()
+        local current_tab = vim.api.nvim_get_current_tabpage()
+        vim.cmd("tabdo wincmd =")
+        vim.api.nvim_set_current_tabpage(current_tab)
+    end,
+})
+
+autocmd({ "FocusGained", "BufEnter", "CursorHold", "CursorHoldI" }, {
+    callback = function()
+        if vim.fn.getcmdwintype() == "" then
+            vim.cmd("checktime")
+        end
+    end,
+})
+
+autocmd("BufWritePre", {
+    callback = function(event)
+        if event.match:match("^%w%w+:[\\/][\\/]") then
+            return
+        end
+        local file = vim.uv.fs_realpath(event.match) or event.match
+        vim.fn.mkdir(vim.fn.fnamemodify(file, ":p:h"), "p")
+    end,
+})
+
 autocmd("LspAttach", {
     callback = function(event)
         local opts = { buffer = event.buf }
         vim.keymap.set({ "n", "i" }, "<C-k>", function() require("lsp_signature").toggle_float_win() end, { silent = true, noremap = true, desc = "toggle signature" })
-        vim.keymap.set({ "n", "v" }, "<leader>=", function() require("conform").format({ async = true, lsp_fallback = true, }) end, { desc = "Format code" })
+        vim.keymap.set("", "<leader>=", function()
+            require("conform").format({ async = true }, function(err)
+                if not err then
+                    local mode = vim.api.nvim_get_mode().mode
+                    if vim.startswith(string.lower(mode), "v") then
+                        vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes("<Esc>", true, false, true), "n", true)
+                    end
+                end
+            end)
+        end, { desc = "Format code" })
 
         vim.keymap.set("n", "K", function() vim.lsp.buf.hover() end, opts)
         vim.keymap.set("n", "<leader>r", function() vim.lsp.buf.rename() end, opts)
@@ -447,8 +615,7 @@ autocmd("LspAttach", {
         vim.keymap.set("n", "g[", '<cmd>lua vim.diagnostic.jump({count=-1, float=true})<cr>', opts)
 
         local client = vim.lsp.get_client_by_id(event.data.client_id)
-        if client.name == "jdtls" then
-            local opts = { buffer = event.buf, silent = true }
+        if client and client.name == "jdtls" then
             vim.keymap.set("n", "<A-o>", function() require('jdtls').organize_imports() end, opts)
             vim.keymap.set("n", "crv", function() require('jdtls').extract_variable() end, opts)
             vim.keymap.set("v", "crv", [[<Esc><Cmd>lua require('jdtls').extract_variable(true)<CR>]], opts)
