@@ -19,47 +19,43 @@ local conds = require("luasnip.extras.expand_conditions")
 local events = require("luasnip.util.events")
 
 return {
-    -- delete line
-    s("~~", fmt([[~~{}~~{}]], { i(1), i(0) })),
+    ls.add_snippets("markdown", {
+        -- delete line
+        s("~~", fmt([[~~{}~~{}]], { i(1), i(0) })),
 
-    -- Italics
-    s({ trig = "*", priority = -50 }, {
-        t("*"),
-        i(1),
-        t("*"),
-        i(0),
-    }),
+        -- Italics
+        s({ trig = "*", priority = -50 }, {
+            t("*"),
+            i(1),
+            t("*"),
+            i(0),
+        }),
 
-    -- Bold
-    s({ trig = "**", priority = -50 }, {
-        t("**"),
-        i(1),
-        t("**"),
-        i(0),
-    }),
-    -- Bold Italics
-    s({ trig = "***", priority = -50 }, {
-        t("***"),
-        i(1),
-        t("***"),
-        i(0),
-    }),
+        -- Bold
+        s({ trig = "**", priority = -50 }, {
+            t("**"),
+            i(1),
+            t("**"),
+            i(0),
+        }),
 
-    -- Link: [Text](url)
-    s(
+        -- Bold Italics
+        s({ trig = "***", priority = -50 }, {
+            t("***"),
+            i(1),
+            t("***"),
+            i(0),
+        }),
 
-        "link",
-        fmt("[{}]({}){}", {
+        -- Link: [Text](url)
+        s("link", fmt("[{}]({}){}", {
             i(1),
             i(2, "https://www.url.com"),
             i(0),
-        })
-    ),
+        })),
 
-    -- Image: ![alt](path "title")
-    s(
-        "img",
-        fmt("![{}]({}{}){}", {
+        -- Image: ![alt](path "title")
+        s("img", fmt("![{}]({}{}){}", {
             i(1, "pic alt"),
             i(2, "path"),
             f(function(args) -- 处理可选的 title
@@ -70,58 +66,46 @@ return {
                 end
             end, { 3 }), -- 依赖节点 3 (title)
             i(0),
-        })
-    ),
+        })),
 
-    -- Inline Code
-    s("inline", fmt([[`{}`{}]], { i(1), i(0) })),
+        -- Inline Code
+        s("inline", fmt([[`{}`{}]], { i(1), i(0) })),
 
-    -- Codeblock
-    s(
-        "code",
-        fmt(
-            [[
-            ```{}
-            {}
-            ```
-            ]],
-            { i(1, "bash"), i(0) }
-        )
-    ),
+        -- Codeblock
+        s("code", fmt([[
+```{}
+{}
+```
+]], { i(1, "bash"), i(0) })),
 
-    -- Spoiler for hexo
-    s("spo", fmt([[{{% spoiler {} %}}]], { i(1) })),
+        -- Spoiler for hexo
+        s("spo", fmt([[{{% spoiler {} %}}]], { i(1) })),
 
-    s(
-        { trig = "date" },
-        fmt([[{}]], { f(function(_, _)
-            return os.date("%Y-%m-%d %H:%M:%S")
-        end) })
-    ),
+        s({ trig = "date" }, fmt([[{}]], {
+            f(function(_, _)
+                return os.date("%Y-%m-%d %H:%M:%S")
+            end)
+        })),
 
-    -- blog posts for hexo
-    s(
-        "hexo",
-        fmt(
-            [[
-            ---
-            title: {}
-            date: {}
-            tags: {}
-            categories: {}
-            description: {}
-            mathjax: true
-            ---
-            {}
-            ]],
-            {
-                i(1, "title"),
-                i(2, "date"),
-                i(3, "tags"),
-                i(4, "categories"),
-                i(5),
-                i(0),
-            }
-        )
-    ),
+        -- blog posts for hexo
+        s("hexo", fmt([[
+---
+title: {}
+date: {}
+tags: {}
+categories: {}
+description: {}
+mathjax: true
+---
+
+{}
+]], {
+            i(1, "title"),
+            i(2, "date"),
+            i(3, "tags"),
+            i(4, "categories"),
+            i(5),
+            i(0),
+        })),
+    }),
 }
