@@ -40,29 +40,33 @@ end
 
 return {
     ls.add_snippets("java", {
+
+        -- lambda
+        s("lam", fmt("({}) -> {}", { i(1, "params"), i(0) })),
+
         s("package", fmt("package {};", {
             f(get_java_package)
         })),
 
         -- public static final
-        s("psf", {
+        s("pub", {
             t("public static final "),
-            i(1, "String"), -- 类型
+            i(1), -- 类型
             t(" "),
-            i(2, "VARIABLE_NAME"), -- 变量名
+            i(2), -- 变量名
             t(" = "),
-            i(3, "value"), -- 值
+            i(3), -- 值
             t(";"),
         }),
 
         -- private static final
-        s("prsf", {
+        s("pri", {
             t("private static final "),
-            i(1, "String"),
+            i(1),
             t(" "),
-            i(2, "VARIABLE_NAME"),
+            i(2),
             t(" = "),
-            i(3, "value"),
+            i(3),
             t(";"),
         }),
 
@@ -98,7 +102,7 @@ for ({} {} : {}) {{
 ]], { i(1, "type"), i(2, "var"), i(3, "iterable"), i(0) })),
 
         -- Constructor
-        s("ctor", fmt([[
+        s("cons", fmt([[
 public {}($2) {{
     {}
 }}
