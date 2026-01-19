@@ -20,7 +20,7 @@ require("lazy").setup({
     -- UI: Indent Guides
     { "lukas-reineke/indent-blankline.nvim", main = "ibl", event = "BufReadPre", opts = {} },
     -- UI: Smooth Scrolling
-    { "karb94/neoscroll.nvim", opts = {} },
+    { "karb94/neoscroll.nvim", opts = {duration_multiplier = 0.1145141919810} },
     -- SAME WORD HIGHLIGHT
     { "RRethy/vim-illuminate", event = "BufReadPost" },
     -- EDITOR: Commenting
@@ -56,14 +56,6 @@ require("lazy").setup({
             { "<leader>lg", "<cmd>LazyGit<cr>", desc = "LazyGit" },
         },
     },
-    -- EDITOR: Surround
-    {
-        "nvim-mini/mini.surround",
-        version = "*",
-        config = function()
-            require("mini.surround").setup({})
-        end,
-    },
     -- EDITOR: Multi Cursor
     {
         "mg979/vim-visual-multi",
@@ -91,6 +83,8 @@ require("lazy").setup({
     -- UI: File Explorer
     {
         "stevearc/oil.nvim",
+        lazy = false,
+        priority = 1000,
         main = "oil",
         opts = {
             delete_to_trash = true,
@@ -203,11 +197,28 @@ require("lazy").setup({
             })
         end,
     },
+    {
+        "folke/flash.nvim",
+        event = "VeryLazy",
+        ---@type Flash.Config
+        opts = {},
+        -- 核心按键绑定
+        keys = {
+            { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+            { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+            { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+            { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+            { "<c-s>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+        },
+    },
     -- CORE: Syntax Highlighting
     {
         "nvim-treesitter/nvim-treesitter",
-        event = { "BufReadPost", "BufNewFile" },
         build = ":TSUpdate",
+        event = { "BufReadPost", "BufNewFile" },
+        dependencies = {
+            { "nvim-treesitter/nvim-treesitter-context", config = true },
+        },
         opts = {
             ensure_installed = {
                 "bash",
@@ -486,7 +497,7 @@ require("lazy").setup({
                     require("sidekick.cli").toggle()
                 end,
                 desc = "Sidekick Toggle",
-                mode = { "n", "t", "i", "x" },
+                mode = { "n", "t", "x" },
             },
             {
                 "<leader>av",
@@ -579,8 +590,8 @@ opt.undodir = vim.fn.stdpath("state") .. "/undo"
 local keymap = vim.keymap.set
 
 -- File & Buffer Operations
+keymap("n", "<leader>q", "<CMD>quit<CR>", { desc = "Close file", silent = true })
 keymap("n", "<leader>w", "<CMD>write<CR>", { desc = "Save file", silent = true })
-keymap("n", "<leader>c", "<CMD>nohlsearch<CR>", { desc = "Clear highlights", silent = true })
 keymap("n", "<leader>n", "<CMD>bnext<CR>", { desc = "Next buffer", silent = true })
 keymap("n", "<leader>p", "<CMD>bprevious<CR>", { desc = "Previous buffer", silent = true })
 keymap("n", "<leader>x", "<CMD>bdelete<CR>", { desc = "Close buffer", silent = true })
@@ -589,7 +600,6 @@ keymap({ "n", "v" }, "<leader>y", '"+y', { desc = "Yank to system clipboard", si
 -- Commenting
 keymap("n", "<leader>/", "gcc", { desc = "Toggle Line Comment", remap = true, silent = true })
 keymap("v", "<leader>/", "gc", { desc = "Toggle Comment Selection", remap = true, silent = true })
-keymap({ "n", "i", "v" }, "<C-_>", "<C-/>", { desc = "Toggle Comment", remap = true, silent = true })
 
 -- Formatting
 keymap({ "n", "v" }, "<leader>=", function()
@@ -605,6 +615,18 @@ end, { desc = "Format code" })
 
 -- Auto Commands
 local autocmd = vim.api.nvim_create_autocmd
+
+-- Auto Highlight
+autocmd("CursorMoved", {
+    group = vim.api.nvim_create_augroup("auto-hlsearch", { clear = true }),
+    callback = function()
+        if vim.v.hlsearch == 1 and vim.fn.searchcount().exact_match == 0 then
+            vim.schedule(function()
+                vim.cmd.nohlsearch()
+            end)
+        end
+    end,
+})
 
 -- Typst Preview
 autocmd("FileType", {
@@ -676,6 +698,7 @@ autocmd("LspAttach", {
 })
 
 -- Java
+-- Are you sure? Why not use IntelliJ?
 autocmd("FileType", {
     group = vim.api.nvim_create_augroup("jdtls_setup", { clear = true }),
     pattern = "java",
@@ -772,9 +795,9 @@ autocmd("FileType", {
         local jdtls_ui = require("jdtls.ui")
         local fzf = require("fzf-lua")
 
+        -- Override pick_many to use fzf-lua for multi-selection
         function jdtls_ui.pick_many(items, prompt, label_fn)
             local co = coroutine.running()
-
             if not co then
                 print("❌ Error: pick_many must be run in a coroutine")
                 return {}
@@ -786,7 +809,6 @@ autocmd("FileType", {
                 table.insert(choices, string.format("%d|%s", i, text))
             end
 
-            -- 🏳️ 状态标志位：标记是否已经完成选择
             local is_picked = false
 
             fzf.fzf_exec(choices, {
@@ -795,14 +817,11 @@ autocmd("FileType", {
                     ["--multi"] = true,
                     ["--delimiter"] = "|",
                     ["--with-nth"] = "2..",
-                    -- alt-a toggle all
                     ["--bind"] = "alt-a:select-all",
                 },
                 actions = {
-                    ["default"] = function(selected, opts)
-                        -- ⚡ 1. 标记为已选择，阻止 on_close 误判
+                    ["default"] = function(selected, _)
                         is_picked = true
-
                         vim.schedule(function()
                             local result = {}
                             if selected then
@@ -815,7 +834,6 @@ autocmd("FileType", {
                                 end
                             end
 
-                            -- 正常恢复协程
                             if coroutine.status(co) == "suspended" then
                                 coroutine.resume(co, result)
                             end
@@ -826,14 +844,12 @@ autocmd("FileType", {
                     height = 0.6,
                     width = 0.6,
                     on_close = function()
-                        -- ⚡ 2. 延迟 20ms 执行，给 action 一点时间去设置 is_picked
+                        -- Defer execution to allow the default action to set is_picked first
                         vim.defer_fn(function()
-                            -- 只有当 is_picked 为 false 时，才认为是取消操作
                             if not is_picked and coroutine.status(co) == "suspended" then
-                                -- print("Debug: 检测到窗口关闭且未选择，发送空表取消")
                                 coroutine.resume(co, {})
                             end
-                        end, 20) -- 20ms 延迟足以解决竞争问题
+                        end, 20)
                     end,
                 },
             })
