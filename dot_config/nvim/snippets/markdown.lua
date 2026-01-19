@@ -18,12 +18,13 @@ local types = require("luasnip.util.types")
 local conds = require("luasnip.extras.expand_conditions")
 local events = require("luasnip.util.events")
 
+-- Markdown Snippets definition
 return {
     ls.add_snippets("markdown", {
-        -- delete line
+        -- Strikethrough: ~~text~~
         s("~~", fmt([[~~{}~~{}]], { i(1), i(0) })),
 
-        -- Italics
+        -- Italics: *text*
         s({ trig = "*", priority = -50 }, {
             t("*"),
             i(1),
@@ -31,7 +32,7 @@ return {
             i(0),
         }),
 
-        -- Bold
+        -- Bold: **text**
         s({ trig = "**", priority = -50 }, {
             t("**"),
             i(1),
@@ -39,7 +40,7 @@ return {
             i(0),
         }),
 
-        -- Bold Italics
+        -- Bold Italics: ***text***
         s({ trig = "***", priority = -50 }, {
             t("***"),
             i(1),
@@ -58,36 +59,37 @@ return {
         s("img", fmt("![{}]({}{}){}", {
             i(1, "pic alt"),
             i(2, "path"),
-            f(function(args) -- 处理可选的 title
+            f(function(args) -- Handle optional title
                 if args[1][1] and args[1][1] ~= "" then
                     return ' "' .. args[1][1] .. '"'
                 else
                     return ""
                 end
-            end, { 3 }), -- 依赖节点 3 (title)
+            end, { 3 }), -- Depends on node 3 (title)
             i(0),
         })),
 
-        -- Inline Code
+        -- Inline Code: `text`
         s("inline", fmt([[`{}`{}]], { i(1), i(0) })),
 
-        -- Codeblock
+        -- Codeblock: ```lang ... ```
         s("code", fmt([[
 ```{}
 {}
 ```
 ]], { i(1, "bash"), i(0) })),
 
-        -- Spoiler for hexo
+        -- Spoiler for Hexo: {% spoiler text %}
         s("spo", fmt([[{{% spoiler {} %}}]], { i(1) })),
 
+        -- Date: YYYY-MM-DD HH:MM:SS
         s({ trig = "date" }, fmt([[{}]], {
             f(function(_, _)
                 return os.date("%Y-%m-%d %H:%M:%S")
             end)
         })),
 
-        -- blog posts for hexo
+        -- Blog Post Frontmatter for Hexo
         s("hexo", fmt([[
 ---
 title: {}
