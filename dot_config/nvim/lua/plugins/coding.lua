@@ -1,5 +1,5 @@
 return {
-    -- COMPLETION: blink.cmp (Modern, Fast, Rust-based)
+    -- CODING: Completion, Snippets, AI
     {
         "saghen/blink.cmp",
         version = "*",
@@ -21,7 +21,7 @@ return {
                 build = "make install_jsregexp",
                 config = function()
                     require("luasnip").setup({ enable_autosnippets = true })
-                    require("luasnip.loaders.from_lua").load({ paths = "./snippets" })
+                    require("luasnip.loaders.from_lua").load({ paths = vim.fn.stdpath("config") .. "/lua/snippets" })
                 end,
             },
             {
@@ -45,8 +45,7 @@ return {
                     return false
                 end
                 return true
-            end
-            ,
+            end,
             keymap = { preset = "enter" },
             snippets = {
                 preset = "luasnip",
@@ -82,4 +81,10 @@ return {
             },
         },
     },
+
+    -- CODING: Commenting
+    { "numToStr/Comment.nvim", lazy = "BufReadPost", opts = {} },
+
+    -- CODING: Auto Pairs
+    { "windwp/nvim-autopairs", event = "InsertEnter", config = true },
 }
