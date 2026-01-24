@@ -4,93 +4,122 @@ local sn = ls.snippet_node
 local t = ls.text_node
 local i = ls.insert_node
 local f = ls.function_node
-local c = ls.choice_node
 local d = ls.dynamic_node
-local l = require("luasnip.extras").lambda
-local r = require("luasnip.extras").rep
-local p = require("luasnip.extras").partial
-local m = require("luasnip.extras").match
-local n = require("luasnip.extras").nonempty
-local dl = require("luasnip.extras").dynamic_lambda
 local fmt = require("luasnip.extras.fmt").fmt
-local fmta = require("luasnip.extras.fmt").fmta
-local types = require("luasnip.util.types")
-local conds = require("luasnip.extras.expand_conditions")
-local events = require("luasnip.util.events")
+local postfix = require("luasnip.extras.postfix").postfix
 
--- Markdown Snippets definition
+-- Helper: Create a dynamic node that repeats the postfix match content
+local function match_content(index)
+    return d(index, function(_, parent)
+        return sn(nil, { t(parent.snippet.env.POSTFIX_MATCH) })
+    end)
+end
+
+-- Pattern for capturing postfix triggers
+local text_pattern = "[%w%.%_%-%(\\)\"']+"
+
 return {
-    ls.add_snippets("markdown", {
-        -- Strikethrough: ~~text~~
-        s("~~", fmt([[~~{}~~{}]], { i(1), i(0) })),
+    ----------------------------------------------------------------------------
+    -- Postfix Snippets
+    ----------------------------------------------------------------------------
 
-        -- Italics: *text*
-        s({ trig = "*", priority = -50 }, {
-            t("*"),
-            i(1),
-            t("*"),
-            i(0),
-        }),
+    -- .b -> **text**
+    postfix({ trig = ".b", match_pattern = text_pattern }, fmt("**{}**", {
+        match_content(1)
+    })),
 
-        -- Bold: **text**
-        s({ trig = "**", priority = -50 }, {
-            t("**"),
-            i(1),
-            t("**"),
-            i(0),
-        }),
+    -- .i -> *text*
+    postfix({ trig = ".i", match_pattern = text_pattern }, fmt("*{}*", {
+        match_content(1)
+    })),
 
-        -- Bold Italics: ***text***
-        s({ trig = "***", priority = -50 }, {
-            t("***"),
-            i(1),
-            t("***"),
-            i(0),
-        }),
+    -- .code -> `text`
+    postfix({ trig = ".code", match_pattern = text_pattern }, fmt("`{}`", {
+        match_content(1)
+    })),
 
-        -- Link: [Text](url)
-        s("link", fmt("[{}]({}){}", {
-            i(1),
-            i(2, "https://www.url.com"),
-            i(0),
-        })),
+    -- .link -> [text](url)
+    postfix({ trig = ".link", match_pattern = text_pattern }, fmt("[{}]({})", {
+        match_content(1),
+        i(2, "url")
+    })),
 
-        -- Image: ![alt](path "title")
-        s("img", fmt("![{}]({}{}){}", {
-            i(1, "pic alt"),
-            i(2, "path"),
-            f(function(args) -- Handle optional title
-                if args[1][1] and args[1][1] ~= "" then
-                    return ' "' .. args[1][1] .. '"'
-                else
-                    return ""
-                end
-            end, { 3 }), -- Depends on node 3 (title)
-            i(0),
-        })),
+    ----------------------------------------------------------------------------
+    -- Text Formatting
+    ----------------------------------------------------------------------------
+    
+    -- Strikethrough: ~~text~~
+    s("~~", fmt("~~{}~~{}", { i(1), i(0) })),
 
-        -- Inline Code: `text`
-        s("inline", fmt([[`{}`{}]], { i(1), i(0) })),
+    -- Italics: *text*
+    s({ trig = "*", priority = -50 }, {
+        t("*"),
+        i(1),
+        t("*"),
+        i(0),
+    }),
 
-        -- Codeblock: ```lang ... ```
-        s("code", fmt([[
+    -- Bold: **text**
+    s({ trig = "**", priority = -50 }, {
+        t("**"),
+        i(1),
+        t("**"),
+        i(0),
+    }),
+
+    -- Bold Italics: ***text***
+    s({ trig = "***", priority = -50 }, {
+        t("***"),
+        i(1),
+        t("***"),
+        i(0),
+    }),
+
+    ----------------------------------------------------------------------------
+    -- Elements
+    ----------------------------------------------------------------------------
+
+    -- Link: [Text](url)
+    s("link", fmt("[{}]({}){}", {
+        i(1, "text"),
+        i(2, "https://example.com"),
+        i(0),
+    })),
+
+    -- Image: ![alt](path)
+    -- Simplified from original to ensure stability
+    s("img", fmt("![{}]({}){}", {
+        i(1, "alt text"),
+        i(2, "path/to/image"),
+        i(0),
+    })),
+
+    -- Inline Code: `text`
+    s("inline", fmt("`{}`{}", { i(1), i(0) })),
+
+    -- Codeblock: ```lang ... ```
+    s("code", fmt([[
 ```{}
 {}
 ```
 ]], { i(1, "bash"), i(0) })),
 
-        -- Spoiler for Hexo: {% spoiler text %}
-        s("spo", fmt([[{{% spoiler {} %}}]], { i(1) })),
+    -- Spoiler for Hexo: {% spoiler text %}
+    s("spo", fmt("{{% spoiler {} %}}", { i(1) })),
 
-        -- Date: YYYY-MM-DD HH:MM:SS
-        s({ trig = "date" }, fmt([[{}]], {
-            f(function(_, _)
-                return os.date("%Y-%m-%d %H:%M:%S")
-            end)
-        })),
+    -- Date: YYYY-MM-DD HH:MM:SS
+    s("date", fmt("{}", {
+        f(function()
+            return os.date("%Y-%m-%d %H:%M:%S")
+        end)
+    })),
 
-        -- Blog Post Frontmatter for Hexo
-        s("hexo", fmt([[
+    ----------------------------------------------------------------------------
+    -- Templates
+    ----------------------------------------------------------------------------
+
+    -- Blog Post Frontmatter for Hexo
+    s("hexo", fmt([[
 ---
 title: {}
 date: {}
@@ -102,12 +131,11 @@ mathjax: true
 
 {}
 ]], {
-            i(1, "title"),
-            i(2, "date"),
-            i(3, "tags"),
-            i(4, "categories"),
-            i(5),
-            i(0),
-        })),
-    }),
+        i(1, "Title"),
+        f(function() return os.date("%Y-%m-%d %H:%M:%S") end),
+        i(2, "tags"),
+        i(3, "categories"),
+        i(4, "description"),
+        i(0),
+    })),
 }
