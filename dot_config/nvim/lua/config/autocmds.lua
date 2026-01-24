@@ -1,6 +1,34 @@
 -- Auto Commands
 local autocmd = vim.api.nvim_create_autocmd
 
+local auto_save_group = vim.api.nvim_create_augroup("AutoSave", { clear = true })
+local save_timer = nil
+local delay = 1145.14
+
+-- Auto Save
+vim.api.nvim_create_autocmd({ "InsertLeave", "FocusLost" }, {
+    group = auto_save_group,
+    pattern = "*",
+    callback = function()
+        if save_timer then
+            vim.uv.timer_stop(save_timer)
+        end
+
+        save_timer = vim.uv.new_timer()
+        vim.uv.timer_start(
+            save_timer,
+            delay,
+            0,
+            vim.schedule_wrap(function()
+                if vim.bo.modified and vim.fn.expand("%") ~= "" and vim.bo.buftype == "" then
+                    vim.cmd("silent! write")
+                end
+                save_timer = nil
+            end)
+        )
+    end,
+})
+
 -- Auto Highlight
 autocmd("CursorMoved", {
     group = vim.api.nvim_create_augroup("auto-hlsearch", { clear = true }),
@@ -64,9 +92,6 @@ autocmd("LspAttach", {
             vim.keymap.set(mode, lhs, rhs, { buffer = event.buf, silent = true, desc = desc })
         end
 
-        map("n", "K", vim.lsp.buf.hover, "Hover Documentation")
-        map("n", "<leader>r", vim.lsp.buf.rename, "Rename Symbol")
-
         map("n", "]d", function()
             vim.diagnostic.jump({ count = 1, float = true })
         end, "Next Diagnostic")
@@ -74,16 +99,19 @@ autocmd("LspAttach", {
             vim.diagnostic.jump({ count = -1, float = true })
         end, "Prev Diagnostic")
 
-        -- Inlay hints
-        map("n", "<leader>li", function()
-            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
-        end, "Inlay Hints")
+        map("n", "K", vim.lsp.buf.hover, "Hover Documentation")
+        map("n", "<leader>r", vim.lsp.buf.rename, "Rename Symbol")
         map("n", "<leader>la", "<cmd>FzfLua lsp_code_actions<cr>", "Code Actions")
         map("n", "gd", "<cmd>FzfLua lsp_definitions<cr>", "Go to Definition")
         map("n", "gD", "<cmd>FzfLua lsp_declarations<cr>", "Go to Declaration")
         map("n", "gi", "<cmd>FzfLua lsp_implementations<cr>", "Go to Implementation")
         map("n", "gr", "<cmd>FzfLua lsp_references<cr>", "Go to References")
         map("n", "gs", "<cmd>FzfLua lsp_live_workspace_symbols<cr>", "Go to Symbols")
+
+        -- Inlay hints
+        map("n", "<leader>li", function()
+            vim.lsp.inlay_hint.enable(not vim.lsp.inlay_hint.is_enabled())
+        end, "Inlay Hints")
     end,
 })
 

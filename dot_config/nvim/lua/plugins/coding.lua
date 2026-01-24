@@ -46,7 +46,12 @@ return {
                 end
                 return true
             end,
-            keymap = { preset = "enter" },
+            keymap = {
+                preset = "default",
+                ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
+                ["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
+                ["<CR>"] = { "accept", "fallback" },
+            },
             snippets = {
                 preset = "luasnip",
             },
@@ -87,4 +92,15 @@ return {
 
     -- CODING: Auto Pairs
     { "windwp/nvim-autopairs", event = "InsertEnter", config = true },
+    {
+        "lervag/vimtex",
+        lazy = false,
+        init = function()
+            vim.g.vimtex_view_method = "zathura"
+            vim.g.tex_flavor = "latex"
+            vim.g.vimtex_quickfix_mode = 0
+            vim.opt.conceallevel = 2
+            vim.g.tex_conceal = "abdmgs"
+        end,
+    },
 }

@@ -2,12 +2,11 @@
 local keymap = vim.keymap.set
 
 -- File & Buffer Operations
-keymap("n", "<leader>q", "<CMD>quit<CR>", { desc = "Close file", silent = true })
-keymap("n", "<leader>w", "<CMD>write<CR>", { desc = "Save file", silent = true })
 keymap("n", "<leader>n", "<CMD>bnext<CR>", { desc = "Next buffer", silent = true })
 keymap("n", "<leader>p", "<CMD>bprevious<CR>", { desc = "Previous buffer", silent = true })
 keymap("n", "<leader>x", "<CMD>bdelete<CR>", { desc = "Close buffer", silent = true })
 keymap({ "n", "v" }, "<leader>y", '"+y', { desc = "Yank to system clipboard", silent = true })
+keymap('n', '<Leader><Tab>', '<C-^>', { noremap = true, silent = true, desc = 'Switch to last buffer' })
 
 -- Commenting
 keymap("n", "<leader>/", "gcc", { desc = "Toggle Line Comment", remap = true, silent = true })

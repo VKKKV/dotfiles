@@ -1,17 +1,4 @@
 return {
-    -- EDITOR: Terminal
-    {
-        "akinsho/toggleterm.nvim",
-        version = "*",
-        config = function()
-            require("toggleterm").setup({
-                size = 15,
-                open_mapping = "<leader>t",
-                direction = "horizontal",
-                shade_terminals = true,
-            })
-        end,
-    },
     -- EDITOR: Git
     {
         "kdheepak/lazygit.nvim",
@@ -32,9 +19,84 @@ return {
     },
     -- EDITOR: Multi Cursor
     {
-        "mg979/vim-visual-multi",
-        branch = "master",
-        event = "BufReadPost",
+        "jake-stewart/multicursor.nvim",
+        branch = "1.0",
+        keys = {
+            {
+                "<C-up>",
+                function()
+                    require("multicursor-nvim").lineAddCursor(-1)
+                end,
+                mode = { "n", "x" },
+                desc = "Add cursor up",
+            },
+            {
+                "<C-down>",
+                function()
+                    require("multicursor-nvim").lineAddCursor(1)
+                end,
+                mode = { "n", "x" },
+                desc = "Add cursor down",
+            },
+            {
+                "<C-n>",
+                function()
+                    require("multicursor-nvim").matchAddCursor(1)
+                end,
+                mode = { "n", "x" },
+                desc = "Add cursor next match",
+            },
+            {
+                "<leader>s",
+                function()
+                    require("multicursor-nvim").matchSkipCursor(1)
+                end,
+                mode = { "n", "x" },
+                desc = "Skip cursor next match",
+            },
+            {
+                "<leader>S",
+                function()
+                    require("multicursor-nvim").matchSkipCursor(-1)
+                end,
+                mode = { "n", "x" },
+                desc = "Skip cursor previous match",
+            },
+            {
+                "<leader>A",
+                function()
+                    require("multicursor-nvim").matchAllAddCursors()
+                end,
+                mode = { "n", "x" },
+                desc = "Add all matches",
+            },
+            {
+                "<esc>",
+                function()
+                    local mc = require("multicursor-nvim")
+                    if not mc.cursorsEnabled() then
+                        mc.enableCursors()
+                    elseif mc.hasCursors() then
+                        mc.clearCursors()
+                    else
+                        return "<esc>"
+                    end
+                end,
+                mode = "n",
+                desc = "Clear/Enable cursors",
+                expr = true,
+            },
+        },
+        config = function()
+            require("multicursor-nvim").setup()
+            local hl = vim.api.nvim_set_hl
+            hl(0, "MultiCursorCursor", { link = "Cursor" })
+            hl(0, "MultiCursorVisual", { link = "Visual" })
+            hl(0, "MultiCursorSign", { link = "SignColumn" })
+            hl(0, "MultiCursorDisabledCursor", { link = "Visual" })
+            hl(0, "MultiCursorDisabledVisual", { link = "Visual" })
+            hl(0, "MultiCursorDisabledSign", { link = "SignColumn" })
+        end,
     },
     -- EDITOR: Task Runner / Workflow
     {
@@ -58,7 +120,7 @@ return {
             },
             float = {
                 padding = 2,
-                max_width = 0.8,
+                max_width = 0.6,
                 max_height = 0.8,
                 border = "rounded",
                 win_options = { winblend = 10 },
@@ -89,6 +151,7 @@ return {
             { "<leader>fb", "<cmd>FzfLua buffers<cr>", desc = "Fzf Buffers" },
             { "<leader>fk", "<cmd>FzfLua keymaps<cr>", desc = "Fzf Keymaps" },
             { "<leader>fm", "<cmd>FzfLua marks<cr>", desc = "Fzf Marks" },
+            { "<leader>fh", "<cmd>FzfLua history<cr>", desc = "Fzf Marks" },
         },
         opts = {
             winopts = {
@@ -119,8 +182,13 @@ return {
         "folke/flash.nvim",
         event = "VeryLazy",
         ---@type Flash.Config
-        opts = {},
-        -- 核心按键绑定
+        opts = {
+            modes = {
+                search = {
+                    enabled = true,
+                },
+            },
+        },
         keys = {
             {
                 "s",
@@ -153,14 +221,6 @@ return {
                     require("flash").treesitter_search()
                 end,
                 desc = "Treesitter Search",
-            },
-            {
-                "<c-s>",
-                mode = { "c" },
-                function()
-                    require("flash").toggle()
-                end,
-                desc = "Toggle Flash Search",
             },
         },
     },
