@@ -40,6 +40,18 @@ return {
                             capabilities = capabilities,
                         })
                     end,
+                    ["kotlin_language_server"] = function()
+                        require("lspconfig").kotlin_language_server.setup({
+                            capabilities = capabilities,
+                            settings = {
+                                kotlin = {
+                                    compiler = {
+                                        jvm = { target = "17" },
+                                    },
+                                },
+                            },
+                        })
+                    end,
 
                     ["rust_analyzer"] = function()
                         require("lspconfig").rust_analyzer.setup({
@@ -48,9 +60,9 @@ return {
                                 ["rust-analyzer"] = {
                                     inlayHints = {
                                         bindingModeHints = { enable = false },
-                                        chainingHints = { enable = true }, -- 链式调用提示
-                                        closingBraceHints = { enable = true, minLines = 25 }, -- 大括号跨度大时提示是哪个块结束
-                                        closureReturnTypeHints = { enable = "always" }, -- 闭包返回类型
+                                        chainingHints = { enable = true },
+                                        closingBraceHints = { enable = true, minLines = 25 },
+                                        closureReturnTypeHints = { enable = "always" },
                                         lifetimeElisionHints = { enable = "always", useParameterNames = true },
                                         maxLength = 25,
                                         parameterHints = { enable = true }, -- 参数名提示
