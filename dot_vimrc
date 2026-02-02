@@ -106,9 +106,6 @@ let NERDTreeConfirmRename='yes'
 Plug 'tomtom/tcomment_vim'
 Plug 'tpope/vim-surround'
 Plug 'honza/vim-snippets'
-Plug 'neoclide/coc.nvim', { 'branch': 'release' }
-Plug 'yaegassy/coc-volar', { 'do': 'yarn install --frozen-lockfile' }
-Plug 'yaegassy/coc-volar-tools', { 'do': 'yarn install --frozen-lockfile' }
 Plug 'morhetz/gruvbox'
 Plug 'vim-airline/vim-airline'
 Plug 'vim-airline/vim-airline-themes'
@@ -121,134 +118,7 @@ if !exists('g:airline_symbols')
       let g:airline_symbols = {}
 endif
 let g:airline_symbols.colnr = ' ℅:'
-
-Plug 'tpope/vim-fugitive'
 call plug#end()
-
-let g:coc_node_path='/usr/bin/node'
-let g:coc_global_extensions = [
-                  \'coc-marketplace',
-                  \'coc-dictionary',
-                  \'coc-biome',
-                  \'coc-eslint',
-                  \'coc-go',
-                  \'coc-clangd',
-                  \'coc-highlight',
-                  \'coc-json',
-                  \'coc-lists',
-                  \'coc-markdownlint',
-                  \'coc-word',
-                  \'coc-pairs',
-                  \'coc-sh',
-                  \'coc-snippets',
-                  \'coc-sumneko-lua',
-                  \'coc-tag',
-                  \'coc-tsserver',
-                  \'coc-typos',
-                  \'coc-xml',
-                  \'coc-css',
-                  \'coc-yaml',
-                  \'coc-pyright',
-                  \]
-
-let g:coc_snippet_next = '<tab>'
-
-inoremap <silent><expr> <Tab>
-			\ coc#pum#visible() ? coc#pum#next(1):
-			\ CheckBackspace() ? "\<Tab>" :
-			\ coc#expandableOrJumpable() ?
-            \"\<C-r>=coc#rpc#request('doKeymap', ['snippets-expand-jump',''])\<CR>" :
-			\ NextCharIsPair() ? "\<Right>" :
-            \ <SID>check_back_space() ?
-            \"\<TAB>" :
-			\ coc#refresh()
-inoremap <expr><S-TAB> coc#pum#visible() ? coc#pum#prev(1) : "\<C-h>"
-
-nnoremap <silent><nowait> <Leader>d :<C-u>CocDiagnostics<CR>
-nnoremap <silent><nowait> <Leader>o :<C-u>CocOutline<CR>
-nnoremap <silent><nowait> <Leader>s :<C-u>CocList -I symbols<cr>
-
-nmap <silent> gd <Plug>(coc-definition)
-nmap <silent> gy <Plug>(coc-type-definition)
-nmap <silent> gi <Plug>(coc-implementation)
-nmap <silent> gr <Plug>(coc-references)
-
-nmap <silent> [g <Plug>(coc-diagnostic-prev)
-nmap <silent> ]g <Plug>(coc-diagnostic-next)
-
-xmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>a  <Plug>(coc-codeaction-selected)
-nmap <leader>ac  <Plug>(coc-codeaction-cursor)
-nmap <leader>as  <Plug>(coc-codeaction-source)
-nmap <leader>qf  <Plug>(coc-fix-current)
-
-nmap <leader>rn <Plug>(coc-rename)
-nmap <silent> <leader>re <Plug>(coc-codeaction-refactor)
-xmap <silent> <leader>r  <Plug>(coc-codeaction-refactor-selected)
-nmap <silent> <leader>r  <Plug>(coc-codeaction-refactor-selected)
-
-nmap <leader>cl  <Plug>(coc-codelens-action)
-
-" Map function and class text objects
-" NOTE: Requires 'textDocument.documentSymbol' support from the language server
-xmap if <Plug>(coc-funcobj-i)
-omap if <Plug>(coc-funcobj-i)
-xmap af <Plug>(coc-funcobj-a)
-omap af <Plug>(coc-funcobj-a)
-xmap ic <Plug>(coc-classobj-i)
-omap ic <Plug>(coc-classobj-i)
-xmap ac <Plug>(coc-classobj-a)
-omap ac <Plug>(coc-classobj-a)
-
-nnoremap <silent> K :call ShowDocumentation()<CR>
-function! ShowDocumentation()
-  if CocAction('hasProvider', 'hover')
-    call CocActionAsync('doHover')
-  else
-    call feedkeys('K', 'in')
-  endif
-endfunction
-
-autocmd CursorHold * silent call CocActionAsync('highlight')
-
-" format
-xmap <leader>f  <Plug>(coc-format-selected)
-nmap <leader>f  <Plug>(coc-format-selected)
-
-augroup mygroup
-  autocmd!
-  " Setup formatexpr specified filetype(s)
-  autocmd FileType typescript,json setl formatexpr=CocAction('formatSelected')
-augroup end
-
-inoremap <silent><expr> <CR> coc#pum#visible() && coc#pum#info()['index'] != -1 ? coc#pum#confirm()
-			\: "\<C-g>u\<CR>\<c-r>=coc#on_enter()\<CR>"
-inoremap <silent><expr> <backspace> coc#pum#visible() ? "\<bs>\<c-r>=coc#start()\<CR>" : "\<bs>"
-
-" Use CTRL-S for selections ranges
-" Requires 'textDocument/selectionRange' support of language server
-nmap <silent> <C-s> <Plug>(coc-range-select)
-xmap <silent> <C-s> <Plug>(coc-range-select)
-
-function! CheckBackspace() abort
-	let col = col('.') - 1
-	return !col || getline('.')[col - 1]  =~# '\s'
-endfunction
-
-function! NextCharIsPair() abort
-	let col = col('.') - 1
-	let l:next_char = getline('.')[col]
-	return l:next_char =~# ')\|]\|}\|>\|''\|"\|`'
-endfunction
-
-" format current buffer
-command! -nargs=0 Format :call CocActionAsync('format')
-" fold current buffer
-command! -nargs=? Fold :call     CocAction('fold', <f-args>)
-" organize imports of the current buffer
-command! -nargs=0 OR   :call     CocActionAsync('runCommand', 'editor.action.organizeImport')
-
-set statusline^=%{coc#status()}%{get(b:,'coc_current_function','')}
 
 autocmd vimenter * ++nested colorscheme gruvbox
 set background=dark
