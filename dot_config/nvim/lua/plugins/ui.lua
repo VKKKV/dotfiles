@@ -53,11 +53,52 @@ return {
     -- UI: Status Line
     {
         "nvim-lualine/lualine.nvim",
-        dependencies = { "nvim-tree/nvim-web-devicons" },
-        opts = {
-            options = { theme = "gruvbox", section_separators = "", component_separators = "" },
-            tabline = { lualine_a = { "buffers" } },
-            sections = { lualine_c = { "filename" } },
-        },
+        dependencies = { "nvim-tree/nvim-web-devicons", lazy = true },
+        config = function()
+            require("lualine").setup({
+                options = {
+                    theme = "gruvbox_dark",
+                    globalstatus = true,
+                    section_separators = "",
+                    component_separators = "",
+                },
+                tabline = { lualine_a = { "buffers" } },
+                sections = {
+                    lualine_c = {
+                        "filename",
+                        "lsp_progress",
+                        {
+                            function()
+                                local msg = "No Active Lsp"
+                                local buf_ft = vim.api.nvim_get_option_value("filetype", { buf = 0 })
+                                local clients = vim.lsp.get_clients()
+                                if next(clients) == nil then
+                                    return msg
+                                end
+                                for _, client in ipairs(clients) do
+                                    local filetypes = client.config.filetypes
+                                    if filetypes and vim.fn.index(filetypes, buf_ft) ~= -1 then
+                                        return client.name
+                                    end
+                                end
+                                return msg
+                            end,
+                        },
+                    },
+                    lualine_z = { "location" },
+                },
+            })
+        end,
+    },
+    {
+        "uga-rosa/ccc.nvim",
+        cmd = "CccPick",
+        config = true,
+    },
+    {
+        "brenoprata10/nvim-highlight-colors",
+        config = function()
+            require("nvim-highlight-colors").setup({})
+        end,
     },
 }
