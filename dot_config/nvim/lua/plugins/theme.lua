@@ -1,10 +1,15 @@
 return {
-    -- THEME: Gruvbox
+    -- THEME: Kanagawa Dragon
     {
-        "ellisonleao/gruvbox.nvim",
-        priority = 1000,
+        "rebelot/kanagawa.nvim",
         config = function()
-            vim.cmd.colorscheme("gruvbox")
+            require("kanagawa").setup({
+                functionStyle = { italic = true },
+                variablebuiltinStyle = { italic = true },
+            })
+            vim.cmd("colorscheme kanagawa-dragon")
+            -- vim.cmd("colorscheme kanagawa-wave")
+            -- vim.cmd("colorscheme kanagawa-lotus")
         end,
     },
 }

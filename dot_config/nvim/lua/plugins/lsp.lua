@@ -65,7 +65,7 @@ return {
                                         closureReturnTypeHints = { enable = "always" },
                                         lifetimeElisionHints = { enable = "always", useParameterNames = true },
                                         maxLength = 25,
-                                        parameterHints = { enable = true }, -- 参数名提示
+                                        parameterHints = { enable = true },
                                         reborrowHints = { enable = "always" },
                                         renderColons = true,
                                         typeHints = {
@@ -90,10 +90,10 @@ return {
             vim.diagnostic.config({
                 signs = {
                     text = {
-                        [vim.diagnostic.severity.ERROR] = "󰚌",
-                        [vim.diagnostic.severity.WARN] = "󱐋",
-                        [vim.diagnostic.severity.HINT] = "󰌵",
-                        [vim.diagnostic.severity.INFO] = "󰋽",
+                        [vim.diagnostic.severity.ERROR] = "",
+                        [vim.diagnostic.severity.WARN] = "",
+                        [vim.diagnostic.severity.HINT] = "",
+                        [vim.diagnostic.severity.INFO] = "",
                     },
                 },
             })

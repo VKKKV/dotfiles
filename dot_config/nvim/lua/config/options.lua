@@ -6,7 +6,6 @@ opt.guicursor = "n-v-c-sm:block,i-ci-ve:ver25,r-cr-o:hor20"
 opt.shiftwidth = 4
 opt.scrolloff = 4
 opt.termguicolors = true
-opt.signcolumn = "yes"
 opt.smartindent = true
 opt.wrap = true
 opt.updatetime = 50

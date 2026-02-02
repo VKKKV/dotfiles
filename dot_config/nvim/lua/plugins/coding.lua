@@ -25,16 +25,25 @@ return {
                 end,
             },
             {
-                "Exafunction/codeium.nvim",
-                cmd = "Codeium",
-                build = ":Codeium Auth",
-                opts = {
-                    enable_cmp_source = false,
-                    virtual_text = {
-                        enabled = true,
-                    },
+                "Exafunction/windsurf.nvim",
+                dependencies = {
+                    "nvim-lua/plenary.nvim",
+                    "saghen/blink.cmp",
                 },
+                config = function()
+                    require("codeium").setup({
+                        enable_cmp_source = false,
+                        virtual_text = {
+                            enabled = true,
+                            key_bindings = {
+                                accept = "<c-a>",
+                                accept_line = "<c-f>",
+                            },
+                        },
+                    })
+                end,
             },
+            { "Exafunction/codeium.nvim" },
         },
         ---@module 'blink.cmp'
         ---@type blink.cmp.Config
@@ -51,6 +60,21 @@ return {
                 ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
                 ["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
                 ["<CR>"] = { "accept", "fallback" },
+            },
+            completion = {
+                list = { selection = { preselect = true, auto_insert = false } },
+                menu = {
+                    max_height = 99,
+                    auto_show = true,
+                },
+                documentation = {
+                    auto_show = true,
+                    auto_show_delay_ms = 50,
+                    window = {
+                        max_width = 99,
+                        max_height = 99,
+                    },
+                },
             },
             snippets = {
                 preset = "luasnip",
@@ -70,20 +94,6 @@ return {
                 },
             },
             signature = { enabled = true },
-            completion = {
-                menu = {
-                    max_height = 99,
-                    auto_show = true,
-                },
-                documentation = {
-                    auto_show = true,
-                    auto_show_delay_ms = 50,
-                    window = {
-                        max_width = 99,
-                        max_height = 99,
-                    },
-                },
-            },
         },
     },
 

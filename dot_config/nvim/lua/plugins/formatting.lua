@@ -9,6 +9,7 @@ return {
                 python = { "ruff" },
                 java = { "google-java-format" },
                 json = { "jq" },
+                rust = { "rustfmt" },
                 ["_"] = { "trim_whitespace" },
             },
             formatters = {

@@ -12,6 +12,7 @@ return {
                 "bash",
                 "c",
                 "lua",
+                "rust",
                 "vim",
                 "vimdoc",
                 "query",
