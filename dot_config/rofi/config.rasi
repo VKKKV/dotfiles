@@ -1,12 +1,6 @@
 configuration {
-    font: "Source Sans Pro 19";
     show-icons: true;
-    display-window: "Window";
-    display-drun: "Search";
 }
 
 @theme "launchpad"
 
-listview {
-    lines: 12;
-}

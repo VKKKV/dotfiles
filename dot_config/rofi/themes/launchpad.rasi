@@ -1,81 +1,133 @@
 * {
-    font: "JetBrains Mono Nerd Font 12";
+    /* Font Configuration */
+    font: "JetBrains Mono Nerd Font 14";
 
-    bg0:  #24242480;
-    bg1:  #363636;
-    bg2:  #f5f5f520;
-    bg3:  #f5f5f540;
-    bg4:  #0860f2E6;
+    /* --- Gruvbox Dark Palette --- */
 
-    fg0:  #f5f5f5;
-    fg1:  #f5f5f580;
+    /* Background: Deep Grey-Brown (#282828) with Transparency (F2 approx 95%) */
+    /* Preserves Gruvbox depth while allowing texture to show through */
+    bg0:  #282828F2;
+    bg1:  #3c3836;
+    bg2:  #504945;
+
+    /* Highlight: Gruvbox Orange (#d79921) for high visual impact */
+    bg4:  #d79921E6;
+
+    /* Foreground: Gruvbox Cream (#ebdbb2) */
+    fg0:  #ebdbb2;
+    fg1:  #a89984; /* Dimmed gray for unselected/placeholder text */
+
+    background-color: transparent;
+    text-color:       @fg0;
+
+    margin:     0em;
+    padding:    0em;
+    spacing:    0em;
+}
+
+/* --- Window Configuration --- */
+window {
+    width:            80em;
+    height:           45em;
+    transparency:     "real";
+    location:         center;
+    anchor:           center;
+    fullscreen:       false;
 
     background-color: @bg0;
-    text-color:       @fg0;
-    padding:          0px;
-    margin:           0px;
+    border:           0.15em;
+    border-color:     @bg4; /* Orange border */
+    border-radius:    0.5em;  /* Sharper corners suit the Gruvbox aesthetic */
+    cursor:           "default";
 }
 
-window {
-  fullscreen: true;
-  padding: 1em;
-}
-
+/* --- Main Container --- */
 mainbox {
-  padding:  8px;
-}
-inputbar {
-    enabled:                     true;
-    spacing:                     10px;
-    margin:                      0% 28%;
-    padding:                     10px;
-    border:                      1px solid;
-    border-radius:               6px;
-    border-color:                white / 25%;
+    padding:          1em;
+    background-color: transparent;
+    children:         [ "listview", "inputbar" ];
 }
 
-prompt {
-  enabled:  false;
+/* --- Input Bar --- */
+inputbar {
+    enabled:          true;
+    margin:           1em 0em 0em 0em;
+    padding:          1em;
+    background-color: @bg2;
+    border-radius:    0.6em;
+    border-color:     @bg4;
+    children:         [ "icon-search", "entry" ];
+    text-color:       @fg0;
 }
 
 icon-search {
-  expand:   false;
-  filename: "search";
-  vertical-align: 0.5;
+    expand:           false;
+    filename:         "search";
+    size:             1em;
+    vertical-align:   0.5;
+    margin:           0em 0.8em 0em 0em;
 }
 
 entry {
-  placeholder:        "Search";
-  placeholder-color:  @bg2;
-  text-color: @fg0;
+    placeholder:       "Search...";
+    placeholder-color: @fg1;
+    background-color:  transparent;
+    text-color:        inherit;
+    vertical-align:    0.5;
+    cursor:            text;
 }
 
+/* --- List View --- */
 listview {
-  columns:  8;
-  fixed-columns: true;
+    enabled:          true;
+    columns:          10;
+    cycle:            true;
+    dynamic:          true;
+    layout:           vertical;
+    spacing:          0.8em;
+    border: 0px 0px 0px;
+    scrollbar:         false;
+    handle-width:     0.3em;
+    handle-color:     @bg4;
+    border-color:     @bg1;
+    background-color: transparent;
+    reverse:          true;
 }
 
-element, element-text, element-icon {
-  cursor: pointer;
-}
-
+/* --- Elements --- */
 element {
-  padding:      8px;
-  spacing:      4px;
-
-  orientation:    vertical;
-  border-radius:  16px;
+    enabled:          true;
+    orientation:      vertical; /* Icon top, text bottom */
+    spacing:          0.8em;
+    margin:           0em;
+    padding:          1.6em 0.8em;
+    border-radius:    0.8em;
+    cursor:           pointer;
+    background-color: transparent;
+    text-color:       @fg0;
 }
 
-element selected {
-  background-color: @bg4;
+/* Selected Element State */
+element selected.normal {
+    background-color: @bg4;
+    text-color:       #282828; /* Dark text on orange background for high contrast */
+    border:           0em;
 }
 
+/* Element Icon */
 element-icon {
-  size: 4em;
-  horizontal-align: 0.5;
+    background-color: transparent;
+    text-color:       inherit;
+    size:             4em;
+    cursor:           inherit;
 }
 
+/* Element Text */
 element-text {
-  horizontal-align: 0.5;
+    background-color: transparent;
+    text-color:       inherit;
+    highlight:        inherit;
+    cursor:           inherit;
+    vertical-align:   0.5;
+    horizontal-align: 0.5;
 }
