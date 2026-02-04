@@ -27,7 +27,7 @@
 
 /* --- Window Configuration --- */
 window {
-    width:            80em;
+    width:            55em;
     height:           45em;
     transparency:     "real";
     location:         center;
@@ -80,7 +80,7 @@ entry {
 /* --- List View --- */
 listview {
     enabled:          true;
-    columns:          10;
+    columns:          6;
     cycle:            true;
     dynamic:          true;
     layout:           vertical;
