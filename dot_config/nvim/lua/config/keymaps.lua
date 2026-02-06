@@ -10,7 +10,8 @@ keymap('n', '<Leader><Tab>', '<C-^>', { noremap = true, silent = true, desc = 'S
 
 -- Commenting
 keymap("n", "<leader>/", "gcc", { desc = "Toggle Line Comment", remap = true, silent = true })
-keymap("v", "<leader>/", "gc", { desc = "Toggle Comment Selection", remap = true, silent = true })
+-- use `] to jump to end of comment
+keymap("v", "<leader>/", "gc`]", { desc = "Toggle Comment Selection", remap = true, silent = true })
 
 -- Formatting
 keymap({ "n", "v" }, "<leader>=", function()
