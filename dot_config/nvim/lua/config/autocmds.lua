@@ -1,9 +1,17 @@
+-- Filetype
+vim.filetype.add({
+    extension = {
+        njk = "html",
+        styl = "css",
+    },
+})
+
 -- Auto Commands
 local autocmd = vim.api.nvim_create_autocmd
 
 local auto_save_group = vim.api.nvim_create_augroup("AutoSave", { clear = true })
 local save_timer = nil
-local delay = 1145.14
+local delay = 114.514
 
 -- Auto Save
 vim.api.nvim_create_autocmd({ "InsertLeave", "FocusLost" }, {
@@ -122,7 +130,7 @@ autocmd("FileType", {
     pattern = "java",
     callback = function()
         -- Determine the root directory for the multi modules project
-        local root_dir = vim.fs.root(0, { { ".git/" }, "mvnw", "gradlew" }) or vim.fn.getcwd()
+        local root_dir = vim.fs.root(0, { { "wtf", ".git/" }, "mvnw", "gradlew" }) or vim.fn.getcwd()
         local jdtls = require("jdtls")
 
         local project_name = vim.fn.fnamemodify(root_dir, ":p:h:t")
