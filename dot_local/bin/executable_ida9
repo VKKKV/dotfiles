@@ -1,0 +1,4 @@
+#!/bin/bash
+export IDA_DIR="$HOME/ctf/ida-pro-9.2"
+export PYTHONPATH="$IDA_DIR/.venv/lib/python3.13/site-packages"
+exec env QT_SCALE_FACTOR=1.5 "$IDA_DIR/ida" "$@"
