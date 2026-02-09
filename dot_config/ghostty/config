@@ -1,8 +1,11 @@
 theme = "Kanagawa Dragon"
-font-size = 14.0
+font-size = 16.0
 font-family = "MapleMono NF CN"
+# font-family = "MonaspiceRn NFM"
 confirm-close-surface = false
 window-padding-x=4
 window-padding-y=4
-
+cursor-color = #c84053
+cursor-text = #0d0c0c
 keybind = shift+enter=text:\x1b\r
+
