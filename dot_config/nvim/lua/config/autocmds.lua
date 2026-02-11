@@ -108,7 +108,7 @@ autocmd("LspAttach", {
         end, "Prev Diagnostic")
 
         map("n", "K", vim.lsp.buf.hover, "Hover Documentation")
-        map("n", "<leader>r", vim.lsp.buf.rename, "Rename Symbol")
+        map("n", "<leader>rn", vim.lsp.buf.rename, "Rename Symbol")
         map("n", "<leader>la", "<cmd>FzfLua lsp_code_actions<cr>", "Code Actions")
         map("n", "gd", "<cmd>FzfLua lsp_definitions<cr>", "Go to Definition")
         map("n", "gD", "<cmd>FzfLua lsp_declarations<cr>", "Go to Declaration")
