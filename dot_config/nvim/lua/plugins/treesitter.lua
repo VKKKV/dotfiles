@@ -8,19 +8,7 @@ return {
             { "nvim-treesitter/nvim-treesitter-context", config = true },
         },
         opts = {
-            ensure_installed = {
-                "bash",
-                "c",
-                "lua",
-                "rust",
-                "vim",
-                "vimdoc",
-                "query",
-                "markdown",
-                "markdown_inline",
-                "python",
-                "java",
-            },
+            ensure_installed = { "all" },
             sync_install = false,
             auto_install = true,
             highlight = {

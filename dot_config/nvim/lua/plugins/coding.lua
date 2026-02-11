@@ -113,4 +113,55 @@ return {
             vim.g.tex_conceal = "abdmgs"
         end,
     },
+    {
+        "ThePrimeagen/refactoring.nvim",
+        lazy = false,
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-treesitter/nvim-treesitter",
+        },
+        config = function()
+            local refactoring = require("refactoring")
+            refactoring.setup({})
+
+            vim.keymap.set({ "n", "x" }, "<leader>re", function()
+                return refactoring.refactor("Extract Function")
+            end, { expr = true })
+            vim.keymap.set({ "n", "x" }, "<leader>rf", function()
+                return refactoring.refactor("Extract Function To File")
+            end, { expr = true })
+            vim.keymap.set({ "n", "x" }, "<leader>rv", function()
+                return refactoring.refactor("Extract Variable")
+            end, { expr = true })
+            vim.keymap.set({ "n", "x" }, "<leader>rI", function()
+                return refactoring.refactor("Inline Function")
+            end, { expr = true })
+            vim.keymap.set({ "n", "x" }, "<leader>ri", function()
+                return refactoring.refactor("Inline Variable")
+            end, { expr = true })
+
+            vim.keymap.set({ "n", "x" }, "<leader>rbb", function()
+                return refactoring.refactor("Extract Block")
+            end, { expr = true })
+            vim.keymap.set({ "n", "x" }, "<leader>rbf", function()
+                return refactoring.refactor("Extract Block To File")
+            end, { expr = true })
+
+            local pick = function()
+                local fzf_lua = require("fzf-lua")
+                local results = refactoring.get_refactors()
+                local opts = {
+                    actions = {
+                        ["default"] = function(selected)
+                            -- Execute the selected refactoring action
+                            refactoring.refactor(selected[1])
+                        end,
+                    },
+                }
+                -- Use fzf-lua to present the options
+                fzf_lua.fzf_exec(results, opts)
+            end
+            vim.keymap.set({ "n", "x" }, "<leader>rr", pick)
+        end,
+    },
 }
