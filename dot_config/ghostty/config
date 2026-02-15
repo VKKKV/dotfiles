@@ -5,7 +5,10 @@ font-family = "MapleMono NF CN"
 confirm-close-surface = false
 window-padding-x=4
 window-padding-y=4
-cursor-color = #c84053
-cursor-text = #0d0c0c
 keybind = shift+enter=text:\x1b\r
 
+cursor-color = #c84053
+cursor-text = #fff
+
+custom-shader = "cursor.glsl"
+custom-shader-animation = true
