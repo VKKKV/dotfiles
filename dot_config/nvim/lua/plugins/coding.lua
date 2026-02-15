@@ -83,7 +83,7 @@ return {
                 nerd_font_variant = "mono",
             },
             sources = {
-                default = { "lazydev", "lsp", "path", "snippets", "buffer", "codeium" },
+                default = { "lazydev", "snippets", "lsp", "path", "buffer", "codeium" },
                 providers = {
                     codeium = { name = "Codeium", module = "codeium.blink", async = true },
                     lazydev = {

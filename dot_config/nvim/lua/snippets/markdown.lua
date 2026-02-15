@@ -98,11 +98,17 @@ return {
     s("inline", fmt("`{}`{}", { i(1), i(0) })),
 
     -- Codeblock: ```lang ... ```
-    s("code", fmt([[
+    s("bash", fmt([[
 ```{}
 {}
 ```
-]], { i(1, "bash"), i(0) })),
+]], { t("bash"), i(0) })),
+
+    s("code", fmt([[
+```
+{}
+```
+]], { i(0) })),
 
     -- Spoiler for Hexo: {% spoiler text %}
     s("spo", fmt("{{% spoiler {} %}}", { i(1) })),
