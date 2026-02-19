@@ -99,16 +99,16 @@ return {
 
     -- Codeblock: ```lang ... ```
     s("bash", fmt([[
-```{}
-{}
-```
-]], { t("bash"), i(0) })),
-
-    s("code", fmt([[
-```
+```bash
 {}
 ```
 ]], { i(0) })),
+
+    s("code", fmt([[
+```{}
+{}
+```
+]], { i(1), i(0) })),
 
     -- Spoiler for Hexo: {% spoiler text %}
     s("spo", fmt("{{% spoiler {} %}}", { i(1) })),
