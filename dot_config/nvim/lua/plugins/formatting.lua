@@ -6,7 +6,7 @@ return {
             formatters_by_ft = {
                 nix = { "alejandra" },
                 lua = { "stylua" },
-                python = { "ruff" },
+                python = { "ruff_organize_imports", "ruff_format" },
                 java = { "google-java-format" },
                 rust = { "rustfmt" },
                 html = { "prettier" },
