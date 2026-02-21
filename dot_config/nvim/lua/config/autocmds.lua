@@ -49,19 +49,22 @@ autocmd("CursorMoved", {
     end,
 })
 
--- Typst Preview
-autocmd("FileType", {
-    pattern = "typst",
-    callback = function()
-        vim.keymap.set("n", "<leader>o", "<CMD>TypstPreviewToggle<CR>", { noremap = true, silent = true })
-    end,
-})
+-- Default Code Runner
+vim.keymap.set("n", "<leader>o", ":RunCode<CR>", { noremap = true, silent = false })
 
--- Markdown Preview
-autocmd("FileType", {
-    pattern = "markdown",
-    callback = function()
-        vim.keymap.set("n", "<leader>o", "<CMD>MarkdownPreviewToggle<CR>", { noremap = true, silent = true })
+local ft_group = vim.api.nvim_create_augroup("CustomPreviewMaps", { clear = true })
+
+vim.api.nvim_create_autocmd("FileType", {
+    pattern = { "typst", "markdown" },
+    group = ft_group,
+    callback = function(args)
+        local cmd = (args.match == "typst") and "<cmd>TypstPreviewToggle<CR>" or "<cmd>MarkdownPreviewToggle<CR>"
+        vim.keymap.set("n", "<leader>o", cmd, {
+            noremap = true,
+            silent = true,
+            buffer = args.buf,
+            desc = "Toggle Preview",
+        })
     end,
 })
 

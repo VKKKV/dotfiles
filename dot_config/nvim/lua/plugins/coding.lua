@@ -113,9 +113,11 @@ return {
             vim.g.tex_conceal = "abdmgs"
         end,
     },
+    -- CODING: Refactoring
     {
         "ThePrimeagen/refactoring.nvim",
         lazy = false,
+        desc = "Refactoring tools for extracting functions, variables, and inlining code",
         dependencies = {
             "nvim-lua/plenary.nvim",
             "nvim-treesitter/nvim-treesitter",
@@ -126,26 +128,26 @@ return {
 
             vim.keymap.set({ "n", "x" }, "<leader>re", function()
                 return refactoring.refactor("Extract Function")
-            end, { expr = true })
+            end, { expr = true, desc = "Extract Function" })
             vim.keymap.set({ "n", "x" }, "<leader>rf", function()
                 return refactoring.refactor("Extract Function To File")
-            end, { expr = true })
+            end, { expr = true, desc = "Extract Function To File" })
             vim.keymap.set({ "n", "x" }, "<leader>rv", function()
                 return refactoring.refactor("Extract Variable")
-            end, { expr = true })
+            end, { expr = true, desc = "Extract Variable" })
             vim.keymap.set({ "n", "x" }, "<leader>rI", function()
                 return refactoring.refactor("Inline Function")
-            end, { expr = true })
+            end, { expr = true, desc = "Inline Function" })
             vim.keymap.set({ "n", "x" }, "<leader>ri", function()
                 return refactoring.refactor("Inline Variable")
-            end, { expr = true })
+            end, { expr = true, desc = "Inline Variable" })
 
             vim.keymap.set({ "n", "x" }, "<leader>rbb", function()
                 return refactoring.refactor("Extract Block")
-            end, { expr = true })
+            end, { expr = true, desc = "Extract Block" })
             vim.keymap.set({ "n", "x" }, "<leader>rbf", function()
                 return refactoring.refactor("Extract Block To File")
-            end, { expr = true })
+            end, { expr = true, desc = "Extract Block To File" })
 
             local pick = function()
                 local fzf_lua = require("fzf-lua")
@@ -162,6 +164,25 @@ return {
                 fzf_lua.fzf_exec(results, opts)
             end
             vim.keymap.set({ "n", "x" }, "<leader>rr", pick)
+        end,
+    },
+    -- CODING: Code Runner
+    {
+        "CRAG666/code_runner.nvim",
+        cmd = { "RunCode", "RunFile", "RunProject", "RunClose" },
+        config = function()
+            require("code_runner").setup({
+                mode = "term",
+                focus = true,
+                startinsert = true,
+                filetype = {
+                    c = "gcc % -o %< && ./%<",
+                    cpp = "g++ % -o %< && ./%<",
+                    python = "python -u",
+                    sh = "bash",
+                    rust = "cargo run",
+                },
+            })
         end,
     },
 }
