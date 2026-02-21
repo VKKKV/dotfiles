@@ -11,4 +11,5 @@ cursor-color = #c84053
 cursor-text = #fff
 
 custom-shader = "cursor.glsl"
+# custom-shader = "party_sparks.glsl"
 custom-shader-animation = true
