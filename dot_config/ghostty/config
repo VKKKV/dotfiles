@@ -10,6 +10,8 @@ keybind = shift+enter=text:\x1b\r
 cursor-color = #c84053
 cursor-text = #fff
 
-custom-shader = "cursor.glsl"
+# custom-shader = "cursor.glsl"
+custom-shader = "in-game-crt-cursor.glsl"
+# custom-shader = "in-game-crt.glsl"
 # custom-shader = "party_sparks.glsl"
 custom-shader-animation = true
