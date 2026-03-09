@@ -23,7 +23,6 @@ return {
                 typescript = { "eslint_d" },
                 css = { "stylelint" },
                 json = { "jsonlint" },
-                python = { "ruff" },
                 go = { "golangcilint" },
                 kotlin = { "ktlint" },
                 yaml = { "yamllint" },

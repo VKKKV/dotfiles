@@ -22,3 +22,4 @@ opt.ignorecase = true
 opt.smartcase = true
 opt.undofile = true
 opt.undodir = vim.fn.stdpath("state") .. "/undo"
+opt.shell = "/bin/bash"

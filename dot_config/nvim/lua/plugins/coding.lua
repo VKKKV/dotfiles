@@ -175,9 +175,13 @@ return {
                 mode = "term",
                 focus = true,
                 startinsert = true,
+                term = {
+                    position = "bot",
+                    size = 40,
+                },
                 filetype = {
-                    c = "gcc % -o %< && ./%<",
-                    cpp = "g++ % -o %< && ./%<",
+                    c = "cd $dir && gcc $fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt",
+                    cpp = "cd $dir && g++ $fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt",
                     python = "python -u",
                     sh = "bash",
                     rust = "cargo run",
@@ -185,4 +189,6 @@ return {
             })
         end,
     },
+    -- CODING: Wakatime
+    { "wakatime/vim-wakatime" },
 }

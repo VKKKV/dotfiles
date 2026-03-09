@@ -7,6 +7,7 @@ return {
                 nix = { "alejandra" },
                 lua = { "stylua" },
                 python = { "ruff_organize_imports", "ruff_format" },
+                php = { "phpcbf" },
                 java = { "google-java-format" },
                 rust = { "rustfmt" },
                 html = { "prettier" },

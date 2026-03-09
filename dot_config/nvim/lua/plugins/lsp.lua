@@ -17,6 +17,7 @@ return {
                     exclude = { "jdtls" },
                 },
                 ensure_installed = {
+                    "ty",
                     "nil_ls",
                     "lua_ls",
                     "ts_ls",
@@ -30,7 +31,7 @@ return {
                     "jsonls",
                     "html",
                     "cssls",
-                    "pyright",
+                    "ruff",
                     "yamlls",
                     "kotlin_language_server",
                 },

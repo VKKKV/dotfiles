@@ -98,22 +98,22 @@ return {
             require("nvim-highlight-colors").setup({})
         end,
     },
-    {
-        "sphamba/smear-cursor.nvim",
-        opts = {
-            cursor_color = "#E46876",
-            stiffness = 0.6, -- 非常软，像果冻
-            trailing_stiffness = 0.1, -- 尾巴拖得很长，极其慵懒
-            trailing_exponent = 25, -- 这种指数会让尾巴末端迅速收细，像水滴
-            gamma = 1, -- 线性颜色混合
-            damping = 0.4, -- 阻尼小，晃动感强
-            particles_enabled = true,
-            particles_per_second = 2000, -- 粒子很少，只是点缀
-            particle_max_lifetime = 1000, -- 粒子存在时间长
-            particle_gravity = 5, -- 稍微有点重力，像液体滴落
-            particle_spread = 1, -- 几乎不扩散，聚在一起
-            never_draw_over_target = true, -- if you want to actually see under the cursor
-            hide_target_hack = true,
-        },
-    },
+    -- {
+    --     "sphamba/smear-cursor.nvim",
+    --     opts = {
+    --         cursor_color = "#E46876",
+    --         stiffness = 0.6, -- 非常软，像果冻
+    --         trailing_stiffness = 0.1, -- 尾巴拖得很长，极其慵懒
+    --         trailing_exponent = 25, -- 这种指数会让尾巴末端迅速收细，像水滴
+    --         gamma = 1, -- 线性颜色混合
+    --         damping = 0.4, -- 阻尼小，晃动感强
+    --         particles_enabled = true,
+    --         particles_per_second = 2000, -- 粒子很少，只是点缀
+    --         particle_max_lifetime = 1000, -- 粒子存在时间长
+    --         particle_gravity = 5, -- 稍微有点重力，像液体滴落
+    --         particle_spread = 1, -- 几乎不扩散，聚在一起
+    --         never_draw_over_target = true, -- if you want to actually see under the cursor
+    --         hide_target_hack = true,
+    --     },
+    -- },
 }
