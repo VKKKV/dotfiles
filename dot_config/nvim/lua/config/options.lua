@@ -10,7 +10,6 @@ opt.smartindent = true
 opt.wrap = true
 opt.updatetime = 50
 opt.list = true
--- opt.cursorline = true
 opt.tabstop = 4
 opt.expandtab = true
 opt.softtabstop = 4
@@ -23,3 +22,19 @@ opt.smartcase = true
 opt.undofile = true
 opt.undodir = vim.fn.stdpath("state") .. "/undo"
 opt.shell = "/bin/bash"
+-- opt.cursorline = true
+
+-- Markdown Codeblocks Syntax Highlight
+vim.g.markdown_fenced_languages = {
+    "ts=typescript",
+    "js=javascript",
+    "bash",
+    "sh=bash",
+    "lua",
+    "python",
+    "c",
+    "rust",
+    "go",
+    "json",
+    "yaml"
+}

@@ -16,20 +16,19 @@ local function match_content(index)
 end
 
 -- Pattern for capturing postfix triggers
-local text_pattern = "[%w%.%_%-%(\\)\"']+"
+local text_pattern = "[%w%.%_%-%(\\)\"'\128-\255]+"
 
 return {
     ----------------------------------------------------------------------------
     -- Postfix Snippets
     ----------------------------------------------------------------------------
 
-    -- .b -> **text**
-    postfix({ trig = ".b", match_pattern = text_pattern }, fmt("**{}**", {
+    postfix({ trig = ".bold", match_pattern = text_pattern }, fmt("**{}**", {
         match_content(1)
     })),
 
     -- .i -> *text*
-    postfix({ trig = ".i", match_pattern = text_pattern }, fmt("*{}*", {
+    postfix({ trig = ".italics", match_pattern = text_pattern }, fmt("*{}*", {
         match_content(1)
     })),
 

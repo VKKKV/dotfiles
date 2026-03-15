@@ -3,12 +3,25 @@ return {
     {
         "nvim-treesitter/nvim-treesitter",
         build = ":TSUpdate",
-        event = { "BufReadPost", "BufNewFile" },
+        lazy = false,
         dependencies = {
             { "nvim-treesitter/nvim-treesitter-context", config = true },
         },
         opts = {
-            ensure_installed = { "all" },
+            ensure_installed = {
+                "c",
+                "html",
+                "css",
+                "json",
+                "yaml",
+                "bash",
+                "lua",
+                "python",
+                "javascript",
+                "typescript",
+                "markdown",
+                "markdown_inline",
+            },
             sync_install = false,
             auto_install = true,
             highlight = {

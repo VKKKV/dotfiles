@@ -33,7 +33,6 @@ return {
                     "cssls",
                     "ruff",
                     "yamlls",
-                    "kotlin_language_server",
                 },
                 handlers = {
                     function(server_name)
@@ -41,19 +40,6 @@ return {
                             capabilities = capabilities,
                         })
                     end,
-                    ["kotlin_language_server"] = function()
-                        require("lspconfig").kotlin_language_server.setup({
-                            capabilities = capabilities,
-                            settings = {
-                                kotlin = {
-                                    compiler = {
-                                        jvm = { target = "17" },
-                                    },
-                                },
-                            },
-                        })
-                    end,
-
                     ["rust_analyzer"] = function()
                         require("lspconfig").rust_analyzer.setup({
                             capabilities = capabilities,
