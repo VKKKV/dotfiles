@@ -1,0 +1,2 @@
+source /usr/share/pwndbg/gdbinit.py
+source ~/ctf/tool/reverse/ret-sync/ext_gdb/sync.py
