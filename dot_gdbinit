@@ -1,2 +1,6 @@
 source /usr/share/pwndbg/gdbinit.py
-source ~/ctf/tool/reverse/ret-sync/ext_gdb/sync.py
+set history save on
+set follow-fork-mode child
+set disassembly-flavor intel
+
+
