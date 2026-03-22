@@ -8,39 +8,39 @@ local d = ls.dynamic_node
 local fmt = require("luasnip.extras.fmt").fmt
 local postfix = require("luasnip.extras.postfix").postfix
 
--- Helper: Create a dynamic node that repeats the postfix match content
-local function match_content(index)
-    return d(index, function(_, parent)
-        return sn(nil, { t(parent.snippet.env.POSTFIX_MATCH) })
-    end)
+local function get_match(_, parent)
+    return parent.snippet.env.POSTFIX_MATCH
 end
 
--- Pattern for capturing postfix triggers
-local text_pattern = "[%w%.%_%-%(\\)\"'\128-\255]+"
+local text_pattern = "[%S]+"
 
 return {
     ----------------------------------------------------------------------------
     -- Postfix Snippets
     ----------------------------------------------------------------------------
 
+    postfix({ trig = ".spo", match_pattern = text_pattern }, fmt("{{% spoiler {} %}}", {
+        f(get_match)
+    })),
+
     postfix({ trig = ".bold", match_pattern = text_pattern }, fmt("**{}**", {
-        match_content(1)
+        f(get_match)
     })),
 
     -- .i -> *text*
     postfix({ trig = ".italics", match_pattern = text_pattern }, fmt("*{}*", {
-        match_content(1)
+        f(get_match)
     })),
 
     -- .code -> `text`
     postfix({ trig = ".code", match_pattern = text_pattern }, fmt("`{}`", {
-        match_content(1)
+        f(get_match)
     })),
 
     -- .link -> [text](url)
     postfix({ trig = ".link", match_pattern = text_pattern }, fmt("[{}]({})", {
-        match_content(1),
-        i(2, "url")
+        i(0),
+        f(get_match)
     })),
 
     ----------------------------------------------------------------------------

@@ -31,7 +31,6 @@ return {
                     "jsonls",
                     "html",
                     "cssls",
-                    "ruff",
                     "yamlls",
                 },
                 handlers = {

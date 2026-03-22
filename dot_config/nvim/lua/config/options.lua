@@ -22,8 +22,10 @@ opt.smartcase = true
 opt.undofile = true
 opt.undodir = vim.fn.stdpath("state") .. "/undo"
 opt.shell = "/bin/bash"
+-- opt.conceallevel = 0
 -- opt.cursorline = true
 
+vim.g.markdown_syntax_conceal = 0
 -- Markdown Codeblocks Syntax Highlight
 vim.g.markdown_fenced_languages = {
     "ts=typescript",
