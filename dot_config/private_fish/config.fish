@@ -14,7 +14,6 @@ if status is-interactive
     alias mkdir='mkdir -p'
     alias vim='nvim'
     alias shred='shred -uvz'
-    alias cat='bat --color=always'
 
     alias gpg='gpg --pinentry-mode loopback'
     alias lg='lazygit'
