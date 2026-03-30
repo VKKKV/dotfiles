@@ -1,9 +1,19 @@
 return {
+    {
+        "nvim-mini/mini.align",
+        version = "*",
+        config = function()
+            require("mini.align").setup()
+        end,
+    },
+
     -- FORMATTING: Conform
     {
         "stevearc/conform.nvim",
         opts = {
             formatters_by_ft = {
+                c = { "clang_format" },
+                cpp = { "clang_format" },
                 nix = { "alejandra" },
                 lua = { "stylua" },
                 python = { "ruff_organize_imports", "ruff_format" },

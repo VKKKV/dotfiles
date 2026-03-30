@@ -17,6 +17,7 @@ return {
                     exclude = { "jdtls" },
                 },
                 ensure_installed = {
+                    "clangd",
                     "ty",
                     "nil_ls",
                     "lua_ls",
