@@ -23,7 +23,6 @@ if status is-interactive
     alias mpvhdr='ENABLE_HDR_WSI=1 mpv --vo=gpu-next --target-colorspace-hint --gpu-api=vulkan --gpu-context=waylandvk'
     alias dd='dd bs=4M conv=fsync oflag=direct status=progress'
     alias objdump='objdump -M intel'
-    alias r2='r2 -A'
 
     starship init fish | source
     zoxide init fish | source
@@ -53,6 +52,38 @@ if status is-interactive
         echo $short_url
         echo -n $short_url | wl-copy
         echo "[Copied to clipboard]"
+    end
+
+    function get_cover -d "Random cover extractor"
+        if test -z "$argv[1]"
+            echo "Error: Missing input file."
+            echo "Usage: get_cover <video_file> [output_image]"
+            return 1
+        end
+
+        set video $argv[1]
+
+        # 检查并设置默认的输出文件名
+        if test (count $argv) -ge 2
+            set out $argv[2]
+        else
+            set out "cover.jpg"
+        end
+
+        # 获取视频时长
+        set duration (ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 "$video")
+
+        if test -z "$duration"
+            echo "Error: Could not read video duration. Is ffprobe installed?"
+            return 1
+        end
+
+        # 使用 fish 的 `random` 生成随机种子，并用 awk 计算随机时间点
+        set rand_time (awk -v dur=$duration -v seed=(random) 'BEGIN{srand(seed); print rand()*dur}')
+
+        # 调用 ffmpeg 截图
+        ffmpeg -hide_banner -loglevel error -ss $rand_time -i "$video" -frames:v 1 -q:v 2 "$out"
+        echo "Success! Random frame extracted to $out"
     end
 end
 
