@@ -83,7 +83,8 @@
     },
     "multicursor.nvim": {
       "rev": "704b99f10a72cc05d370cfeb294ff83412a8ab55",
-      "src": "https://github.com/jake-stewart/multicursor.nvim"
+      "src": "https://github.com/jake-stewart/multicursor.nvim",
+      "version": "'1.0'"
     },
     "neoscroll.nvim": {
       "rev": "c8d29979cb0cb3a2437a8e0ae683fd82f340d3b8",

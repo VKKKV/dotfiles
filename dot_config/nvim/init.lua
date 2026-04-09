@@ -1,14 +1,17 @@
+if vim.loader then
+    vim.loader.enable()
+end
+
 -- [[ SETTINGS ]]
 vim.g.mapleader = " "
 
 local opt = vim.opt
-opt.timeoutlen, opt.updatetime = 200, 50
+opt.timeoutlen = 200
 opt.shiftwidth, opt.tabstop, opt.expandtab = 4, 4, true
 opt.termguicolors, opt.undofile, opt.smartcase = true, true, true
 opt.splitbelow, opt.splitright, opt.list = true, true, true
 opt.undodir = vim.fn.stdpath("state") .. "/undo"
 opt.shell = "/bin/bash"
-vim.g.markdown_fenced_languages = { "html", "python", "bash=sh", "json", "toml" }
 
 -- [[ PLUGINS ]]
 vim.pack.add({
@@ -28,12 +31,13 @@ vim.pack.add({
     "https://github.com/numToStr/Comment.nvim",
 
     -- Tools & LSP
-    { src = "https://github.com/Saghen/blink.cmp", build = "cargo build --release", version = vim.version.range("*") },
-    { src = "https://github.com/L3MON4D3/LuaSnip", build = "make install_jsregexp" },
+    { src = "https://github.com/Saghen/blink.cmp", version = vim.version.range("*") },
+    "https://github.com/L3MON4D3/LuaSnip",
     "https://github.com/folke/lazydev.nvim",
     "https://github.com/Exafunction/codeium.nvim",
     "https://github.com/Exafunction/windsurf.nvim",
     "https://github.com/nvim-lua/plenary.nvim",
+    "https://github.com/iamcco/markdown-preview.nvim",
     "https://github.com/stevearc/conform.nvim",
     "https://github.com/williamboman/mason.nvim",
     "https://github.com/williamboman/mason-lspconfig.nvim",
@@ -41,7 +45,7 @@ vim.pack.add({
     "https://github.com/mfussenegger/nvim-jdtls",
     "https://github.com/rachartier/tiny-inline-diagnostic.nvim",
     "https://github.com/CRAG666/code_runner.nvim",
-    { src = "https://github.com/jake-stewart/multicursor.nvim", branch = "1.0" },
+    { src = "https://github.com/jake-stewart/multicursor.nvim", version = "1.0" },
 })
 
 -- [[ PLUGIN CONFIGS ]]
@@ -51,17 +55,11 @@ require("kanagawa").setup({ functionStyle = { italic = true } })
 vim.cmd.colorscheme("kanagawa-dragon")
 
 -- UI Components
-require("fidget").setup({
-    notification = {
-        window = { winblend = 0, align = "top", x_padding = 1, y_padding = 1 },
-        view = { stack_upwards = false },
-    },
-    progress = { display = { done_icon = "✔" } },
-})
+require("fidget").setup({})
 
 require("lualine").setup({
     options = {
-        theme = "gruvbox_dark",
+        theme = "auto",
         globalstatus = true,
         section_separators = "",
         component_separators = "",
@@ -93,17 +91,16 @@ require("ibl").setup()
 require("nvim-highlight-colors").setup({})
 
 require("nvim-treesitter").install({
-    "html",
-    "css",
-    "json",
-    "yaml",
-    "toml",
     "bash",
+    "css",
+    "html",
+    "javascript",
+    "json",
     "python",
-    "javascript",
-    "typescript",
     "rust",
-    "javascript",
+    "toml",
+    "typescript",
+    "yaml",
     "zig",
 })
 
@@ -128,7 +125,7 @@ require("fzf-lua").setup({
     winopts = {
         height = 0.9527,
         width = 0.666,
-        preview = { layout = "vertical", vertical = "up:40%", scrollbar = false },
+        preview = { layout = "vertical", vertical = "up:40%" },
         backdrop = 100,
     },
     files = { formatter = "path.filename_first" },
@@ -138,7 +135,7 @@ require("fzf-lua").register_ui_select()
 
 -- Editing Tools
 require("flash").setup({ modes = { search = { enabled = true } } })
-require("Comment").setup({})
+require("Comment").setup()
 require("multicursor-nvim").setup()
 
 local hl = vim.api.nvim_set_hl
@@ -164,7 +161,7 @@ require("codeium").setup({
 
 require("blink.cmp").setup({
     enabled = function()
-        return vim.api.nvim_buf_get_name(0):find("oil://") ~= 1
+        return vim.bo.filetype ~= "oil"
     end,
     keymap = {
         preset = "default",
@@ -437,14 +434,16 @@ end, { desc = "Skip cursor next match" })
 map({ "n", "x" }, "<leader>S", function()
     mc.matchSkipCursor(-1)
 end, { desc = "Skip cursor previous match" })
-map({ "n", "x" }, "<leader>A", function()
+map({ "n", "x" }, "<leader>a", function()
     mc.matchAllAddCursors()
 end, { desc = "Add all matches" })
 map("n", "<esc>", function()
     if not mc.cursorsEnabled() then
         mc.enableCursors()
+        return ""
     elseif mc.hasCursors() then
         mc.clearCursors()
+        return ""
     else
         return "<esc>"
     end
@@ -474,13 +473,12 @@ map("n", "<leader>fr", "<cmd>FzfLua live_grep<cr>", { desc = "Fzf Live Grep" })
 map("n", "<leader>fb", "<cmd>FzfLua buffers<cr>", { desc = "Fzf Buffers" })
 map("n", "<leader>fk", "<cmd>FzfLua keymaps<cr>", { desc = "Fzf Keymaps" })
 map("n", "<leader>fm", "<cmd>FzfLua marks<cr>", { desc = "Fzf Marks" })
-map("n", "<leader>fh", "<cmd>FzfLua history<cr>", { desc = "Fzf History" })
 map("n", "<leader>n", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 map("n", "<leader>p", "<cmd>bprev<cr>", { desc = "Prev Buffer" })
 map("n", "<leader>x", "<cmd>bd<cr>", { desc = "Delete Buffer" })
 map("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
 map({ "n", "v" }, "<leader>=", function()
-    require("conform").format()
+    require("conform").format({ lsp_fallback = true })
 end, { desc = "Format" })
 map("n", "<leader>/", "gcc", { remap = true, desc = "Comment" })
 map("v", "<leader>/", "gc`]", { remap = true, desc = "Comment Selection" })
@@ -518,24 +516,19 @@ au({ "FocusGained", "BufEnter", "CursorHold" }, {
 })
 
 au("FileType", {
-    pattern = { "typst", "markdown" },
+    pattern = { "markdown" },
     group = group,
     callback = function(args)
-        local cmd = (args.match == "typst") and "<cmd>TypstPreviewToggle<CR>" or "<cmd>MarkdownPreviewToggle<CR>"
+        local cmd = "<cmd>MarkdownPreviewToggle<CR>"
         map("n", "<leader>o", cmd, { buffer = args.buf, desc = "Toggle Preview" })
     end,
 })
 
-au("CursorMoved", {
-    group = vim.api.nvim_create_augroup("auto-hlsearch", { clear = true }),
-    callback = function()
-        if vim.v.hlsearch == 1 and vim.fn.searchcount().exact_match == 0 then
-            vim.schedule(function()
-                vim.cmd.nohlsearch()
-            end)
-        end
-    end,
-})
+vim.on_key(function(char)
+    if vim.fn.mode() == "n" then
+        vim.cmd.nohlsearch()
+    end
+end, vim.api.nvim_create_namespace("auto_nohl"))
 
 au("LspAttach", {
     group = group,
@@ -545,14 +538,18 @@ au("LspAttach", {
         end
         bmap("n", "gd", "<cmd>FzfLua lsp_definitions<cr>", "Definition")
         bmap("n", "gr", "<cmd>FzfLua lsp_references<cr>", "References")
-        bmap("n", "K", vim.lsp.buf.hover, "Hover")
+        bmap("n", "<leader>ls", "<cmd>FzfLua lsp_document_symbols<cr>", "Symbols")
         bmap("n", "<leader>la", "<cmd>FzfLua lsp_code_actions<cr>", "Action")
+        bmap("n", "<leader>ld", "<cmd>FzfLua diagnostics_document<cr>", "Diagnostics")
+        bmap("n", "K", vim.lsp.buf.hover, "Hover")
         bmap("n", "<leader>rn", vim.lsp.buf.rename, "Rename")
-        bmap("n", "]d", function()
-            vim.diagnostic.jump({ count = 1 })
-        end, "Next Diagnostic")
-        bmap("n", "[d", function()
-            vim.diagnostic.jump({ count = -1 })
-        end, "Prev Diagnostic")
+    end,
+})
+
+au("FileType", {
+    pattern = { "yaml", "yml" },
+    callback = function()
+        vim.bo.shiftwidth = 2
+        vim.bo.tabstop = 2
     end,
 })

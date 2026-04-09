@@ -49,9 +49,9 @@ x-scheme-handler/discord-1216669957799018608=discord-1216669957799018608.desktop
 x-scheme-handler/tg=org.telegram.desktop.desktop;
 
 # --- Proxies & Network ---
-x-scheme-handler/clash=flclash.desktop;clash-verge-handler.desktop;clash-nyanpasu-handler.desktop;
-x-scheme-handler/clash-verge=flclash.desktop;clash-verge-handler.desktop;
-x-scheme-handler/clash-nyanpasu=flclash.desktop;clash-nyanpasu-handler.desktop;
+x-scheme-handler/clash=clash-verge.desktop;
+x-scheme-handler/clash-verge=clash-verge.desktop;
+x-scheme-handler/clash-nyanpasu=clash-nyanpasu-handler.desktop
 
 # --- 3D Models & Executables ---
 model/lst=/usr/share/applications/glslViewer.desktop;
