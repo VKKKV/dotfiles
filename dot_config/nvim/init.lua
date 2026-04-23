@@ -6,14 +6,16 @@ end
 vim.g.mapleader = " "
 
 local opt = vim.opt
+opt.colorcolumn = "72,80,120"
+
 opt.timeoutlen = 200
 opt.shiftwidth, opt.tabstop, opt.expandtab = 4, 4, true
+opt.ignorecase = true
 opt.termguicolors, opt.undofile, opt.smartcase = true, true, true
 opt.splitbelow, opt.splitright, opt.list = true, true, true
 opt.undodir = vim.fn.stdpath("state") .. "/undo"
 opt.shell = "/bin/bash"
 
--- [[ PLUGINS ]]
 vim.pack.add({
     -- UI & Theme
     "https://github.com/rebelot/kanagawa.nvim",
@@ -23,6 +25,7 @@ vim.pack.add({
     "https://github.com/j-hui/fidget.nvim",
     "https://github.com/nvim-lualine/lualine.nvim",
     "https://github.com/nvim-treesitter/nvim-treesitter",
+    "https://github.com/shrynx/line-numbers.nvim",
 
     -- Navigation & Editing
     "https://github.com/stevearc/oil.nvim",
@@ -38,6 +41,7 @@ vim.pack.add({
     "https://github.com/Exafunction/windsurf.nvim",
     "https://github.com/nvim-lua/plenary.nvim",
     "https://github.com/iamcco/markdown-preview.nvim",
+    "https://github.com/toppair/peek.nvim",
     "https://github.com/stevearc/conform.nvim",
     "https://github.com/williamboman/mason.nvim",
     "https://github.com/williamboman/mason-lspconfig.nvim",
@@ -56,6 +60,7 @@ vim.cmd.colorscheme("kanagawa-dragon")
 
 -- UI Components
 require("fidget").setup({})
+require("line-numbers").setup({})
 
 require("lualine").setup({
     options = {
@@ -194,7 +199,23 @@ require("luasnip").setup({ enable_autosnippets = true })
 require("luasnip.loaders.from_lua").load({ paths = vim.fn.stdpath("config") .. "/lua/snippets" })
 
 require("conform").setup({
-    formatters_by_ft = { lua = { "stylua" }, python = { "ruff_format" }, ["_"] = { "trim_whitespace" } },
+    formatters_by_ft = {
+        c = { "clang_format" },
+        cpp = { "clang_format" },
+        nix = { "alejandra" },
+        lua = { "stylua" },
+        python = { "ruff_organize_imports", "ruff_format" },
+        php = { "phpcbf" },
+        java = { "google-java-format" },
+        rust = { "rustfmt" },
+        html = { "prettier" },
+        css = { "prettier" },
+        javascript = { "prettier" },
+        typescript = { "prettier" },
+        json = { "prettier" },
+        markdown = { "prettier" },
+        ["_"] = { "trim_whitespace" },
+    },
     formatters = {
         stylua = { prepend_args = { "--indent-type", "Spaces", "--indent-width", "4" } },
         prettier = {
@@ -276,6 +297,12 @@ vim.diagnostic.config({
 require("tiny-inline-diagnostic").setup({ preset = "minimal" })
 
 -- Tools
+-- deno task --quiet build:fast
+require("peek").setup({app = "browser"})
+
+vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
+vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
+
 require("code_runner").setup({
     mode = "term",
     focus = true,

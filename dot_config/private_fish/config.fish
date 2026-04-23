@@ -23,6 +23,7 @@ if status is-interactive
     alias mpvhdr='ENABLE_HDR_WSI=1 mpv --vo=gpu-next --target-colorspace-hint --gpu-api=vulkan --gpu-context=waylandvk'
     alias dd='dd bs=4M conv=fsync oflag=direct status=progress'
     alias objdump='objdump -M intel'
+    alias trans='trans :zh'
 
     starship init fish | source
     zoxide init fish | source
