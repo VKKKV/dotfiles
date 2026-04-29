@@ -2,19 +2,22 @@ if vim.loader then
     vim.loader.enable()
 end
 
--- [[ SETTINGS ]]
-vim.g.mapleader = " "
-
-local opt = vim.opt
-opt.colorcolumn = "72,80,120"
-
-opt.timeoutlen = 200
-opt.shiftwidth, opt.tabstop, opt.expandtab = 4, 4, true
-opt.ignorecase = true
-opt.termguicolors, opt.undofile, opt.smartcase = true, true, true
-opt.splitbelow, opt.splitright, opt.list = true, true, true
-opt.undodir = vim.fn.stdpath("state") .. "/undo"
-opt.shell = "/bin/bash"
+vim.g.mapleader = " " -- leader key must be set before mappings
+vim.opt.signcolumn = "yes:2"
+vim.opt.tabstop = 4
+vim.opt.shiftwidth = 4
+vim.opt.expandtab = true -- spaces instead of tabs
+vim.opt.ignorecase = true
+vim.opt.smartcase = true -- case‑sensitive if uppercase is used
+vim.opt.termguicolors = true -- 24‑bit color
+vim.opt.colorcolumn = "80,120"
+vim.opt.list = true -- show invisible characters (tab, eol, etc.)
+vim.opt.splitbelow = true -- horizontal splits open below
+vim.opt.splitright = true -- vertical splits open to the right
+vim.opt.undofile = true
+vim.opt.undodir = vim.fn.stdpath("state") .. "/undo"
+vim.opt.timeoutlen = 200 -- faster response for mapped sequences
+vim.opt.shell = "/bin/bash" -- avoids issues with fish or exotic shells
 
 vim.pack.add({
     -- UI & Theme
@@ -32,15 +35,14 @@ vim.pack.add({
     "https://github.com/ibhagwan/fzf-lua",
     "https://github.com/folke/flash.nvim",
     "https://github.com/numToStr/Comment.nvim",
+    "https://github.com/chentoast/marks.nvim",
 
     -- Tools & LSP
     { src = "https://github.com/Saghen/blink.cmp", version = vim.version.range("*") },
     "https://github.com/L3MON4D3/LuaSnip",
     "https://github.com/folke/lazydev.nvim",
-    "https://github.com/Exafunction/codeium.nvim",
     "https://github.com/Exafunction/windsurf.nvim",
     "https://github.com/nvim-lua/plenary.nvim",
-    "https://github.com/iamcco/markdown-preview.nvim",
     "https://github.com/toppair/peek.nvim",
     "https://github.com/stevearc/conform.nvim",
     "https://github.com/williamboman/mason.nvim",
@@ -115,11 +117,15 @@ require("oil").setup({
     view_options = { show_hidden = true },
     keymaps = { ["q"] = "actions.close" },
     float = {
-        padding = 2,
-        max_width = 0.6,
-        max_height = 0.8,
+        max_width = 0.9,
+        max_height = 0.9,
         border = "rounded",
         win_options = { winblend = 10 },
+    },
+    lsp_file_methods = {
+        enabled = true,
+        timeout_ms = 1000,
+        autosave_changes = true,
     },
     default_file_explorer = true,
     skip_confirm_for_simple_edits = true,
@@ -141,6 +147,9 @@ require("fzf-lua").register_ui_select()
 -- Editing Tools
 require("flash").setup({ modes = { search = { enabled = true } } })
 require("Comment").setup()
+require("marks").setup({
+    builtin_marks = { "<", ">", "^", "'", '"' },
+})
 require("multicursor-nvim").setup()
 
 local hl = vim.api.nvim_set_hl
@@ -298,7 +307,7 @@ require("tiny-inline-diagnostic").setup({ preset = "minimal" })
 
 -- Tools
 -- deno task --quiet build:fast
-require("peek").setup({app = "browser"})
+require("peek").setup({ app = "browser" })
 
 vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
 vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
@@ -542,15 +551,6 @@ au({ "FocusGained", "BufEnter", "CursorHold" }, {
     end,
 })
 
-au("FileType", {
-    pattern = { "markdown" },
-    group = group,
-    callback = function(args)
-        local cmd = "<cmd>MarkdownPreviewToggle<CR>"
-        map("n", "<leader>o", cmd, { buffer = args.buf, desc = "Toggle Preview" })
-    end,
-})
-
 vim.on_key(function(char)
     if vim.fn.mode() == "n" then
         vim.cmd.nohlsearch()
@@ -574,9 +574,16 @@ au("LspAttach", {
 })
 
 au("FileType", {
-    pattern = { "yaml", "yml" },
+    pattern = { "yaml", "yml", "json" },
     callback = function()
         vim.bo.shiftwidth = 2
         vim.bo.tabstop = 2
     end,
+})
+
+vim.filetype.add({
+    extension = {
+        njk = "html",
+        styl = "css",
+    },
 })

@@ -125,13 +125,6 @@ return {
     -- Spoiler for Hexo: {% spoiler text %}
     s("spo", fmt("{{% spoiler {} %}}", { i(1) })),
 
-    -- Date: YYYY-MM-DD HH:MM:SS
-    s("date", fmt("{}", {
-        f(function()
-            return os.date("%Y-%m-%d %H:%M:%S")
-        end)
-    })),
-
     ----------------------------------------------------------------------------
     -- Templates
     ----------------------------------------------------------------------------
