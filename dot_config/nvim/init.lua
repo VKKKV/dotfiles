@@ -19,258 +19,305 @@ vim.opt.undodir = vim.fn.stdpath("state") .. "/undo"
 vim.opt.timeoutlen = 200 -- faster response for mapped sequences
 vim.opt.shell = "/bin/bash" -- avoids issues with fish or exotic shells
 
-vim.pack.add({
-    -- UI & Theme
-    "https://github.com/rebelot/kanagawa.nvim",
-    "https://github.com/lukas-reineke/indent-blankline.nvim",
-    "https://github.com/RRethy/vim-illuminate",
-    "https://github.com/brenoprata10/nvim-highlight-colors",
-    "https://github.com/j-hui/fidget.nvim",
-    "https://github.com/nvim-lualine/lualine.nvim",
-    "https://github.com/nvim-treesitter/nvim-treesitter",
-    "https://github.com/shrynx/line-numbers.nvim",
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.uv.fs_stat(lazypath) then
+    vim.fn.system({
+        "git",
+        "clone",
+        "--filter=blob:none",
+        "https://github.com/folke/lazy.nvim.git",
+        "--branch=stable",
+        lazypath,
+    })
+end
+vim.opt.rtp:prepend(lazypath)
 
-    -- Navigation & Editing
-    "https://github.com/stevearc/oil.nvim",
-    "https://github.com/ibhagwan/fzf-lua",
-    "https://github.com/folke/flash.nvim",
-    "https://github.com/numToStr/Comment.nvim",
-    "https://github.com/chentoast/marks.nvim",
-
-    -- Tools & LSP
-    { src = "https://github.com/Saghen/blink.cmp", version = vim.version.range("*") },
-    "https://github.com/L3MON4D3/LuaSnip",
-    "https://github.com/folke/lazydev.nvim",
-    "https://github.com/Exafunction/windsurf.nvim",
-    "https://github.com/nvim-lua/plenary.nvim",
-    "https://github.com/toppair/peek.nvim",
-    "https://github.com/stevearc/conform.nvim",
-    "https://github.com/williamboman/mason.nvim",
-    "https://github.com/williamboman/mason-lspconfig.nvim",
-    "https://github.com/neovim/nvim-lspconfig",
-    "https://github.com/mfussenegger/nvim-jdtls",
-    "https://github.com/rachartier/tiny-inline-diagnostic.nvim",
-    "https://github.com/CRAG666/code_runner.nvim",
-    { src = "https://github.com/jake-stewart/multicursor.nvim", version = "1.0" },
-})
-
--- [[ PLUGIN CONFIGS ]]
-
--- Theme
-require("kanagawa").setup({ functionStyle = { italic = true } })
-vim.cmd.colorscheme("kanagawa-dragon")
-
--- UI Components
-require("fidget").setup({})
-require("line-numbers").setup({})
-
-require("lualine").setup({
-    options = {
-        theme = "auto",
-        globalstatus = true,
-        section_separators = "",
-        component_separators = "",
-    },
-    tabline = { lualine_a = { "buffers" } },
-    sections = {
-        lualine_c = {
-            "filename",
-            "lsp_progress",
-            {
-                function()
-                    local clients = vim.lsp.get_clients({ bufnr = 0 })
-                    if #clients == 0 then
-                        return "No Active Lsp"
-                    end
-                    local names = {}
-                    for _, client in ipairs(clients) do
-                        table.insert(names, client.name)
-                    end
-                    return table.concat(names, ", ")
-                end,
-            },
-        },
-        lualine_z = { "location" },
-    },
-})
-
-require("ibl").setup()
-require("nvim-highlight-colors").setup({})
-
-require("nvim-treesitter").install({
-    "bash",
-    "css",
-    "html",
-    "javascript",
-    "json",
-    "python",
-    "rust",
-    "toml",
-    "typescript",
-    "yaml",
-    "zig",
-})
-
--- File Explorer
-require("oil").setup({
-    delete_to_trash = true,
-    view_options = { show_hidden = true },
-    keymaps = { ["q"] = "actions.close" },
-    float = {
-        max_width = 0.9,
-        max_height = 0.9,
-        border = "rounded",
-        win_options = { winblend = 10 },
-    },
-    lsp_file_methods = {
-        enabled = true,
-        timeout_ms = 1000,
-        autosave_changes = true,
-    },
-    default_file_explorer = true,
-    skip_confirm_for_simple_edits = true,
-})
-
--- Fuzzy Finder
-require("fzf-lua").setup({
-    winopts = {
-        height = 0.9527,
-        width = 0.666,
-        preview = { layout = "vertical", vertical = "up:40%" },
-        backdrop = 100,
-    },
-    files = { formatter = "path.filename_first" },
-    grep = { formatter = "path.filename_first" },
-})
-require("fzf-lua").register_ui_select()
-
--- Editing Tools
-require("flash").setup({ modes = { search = { enabled = true } } })
-require("Comment").setup()
-require("marks").setup({
-    builtin_marks = { "<", ">", "^", "'", '"' },
-})
-require("multicursor-nvim").setup()
-
-local hl = vim.api.nvim_set_hl
-hl(0, "MultiCursorCursor", { link = "Cursor" })
-hl(0, "MultiCursorVisual", { link = "Visual" })
-hl(0, "MultiCursorSign", { link = "SignColumn" })
-hl(0, "MultiCursorDisabledCursor", { link = "Visual" })
-hl(0, "MultiCursorDisabledVisual", { link = "Visual" })
-hl(0, "MultiCursorDisabledSign", { link = "SignColumn" })
-
--- LSP & Completion
-require("lazydev").setup({
-    library = { { path = "${3rd}/luv/library", words = { "vim%.uv" } } },
-})
-
-require("codeium").setup({
-    enable_cmp_source = false,
-    virtual_text = {
-        enabled = true,
-        key_bindings = { accept = "<c-a>", accept_line = "<c-f>" },
-    },
-})
-
-require("blink.cmp").setup({
-    enabled = function()
-        return vim.bo.filetype ~= "oil"
-    end,
-    keymap = {
-        preset = "default",
-        ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
-        ["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
-        ["<CR>"] = { "accept", "fallback" },
-    },
-    completion = {
-        list = { selection = { preselect = true, auto_insert = false } },
-        menu = { max_height = 99, auto_show = true },
-        documentation = {
-            auto_show = true,
-            auto_show_delay_ms = 50,
-            window = { max_width = 99, max_height = 99 },
-        },
-    },
-    snippets = { preset = "luasnip" },
-    appearance = { nerd_font_variant = "mono" },
-    sources = {
-        default = { "lazydev", "snippets", "lsp", "path", "buffer", "codeium" },
-        providers = {
-            codeium = { name = "Codeium", module = "codeium.blink", async = true },
-            lazydev = { name = "LazyDev", module = "lazydev.integrations.blink", score_offset = 100 },
-        },
-    },
-    signature = { enabled = true },
-})
-
-require("luasnip").setup({ enable_autosnippets = true })
-require("luasnip.loaders.from_lua").load({ paths = vim.fn.stdpath("config") .. "/lua/snippets" })
-
-require("conform").setup({
-    formatters_by_ft = {
-        c = { "clang_format" },
-        cpp = { "clang_format" },
-        nix = { "alejandra" },
-        lua = { "stylua" },
-        python = { "ruff_organize_imports", "ruff_format" },
-        php = { "phpcbf" },
-        java = { "google-java-format" },
-        rust = { "rustfmt" },
-        html = { "prettier" },
-        css = { "prettier" },
-        javascript = { "prettier" },
-        typescript = { "prettier" },
-        json = { "prettier" },
-        markdown = { "prettier" },
-        ["_"] = { "trim_whitespace" },
-    },
-    formatters = {
-        stylua = { prepend_args = { "--indent-type", "Spaces", "--indent-width", "4" } },
-        prettier = {
-            prepend_args = function(_, ctx)
-                if ctx.filename:find("%.njk$") then
-                    return { "--parser", "html" }
-                end
-                if ctx.filename:find("%.styl$") then
-                    return { "--parser", "css" }
-                end
-                return {}
-            end,
-        },
-    },
-})
-
--- LSP Config
-local capabilities = require("blink.cmp").get_lsp_capabilities()
-require("mason").setup()
-require("mason-lspconfig").setup({
-    automatic_enable = { exclude = { "jdtls" } },
-    ensure_installed = {
-        "clangd",
-        "ty",
-        "nil_ls",
-        "lua_ls",
-        "ts_ls",
-        "tinymist",
-        "rust_analyzer",
-        "marksman",
-        "glsl_analyzer",
-        "bashls",
-        "gradle_ls",
-        "gopls",
-        "jsonls",
-        "html",
-        "cssls",
-        "yamlls",
-    },
-    handlers = {
-        function(server)
-            require("lspconfig")[server].setup({ capabilities = capabilities })
+require("lazy").setup({
+    {
+        "rebelot/kanagawa.nvim",
+        lazy = false,
+        priority = 1000,
+        config = function()
+            require("kanagawa").setup({ functionStyle = { italic = true } })
+            vim.cmd.colorscheme("kanagawa-dragon")
         end,
-        ["rust_analyzer"] = function()
-            require("lspconfig").rust_analyzer.setup({
-                capabilities = capabilities,
+    },
+    {
+        "lukas-reineke/indent-blankline.nvim",
+        lazy = false,
+        main = "ibl",
+        config = true,
+    },
+    { "RRethy/vim-illuminate", lazy = false },
+    {
+        "brenoprata10/nvim-highlight-colors",
+        lazy = false,
+        config = function()
+            require("nvim-highlight-colors").setup({})
+        end,
+    },
+    {
+        "j-hui/fidget.nvim",
+        lazy = false,
+        config = function()
+            require("fidget").setup({})
+        end,
+    },
+    {
+        "nvim-lualine/lualine.nvim",
+        lazy = false,
+        config = function()
+            require("lualine").setup({
+                options = {
+                    theme = "auto",
+                    globalstatus = true,
+                    section_separators = "",
+                    component_separators = "",
+                },
+                tabline = { lualine_a = { "buffers" } },
+                sections = {
+                    lualine_c = {
+                        "filename",
+                        {
+                            function()
+                                local clients = vim.lsp.get_clients({ bufnr = 0 })
+                                if #clients == 0 then
+                                    return "No Active Lsp"
+                                end
+                                local names = {}
+                                for _, client in ipairs(clients) do
+                                    table.insert(names, client.name)
+                                end
+                                return table.concat(names, ", ")
+                            end,
+                        },
+                    },
+                    lualine_z = { "location" },
+                },
+            })
+        end,
+    },
+    {
+        "nvim-treesitter/nvim-treesitter",
+        lazy = false,
+        build = ":TSUpdate",
+        config = function()
+            require("nvim-treesitter").setup({
+                ensure_installed = {
+                    "bash",
+                    "css",
+                    "html",
+                    "javascript",
+                    "json",
+                    "python",
+                    "rust",
+                    "toml",
+                    "typescript",
+                    "yaml",
+                    "zig",
+                },
+            })
+        end,
+    },
+    {
+        "shrynx/line-numbers.nvim",
+        lazy = false,
+        config = function()
+            require("line-numbers").setup()
+        end,
+    },
+    {
+        "stevearc/oil.nvim",
+        lazy = false,
+        config = function()
+            require("oil").setup({
+                delete_to_trash = true,
+                view_options = { show_hidden = true },
+                keymaps = { ["q"] = "actions.close" },
+                float = {
+                    max_width = 0.9,
+                    max_height = 0.9,
+                    border = "rounded",
+                    win_options = { winblend = 10 },
+                },
+                lsp_file_methods = {
+                    enabled = true,
+                    timeout_ms = 1000,
+                    autosave_changes = true,
+                },
+                default_file_explorer = true,
+                skip_confirm_for_simple_edits = true,
+            })
+        end,
+    },
+    {
+        "ibhagwan/fzf-lua",
+        lazy = false,
+        dependencies = { "nvim-lua/plenary.nvim" },
+        config = function()
+            require("fzf-lua").setup({
+                winopts = {
+                    height = 0.9527,
+                    width = 0.666,
+                    preview = { layout = "vertical", vertical = "up:40%" },
+                    backdrop = 100,
+                },
+                files = { formatter = "path.filename_first" },
+                grep = { formatter = "path.filename_first" },
+            })
+            require("fzf-lua").register_ui_select()
+        end,
+    },
+    {
+        "folke/flash.nvim",
+        lazy = false,
+        config = function()
+            require("flash").setup({ modes = { search = { enabled = true } } })
+        end,
+    },
+    {
+        "numToStr/Comment.nvim",
+        lazy = false,
+        config = function()
+            require("Comment").setup()
+        end,
+    },
+    {
+        "chentoast/marks.nvim",
+        lazy = false,
+        config = function()
+            require("marks").setup({ builtin_marks = { "<", ">", "^", "'", '"' } })
+        end,
+    },
+    {
+        "Saghen/blink.cmp",
+        version = "1.*",
+        lazy = false,
+        dependencies = { "L3MON4D3/LuaSnip", "folke/lazydev.nvim", "Exafunction/windsurf.nvim" },
+        config = function()
+            require("blink.cmp").setup({
+                enabled = function()
+                    return vim.bo.filetype ~= "oil"
+                end,
+                keymap = {
+                    preset = "default",
+                    ["<Tab>"] = { "select_next", "snippet_forward", "fallback" },
+                    ["<S-Tab>"] = { "select_prev", "snippet_backward", "fallback" },
+                    ["<CR>"] = { "accept", "fallback" },
+                },
+                completion = {
+                    list = { selection = { preselect = true, auto_insert = false } },
+                    menu = { max_height = 99, auto_show = true },
+                    documentation = {
+                        auto_show = true,
+                        auto_show_delay_ms = 50,
+                        window = { max_width = 99, max_height = 99 },
+                    },
+                },
+                snippets = { preset = "luasnip" },
+                appearance = { nerd_font_variant = "mono" },
+                sources = {
+                    default = { "lazydev", "snippets", "lsp", "path", "buffer", "codeium" },
+                    providers = {
+                        codeium = { name = "Codeium", module = "codeium.blink", async = true },
+                        lazydev = { name = "LazyDev", module = "lazydev.integrations.blink", score_offset = 100 },
+                    },
+                },
+                signature = { enabled = true },
+            })
+        end,
+    },
+    {
+        "L3MON4D3/LuaSnip",
+        lazy = false,
+        config = function()
+            require("luasnip").setup({ enable_autosnippets = true })
+            require("luasnip.loaders.from_lua").load({ paths = vim.fn.stdpath("config") .. "/lua/snippets" })
+        end,
+    },
+    {
+        "folke/lazydev.nvim",
+        lazy = false,
+        config = function()
+            require("lazydev").setup({
+                library = { { path = "${3rd}/luv/library", words = { "vim%.uv" } } },
+            })
+        end,
+    },
+    {
+        "Exafunction/windsurf.nvim",
+        lazy = false,
+        config = function()
+            require("codeium").setup({
+                enable_cmp_source = false,
+                virtual_text = {
+                    enabled = true,
+                    key_bindings = { accept = "<c-a>", accept_line = "<c-f>" },
+                },
+            })
+        end,
+    },
+    { "nvim-lua/plenary.nvim", lazy = false },
+    {
+        "toppair/peek.nvim",
+        build = "deno task --quiet build:fast",
+        ft = "markdown",
+        config = function()
+            require("peek").setup({ app = "browser" })
+        end,
+    },
+    {
+        "stevearc/conform.nvim",
+        lazy = false,
+        config = function()
+            require("conform").setup({
+                formatters_by_ft = {
+                    c = { "clang_format" },
+                    cpp = { "clang_format" },
+                    nix = { "alejandra" },
+                    lua = { "stylua" },
+                    python = { "ruff_organize_imports", "ruff_format" },
+                    php = { "phpcbf" },
+                    java = { "google-java-format" },
+                    rust = { "rustfmt" },
+                    html = { "prettier" },
+                    css = { "prettier" },
+                    javascript = { "prettier" },
+                    typescript = { "prettier" },
+                    json = { "prettier" },
+                    markdown = { "prettier" },
+                    ["_"] = { "trim_whitespace" },
+                },
+                formatters = {
+                    stylua = { prepend_args = { "--indent-type", "Spaces", "--indent-width", "4" } },
+                    prettier = {
+                        prepend_args = function(_, ctx)
+                            if ctx.filename:find("%.njk$") then
+                                return { "--parser", "html" }
+                            end
+                            if ctx.filename:find("%.styl$") then
+                                return { "--parser", "css" }
+                            end
+                            return {}
+                        end,
+                    },
+                },
+            })
+        end,
+    },
+    {
+        "williamboman/mason.nvim",
+        lazy = false,
+        config = true,
+    },
+    {
+        "williamboman/mason-lspconfig.nvim",
+        lazy = false,
+        dependencies = { "williamboman/mason.nvim", "neovim/nvim-lspconfig" },
+        config = function()
+            local capabilities = require("blink.cmp").get_lsp_capabilities()
+            vim.lsp.config("*", { capabilities = capabilities })
+            vim.lsp.config("rust_analyzer", {
                 settings = {
                     ["rust-analyzer"] = {
                         inlayHints = {
@@ -288,9 +335,115 @@ require("mason-lspconfig").setup({
                     },
                 },
             })
+
+            require("mason-lspconfig").setup({
+                automatic_enable = { exclude = { "jdtls", "zls" } },
+                ensure_installed = {
+                    "clangd",
+                    "ty",
+                    "nil_ls",
+                    "lua_ls",
+                    "ts_ls",
+                    "tinymist",
+                    "rust_analyzer",
+                    "marksman",
+                    "glsl_analyzer",
+                    "bashls",
+                    "gradle_ls",
+                    "gopls",
+                    "jsonls",
+                    "html",
+                    "cssls",
+                    "yamlls",
+                },
+            })
+
+            local mason_bin = vim.fn.stdpath("data") .. "/mason/bin"
+            local system_path = table.concat(
+                vim.tbl_filter(function(entry)
+                    return entry ~= mason_bin
+                end, vim.split(vim.env.PATH or "", ":")),
+                ":"
+            )
+            local zls_cmd = "zls"
+            for _, entry in ipairs(vim.split(system_path, ":")) do
+                local candidate = entry .. "/zls"
+                if vim.fn.executable(candidate) == 1 then
+                    zls_cmd = candidate
+                    break
+                end
+            end
+
+            vim.lsp.config("zls", {
+                cmd = { zls_cmd },
+                cmd_env = { PATH = system_path },
+            })
+            vim.lsp.enable("zls")
         end,
     },
+    { "neovim/nvim-lspconfig", lazy = false },
+    { "mfussenegger/nvim-jdtls", lazy = false },
+    {
+        "rachartier/tiny-inline-diagnostic.nvim",
+        lazy = false,
+        config = function()
+            require("tiny-inline-diagnostic").setup({ preset = "minimal" })
+        end,
+    },
+    {
+        "CRAG666/code_runner.nvim",
+        lazy = false,
+        config = function()
+            require("code_runner").setup({
+                mode = "term",
+                focus = true,
+                startinsert = true,
+                term = { position = "bot", size = 40 },
+                filetype = {
+                    c = "cd $dir && gcc $fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt",
+                    cpp = "cd $dir && g++ $fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt",
+                    python = "python -u",
+                    sh = "bash",
+                    rust = "cargo run",
+                    zig = "zig run",
+                },
+            })
+        end,
+    },
+    {
+        "jake-stewart/multicursor.nvim",
+        version = "1.0",
+        lazy = false,
+        config = function()
+            require("multicursor-nvim").setup()
+        end,
+    },
+    { "chomosuke/typst-preview.nvim", lazy = false },
+}, {
+    checker = { enabled = false },
+    performance = {
+        rtp = {
+            disabled_plugins = {
+                "gzip",
+                "matchit",
+                "matchparen",
+                "netrwPlugin",
+                "tarPlugin",
+                "tohtml",
+                "tutor",
+                "zipPlugin",
+            },
+        },
+    },
 })
+
+local hl = vim.api.nvim_set_hl
+hl(0, "MultiCursorCursor", { link = "Cursor" })
+hl(0, "MultiCursorVisual", { link = "Visual" })
+hl(0, "MultiCursorSign", { link = "SignColumn" })
+hl(0, "MultiCursorDisabledCursor", { link = "Visual" })
+hl(0, "MultiCursorDisabledVisual", { link = "Visual" })
+hl(0, "MultiCursorDisabledSign", { link = "SignColumn" })
 
 vim.diagnostic.config({
     virtual_text = false,
@@ -303,28 +456,10 @@ vim.diagnostic.config({
         },
     },
 })
-require("tiny-inline-diagnostic").setup({ preset = "minimal" })
 
 -- Tools
--- deno task --quiet build:fast
-require("peek").setup({ app = "browser" })
-
 vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
 vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
-
-require("code_runner").setup({
-    mode = "term",
-    focus = true,
-    startinsert = true,
-    term = { position = "bot", size = 40 },
-    filetype = {
-        c = "cd $dir && gcc $fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt",
-        cpp = "cd $dir && g++ $fileName -o $fileNameWithoutExt && ./$fileNameWithoutExt",
-        python = "python -u",
-        sh = "bash",
-        rust = "cargo run",
-    },
-})
 
 -- [[ BUILT-IN LSP & ENV ]]
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
@@ -580,6 +715,47 @@ au("FileType", {
         vim.bo.tabstop = 2
     end,
 })
+
+-- Resize splits if window got resized
+au("VimResized", {
+    callback = function()
+        local current_tab = vim.fn.tabpagenr()
+        vim.cmd("tabdo wincmd =")
+        vim.cmd("tabnext " .. current_tab)
+    end,
+})
+
+-- Close certain windows with <q>
+au("FileType", {
+    group = group,
+    pattern = {
+        "PlenaryTestPopup",
+        "help",
+        "lspinfo",
+        "notify",
+        "qf",
+        "spectre_panel",
+        "startuptime",
+        "tsplayground",
+        "neotest-output",
+        "checkhealth",
+        "neotest-summary",
+        "neotest-output-panel",
+        "dbout",
+        "gitsigns-blame",
+    },
+    callback = function(event)
+        vim.bo[event.buf].buflisted = false
+        vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true, desc = "Quit buffer" })
+    end,
+})
+
+-- Write a privileged file even if you forgot to open it with sudo
+vim.api.nvim_create_user_command("SudoWrite", function()
+    vim.cmd("w !sudo tee % >/dev/null")
+    vim.cmd("edit!") -- Reload the buffer to sync with the now-written file
+    print("File saved with sudo!")
+end, { desc = "Write file with sudo privileges" })
 
 vim.filetype.add({
     extension = {
