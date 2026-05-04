@@ -115,6 +115,7 @@ require("lazy").setup({
                     "typescript",
                     "yaml",
                     "zig",
+                    "xml",
                 },
             })
         end,
@@ -124,6 +125,26 @@ require("lazy").setup({
         lazy = false,
         config = function()
             require("line-numbers").setup()
+        end,
+    },
+    {
+        "ya2s/nvim-cursorline",
+        lazy = false,
+        config = function()
+            require("nvim-cursorline").setup({
+                disable_filetypes = {},
+                disable_buftypes = {},
+                cursorline = {
+                    enable = false,
+                    timeout = 1000,
+                    number = false,
+                },
+                cursorword = {
+                    enable = true,
+                    min_length = 3,
+                    hl = { underline = true },
+                },
+            })
         end,
     },
     {
@@ -355,6 +376,7 @@ require("lazy").setup({
                     "html",
                     "cssls",
                     "yamlls",
+                    "lemminx",
                 },
             })
 
@@ -444,18 +466,6 @@ hl(0, "MultiCursorSign", { link = "SignColumn" })
 hl(0, "MultiCursorDisabledCursor", { link = "Visual" })
 hl(0, "MultiCursorDisabledVisual", { link = "Visual" })
 hl(0, "MultiCursorDisabledSign", { link = "SignColumn" })
-
-vim.diagnostic.config({
-    virtual_text = false,
-    signs = {
-        text = {
-            [vim.diagnostic.severity.ERROR] = "",
-            [vim.diagnostic.severity.WARN] = "",
-            [vim.diagnostic.severity.HINT] = "",
-            [vim.diagnostic.severity.INFO] = "",
-        },
-    },
-})
 
 -- Tools
 vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
