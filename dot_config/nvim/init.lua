@@ -2,6 +2,13 @@ if vim.loader then
     vim.loader.enable()
 end
 
+vim.filetype.add({
+    extension = {
+        njk = "html",
+        styl = "css",
+    },
+})
+
 vim.g.mapleader = " " -- leader key must be set before mappings
 vim.opt.signcolumn = "yes:2"
 vim.opt.tabstop = 4
@@ -34,12 +41,17 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
     {
+        "VKKKV/badapple.nvim",
+        config = function()
+            require("badapple").setup({ audio_enabled = false })
+        end,
+    },
+    {
         "rebelot/kanagawa.nvim",
         lazy = false,
         priority = 1000,
         config = function()
             require("kanagawa").setup({ functionStyle = { italic = true } })
-            vim.cmd.colorscheme("kanagawa-dragon")
         end,
     },
     {
@@ -177,12 +189,6 @@ require("lazy").setup({
         dependencies = { "nvim-lua/plenary.nvim" },
         config = function()
             require("fzf-lua").setup({
-                winopts = {
-                    height = 0.9527,
-                    width = 0.666,
-                    preview = { layout = "vertical", vertical = "up:40%" },
-                    backdrop = 100,
-                },
                 files = { formatter = "path.filename_first" },
                 grep = { formatter = "path.filename_first" },
             })
@@ -427,7 +433,17 @@ require("lazy").setup({
                     python = "python -u",
                     sh = "bash",
                     rust = "cargo run",
-                    zig = "zig run",
+                    zig = function()
+                        local path = vim.api.nvim_buf_get_name(0)
+                        local f = io.open(path, "r")
+                        local need = false
+                        if f then
+                            local content = f:read("*a")
+                            f:close()
+                            need = content:find("@cImport") or content:find("@cInclude")
+                        end
+                        return "zig run" .. (need and " -lc" or "")
+                    end,
                 },
             })
         end,
@@ -645,7 +661,6 @@ map({ "o", "x" }, "R", function()
 end, { desc = "Treesitter Search" })
 
 -- General
-map("n", "<leader>w", "<cmd>w<cr>", { desc = "Save" })
 map("n", "<leader>e", function()
     require("oil").toggle_float()
 end, { desc = "Oil" })
@@ -657,7 +672,6 @@ map("n", "<leader>fm", "<cmd>FzfLua marks<cr>", { desc = "Fzf Marks" })
 map("n", "<leader>n", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 map("n", "<leader>p", "<cmd>bprev<cr>", { desc = "Prev Buffer" })
 map("n", "<leader>x", "<cmd>bd<cr>", { desc = "Delete Buffer" })
-map("n", "<leader>q", "<cmd>q<cr>", { desc = "Quit" })
 map({ "n", "v" }, "<leader>=", function()
     require("conform").format({ lsp_fallback = true })
 end, { desc = "Format" })
@@ -696,7 +710,7 @@ au({ "FocusGained", "BufEnter", "CursorHold" }, {
     end,
 })
 
-vim.on_key(function(char)
+vim.on_key(function(_)
     if vim.fn.mode() == "n" then
         vim.cmd.nohlsearch()
     end
@@ -713,8 +727,8 @@ au("LspAttach", {
         bmap("n", "<leader>ls", "<cmd>FzfLua lsp_document_symbols<cr>", "Symbols")
         bmap("n", "<leader>la", "<cmd>FzfLua lsp_code_actions<cr>", "Action")
         bmap("n", "<leader>ld", "<cmd>FzfLua diagnostics_document<cr>", "Diagnostics")
-        bmap("n", "K", vim.lsp.buf.hover, "Hover")
         bmap("n", "<leader>rn", vim.lsp.buf.rename, "Rename")
+        bmap("n", "K", vim.lsp.buf.hover, "Hover")
     end,
 })
 
@@ -735,41 +749,4 @@ au("VimResized", {
     end,
 })
 
--- Close certain windows with <q>
-au("FileType", {
-    group = group,
-    pattern = {
-        "PlenaryTestPopup",
-        "help",
-        "lspinfo",
-        "notify",
-        "qf",
-        "spectre_panel",
-        "startuptime",
-        "tsplayground",
-        "neotest-output",
-        "checkhealth",
-        "neotest-summary",
-        "neotest-output-panel",
-        "dbout",
-        "gitsigns-blame",
-    },
-    callback = function(event)
-        vim.bo[event.buf].buflisted = false
-        vim.keymap.set("n", "q", "<cmd>close<cr>", { buffer = event.buf, silent = true, desc = "Quit buffer" })
-    end,
-})
-
--- Write a privileged file even if you forgot to open it with sudo
-vim.api.nvim_create_user_command("SudoWrite", function()
-    vim.cmd("w !sudo tee % >/dev/null")
-    vim.cmd("edit!") -- Reload the buffer to sync with the now-written file
-    print("File saved with sudo!")
-end, { desc = "Write file with sudo privileges" })
-
-vim.filetype.add({
-    extension = {
-        njk = "html",
-        styl = "css",
-    },
-})
+vim.cmd.colorscheme("kanagawa-dragon")
