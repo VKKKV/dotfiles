@@ -1,0 +1,6 @@
+require("shared")
+require("base")
+require("monitors")
+require("windowrules")
+require("keybindings")
+require("desktop")
