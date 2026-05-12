@@ -87,12 +87,12 @@ add_rules({
 
 add_layer_rules({
   { match = { namespace = "rofi" }, blur = true },
-  { match = { namespace = "rofi" }, ignore_alpha = 0 },
+  { match = { namespace = "rofi" }, ignore_alpha = true },
   { match = { namespace = "notifications" }, blur = true },
-  { match = { namespace = "notifications" }, ignore_alpha = 0 },
+  { match = { namespace = "notifications" }, ignore_alpha = true },
   { match = { namespace = "swaync-notification-window" }, blur = true },
-  { match = { namespace = "swaync-notification-window" }, ignore_alpha = 0 },
+  { match = { namespace = "swaync-notification-window" }, ignore_alpha = true },
   { match = { namespace = "swaync-control-center" }, blur = true },
-  { match = { namespace = "swaync-control-center" }, ignore_alpha = 0 },
+  { match = { namespace = "swaync-control-center" }, ignore_alpha = true },
   { match = { namespace = "logout_dialog" }, blur = true },
 })
