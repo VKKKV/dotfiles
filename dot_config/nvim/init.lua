@@ -9,9 +9,11 @@ vim.filetype.add({
     },
 })
 
+-- vim.g.netrw_banner = 0
 vim.g.mapleader = " " -- leader key must be set before mappings
 vim.opt.signcolumn = "yes:2"
 vim.opt.tabstop = 4
+vim.opt.softtabstop = 4
 vim.opt.shiftwidth = 4
 vim.opt.expandtab = true -- spaces instead of tabs
 vim.opt.ignorecase = true
@@ -373,7 +375,6 @@ require("lazy").setup({
                     "ts_ls",
                     "tinymist",
                     "rust_analyzer",
-                    "marksman",
                     "glsl_analyzer",
                     "bashls",
                     "gradle_ls",
@@ -675,8 +676,24 @@ map("n", "<leader>x", "<cmd>bd<cr>", { desc = "Delete Buffer" })
 map({ "n", "v" }, "<leader>=", function()
     require("conform").format({ lsp_fallback = true })
 end, { desc = "Format" })
+
 map("n", "<leader>/", "gcc", { remap = true, desc = "Comment" })
 map("v", "<leader>/", "gc`]", { remap = true, desc = "Comment Selection" })
+
+map("v", "<", "<gv", { desc = "Unindent and keep selection" })
+map("v", ">", ">gv", { desc = "Indent and keep selection" })
+
+map("v", "J", ":m '>+1<CR>gv=gv", { desc = "move selected lines down", silent = true })
+map("v", "K", ":m '<-2<CR>gv=gv", { desc = "move selected lines up", silent = true })
+
+map("n", "J", "mzJ`z", { desc = "Join lines without moving cursor" })
+
+map("n", "<C-d>", "<C-d>zz", { desc = "move down in buffer with cursor centered" })
+map("n", "<C-u>", "<C-u>zz", { desc = "move up in buffer with cursor centered" })
+
+map("n", "n", "nzzzv", { desc = "Next search result cursor centered" })
+map("n", "N", "Nzzzv", { desc = "Previous search result cursor centered" })
+
 map("v", "<leader>y", '"+y', { desc = "Yank to Clipboard" })
 map("n", "<leader>o", ":RunCode<CR>", { desc = "Run Code" })
 
