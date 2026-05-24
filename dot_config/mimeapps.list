@@ -61,3 +61,4 @@ model/gltf-binary=/usr/share/applications/glslViewer.desktop;
 model/gltf+json=/usr/share/applications/glslViewer.desktop;
 application/octet-stream=svstudio.desktop;onlyoffice-desktopeditors.desktop;
 application/vnd.microsoft.portable-executable=userapp-ghidra-XUFFK3.desktop;wine.desktop;wine-extension-msp.desktop;
+x-scheme-handler/claude-cli=claude-code-url-handler.desktop
