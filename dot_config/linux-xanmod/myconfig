@@ -1,0 +1,83 @@
+#!/bin/bash
+# linux-xanmod myconfig — 针对 Ryzen 5600G + NVIDIA + NVMe 桌面优化
+# 放 ~/.config/linux-xanmod/myconfig，构建时自动应用
+# 调用方式：env _microarchitecture=99 makepkg -si
+
+# ===== CPU 与调度器 =====
+
+# Zen3 特定优化（配合 _microarchitecture=99 效果更好）
+scripts/config --enable CONFIG_MZEN3
+
+# HZ 越高交互响应越快。RT 默认 250，桌面建议 1000
+# 如果你需要 RT 低延迟，保持 250；如果不是强 RT 需求，改 1000
+# scripts/config --set-val CONFIG_HZ 1000
+# scripts/config --enable CONFIG_HZ_1000
+# scripts/config --disable CONFIG_HZ_250
+
+# 处理器空闲状态管理 — 减少 deep C-state 延迟
+scripts/config --disable CONFIG_INTEL_IDLE
+
+# ===== 内存管理 =====
+
+# Transparent Hugepages — RT 默认关掉是为了防延迟尖峰
+# 桌面场景用 madvise 模式（APP 主动申请才用），兼顾性能和安全
+# scripts/config --enable CONFIG_TRANSPARENT_HUGEPAGE
+# scripts/config --enable CONFIG_TRANSPARENT_HUGEPAGE_MADVISE
+# scripts/config --disable CONFIG_TRANSPARENT_HUGEPAGE_ALWAYS
+
+# ZRAM 改用 zstd — 压缩率更高（你的 31GB RAM 不缺那点 CPU）
+scripts/config --set-val CONFIG_ZRAM_DEF_COMP "zstd"
+scripts/config --enable CONFIG_ZRAM_DEF_COMP_ZSTD
+scripts/config --disable CONFIG_ZRAM_DEF_COMP_LZORLE
+
+# 匿名页和水印调优
+scripts/config --set-val CONFIG_ANON_MIN_RATIO 10
+scripts/config --set-val CONFIG_CLEAN_MIN_RATIO 10
+scripts/config --set-val CONFIG_WATERMARK_SCALE_FACTOR 10
+
+# ===== 电源管理 =====
+
+# USB 自动挂起延迟设为 0（禁用），避免外设休眠导致卡顿
+# scripts/config --set-val CONFIG_USB_AUTOSUSPEND_DELAY 0
+
+# 关闭 PCIe 电源管理电源节省（桌面不需要）
+scripts/config --disable CONFIG_PCIEASPM_POWERSAVE
+scripts/config --enable CONFIG_PCIEASPM_PERFORMANCE
+
+# SATA 链路电源管理禁用
+scripts/config --disable CONFIG_SATA_MOBILE_LPM
+
+# ===== IO 调度器 =====
+
+# 你的 NVMe 用 none (已在用)，这是正确的
+# 确保 BFQ 作为模块可用（如果有机械盘或 USB 存储）
+# scripts/config --enable CONFIG_IOSCHED_BFQ
+
+# ===== 网络 =====
+
+# BBR 已经是默认（你的 config 已有），保留
+# fq_codel 作为默认 qdisc — 缓冲区膨胀控制
+scripts/config --enable CONFIG_DEFAULT_FQ_CODEL
+scripts/config --set-val CONFIG_DEFAULT_NET_SCH "fq_codel"
+
+# ===== 安全 =====
+
+# 如果不用容器/沙盒，可以关（如果用了别关）
+# scripts/config --enable CONFIG_USER_NS_UNPRIVILEGED
+
+# Stackleak — 安全擦除内核栈，性能开销极小
+# scripts/config --enable CONFIG_GCC_PLUGIN_STACKLEAK
+
+# ===== 调试与跟踪 =====
+
+# 这些已经在 XanMod 默认关了。如果没关就加：
+# scripts/config --disable CONFIG_FUNCTION_TRACER
+# scripts/config --disable CONFIG_STACK_TRACER
+
+# ===== 不需要的功能 =====
+
+# 单 NUMA 桌面关 NUMA（你的 5600G 就一个 die）
+# PKGBUILD 中设 use_numa=n 即可，这里也保底
+scripts/config --disable CONFIG_NUMA
+
+# XanMod RT 默认已做的大多数优化不再重复
