@@ -5,8 +5,8 @@ hl.on("hyprland.start", function()
   hl.exec_cmd("fcitx5 -d")
   hl.exec_cmd("awww-daemon")
   hl.exec_cmd("thunar --daemon")
-  hl.exec_cmd("[workspace 2 silent] ghostty")
-  hl.exec_cmd("[workspace 1 silent] zen-browser")
+  hl.exec_cmd("[workspace 1 silent] ghostty")
+  hl.exec_cmd("[workspace 2 silent] zen-browser")
 end)
 
 hl.bind("CTRL + ALT + W", hl.dsp.exec_cmd("pkill -x waybar || waybar &"))
@@ -34,3 +34,8 @@ hl.bind("SUPER + CTRL + SHIFT + ALT + P", hl.dsp.exec_cmd(src_path .. "/screensh
 hl.bind("SUPER + P", hl.dsp.exec_cmd(src_path .. "/screenshot.sh s"))
 hl.bind("SUPER + ALT + P", hl.dsp.exec_cmd(src_path .. "/screenshot.sh sc"), { locked = true })
 hl.bind("Print", hl.dsp.exec_cmd(src_path .. "/screenshot.sh p"), { locked = true })
+
+-- Touchpad gestures
+hl.gesture({ fingers = 3, direction = "horizontal", action = "workspace" })
+hl.gesture({ fingers = 3, direction = "down", action = "close" })
+hl.gesture({ fingers = 3, direction = "up", action = "fullscreen" })

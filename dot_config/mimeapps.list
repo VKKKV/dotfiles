@@ -45,7 +45,7 @@ application/x-rar=org.kde.ark.desktop;
 
 x-scheme-handler/magnet=zen.desktop;
 x-scheme-handler/discord=discord.desktop;
-x-scheme-handler/discord-1216669957799018608=discord-1216669957799018608.desktop;
+x-scheme-handler/discord-1216669957799018608=discord-1216669957799018608.desktop
 x-scheme-handler/tg=org.telegram.desktop.desktop;
 
 # --- Proxies & Network ---
@@ -64,3 +64,4 @@ application/vnd.microsoft.portable-executable=userapp-ghidra-XUFFK3.desktop;wine
 x-scheme-handler/claude-cli=claude-code-url-handler.desktop
 x-scheme-handler/mihomo=sparkle.desktop
 x-scheme-handler/sparkle=sparkle.desktop
+x-scheme-handler/lobehub=lobehub-desktop.desktop

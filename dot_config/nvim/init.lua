@@ -43,12 +43,6 @@ vim.opt.rtp:prepend(lazypath)
 
 require("lazy").setup({
     {
-        "VKKKV/badapple.nvim",
-        config = function()
-            require("badapple").setup({ audio_enabled = false })
-        end,
-    },
-    {
         "rebelot/kanagawa.nvim",
         lazy = false,
         priority = 1000,
@@ -56,13 +50,7 @@ require("lazy").setup({
             require("kanagawa").setup({ functionStyle = { italic = true } })
         end,
     },
-    {
-        "lukas-reineke/indent-blankline.nvim",
-        lazy = false,
-        main = "ibl",
-        config = true,
-    },
-    { "RRethy/vim-illuminate", lazy = false },
+
     {
         "brenoprata10/nvim-highlight-colors",
         lazy = false,
@@ -70,13 +58,7 @@ require("lazy").setup({
             require("nvim-highlight-colors").setup({})
         end,
     },
-    {
-        "j-hui/fidget.nvim",
-        lazy = false,
-        config = function()
-            require("fidget").setup({})
-        end,
-    },
+
     {
         "nvim-lualine/lualine.nvim",
         lazy = false,
@@ -143,47 +125,21 @@ require("lazy").setup({
         end,
     },
     {
-        "ya2s/nvim-cursorline",
+        "nvim-mini/mini.files",
         lazy = false,
         config = function()
-            require("nvim-cursorline").setup({
-                disable_filetypes = {},
-                disable_buftypes = {},
-                cursorline = {
-                    enable = false,
-                    timeout = 1000,
-                    number = false,
-                },
-                cursorword = {
-                    enable = true,
-                    min_length = 3,
-                    hl = { underline = true },
+            local mf = require("mini.files")
+            mf.setup({
+                options = { permanent_delete = false },
+                windows = { preview = true, width_preview = 40 },
+                mappings = {
+                    go_in_plus = "<Right>",
+                    go_out_plus = "<Left>",
                 },
             })
-        end,
-    },
-    {
-        "stevearc/oil.nvim",
-        lazy = false,
-        config = function()
-            require("oil").setup({
-                delete_to_trash = true,
-                view_options = { show_hidden = true },
-                keymaps = { ["q"] = "actions.close" },
-                float = {
-                    max_width = 0.9,
-                    max_height = 0.9,
-                    border = "rounded",
-                    win_options = { winblend = 10 },
-                },
-                lsp_file_methods = {
-                    enabled = true,
-                    timeout_ms = 1000,
-                    autosave_changes = true,
-                },
-                default_file_explorer = true,
-                skip_confirm_for_simple_edits = true,
-            })
+            vim.keymap.set("n", "<leader>e", function()
+                mf.open()
+            end, { desc = "MiniFiles (cwd)" })
         end,
     },
     {
@@ -214,7 +170,7 @@ require("lazy").setup({
     },
     {
         "chentoast/marks.nvim",
-        lazy = false,
+        event = "BufReadPost",
         config = function()
             require("marks").setup({ builtin_marks = { "<", ">", "^", "'", '"' } })
         end,
@@ -227,7 +183,7 @@ require("lazy").setup({
         config = function()
             require("blink.cmp").setup({
                 enabled = function()
-                    return vim.bo.filetype ~= "oil"
+                    return vim.bo.filetype ~= "minifiles"
                 end,
                 keymap = {
                     preset = "default",
@@ -289,6 +245,46 @@ require("lazy").setup({
     },
     { "nvim-lua/plenary.nvim", lazy = false },
     {
+        "folke/snacks.nvim",
+        priority = 1000,
+        lazy = false,
+        opts = {
+            bigfile = { enabled = true },
+            dim = { enabled = true },
+            words = { enabled = true },
+            dashboard = {
+                sections = {
+                    { section = "header" },
+                    { section = "keys", gap = 1, padding = 1 },
+                    { section = "startup" },
+                },
+            },
+            indent = { enabled = true },
+            notifier = { enabled = true },
+            statuscolumn = { enabled = true },
+            zen = {
+                toggles = { dim = true, git_signs = false },
+                show = { statusline = false, tabline = false },
+            },
+        },
+        keys = {
+            {
+                "<leader>z",
+                function()
+                    Snacks.zen()
+                end,
+                desc = "Toggle Zen Mode",
+            },
+            {
+                "<leader>g",
+                function()
+                    Snacks.lazygit.open()
+                end,
+                desc = "Lazygit",
+            },
+        },
+    },
+    {
         "toppair/peek.nvim",
         build = "deno task --quiet build:fast",
         ft = "markdown",
@@ -311,6 +307,7 @@ require("lazy").setup({
                     php = { "phpcbf" },
                     java = { "google-java-format" },
                     rust = { "rustfmt" },
+                    zig = { "zig_fmt" },
                     html = { "prettier" },
                     css = { "prettier" },
                     javascript = { "prettier" },
@@ -320,6 +317,11 @@ require("lazy").setup({
                     ["_"] = { "trim_whitespace" },
                 },
                 formatters = {
+                    zig_fmt = {
+                        command = "zig",
+                        args = { "fmt", "--stdin" },
+                        stdin = true,
+                    },
                     stylua = { prepend_args = { "--indent-type", "Spaces", "--indent-width", "4" } },
                     prettier = {
                         prepend_args = function(_, ctx)
@@ -387,6 +389,9 @@ require("lazy").setup({
                     "cssls",
                     "yamlls",
                     "lemminx",
+                    "svelte",
+                    "intelephense",
+                    "solargraph",
                 },
             })
 
@@ -424,7 +429,7 @@ require("lazy").setup({
     },
     {
         "CRAG666/code_runner.nvim",
-        lazy = false,
+        keys = { { "<leader>o", "<cmd>RunCode<cr>", desc = "Run Code" } },
         config = function()
             require("code_runner").setup({
                 mode = "term",
@@ -455,12 +460,31 @@ require("lazy").setup({
     {
         "jake-stewart/multicursor.nvim",
         version = "1.0",
-        lazy = false,
+        keys = { "<C-up>", "<C-down>", "<C-n>", "<leader>s", "<leader>S", "<leader>a" },
         config = function()
             require("multicursor-nvim").setup()
         end,
     },
-    { "chomosuke/typst-preview.nvim", lazy = false },
+    { "chomosuke/typst-preview.nvim", ft = "typst" },
+    {
+        "hat0uma/csvview.nvim",
+        lazy = false,
+        config = function()
+            require("csvview").setup({
+                view = { display_mode = "border" },
+                keymaps = {
+                    textobject_field_inner = "if",
+                    textobject_field_outer = "af",
+                },
+            })
+            vim.api.nvim_create_autocmd("FileType", {
+                pattern = { "csv", "tsv" },
+                callback = function()
+                    vim.cmd("CsvViewEnable")
+                end,
+            })
+        end,
+    },
 }, {
     checker = { enabled = false },
     performance = {
@@ -488,11 +512,29 @@ hl(0, "MultiCursorDisabledVisual", { link = "Visual" })
 hl(0, "MultiCursorDisabledSign", { link = "SignColumn" })
 
 -- Tools
-vim.api.nvim_create_user_command("PeekOpen", require("peek").open, {})
-vim.api.nvim_create_user_command("PeekClose", require("peek").close, {})
+vim.api.nvim_create_user_command("PeekOpen", function()
+    require("peek").open()
+end, {})
+vim.api.nvim_create_user_command("PeekClose", function()
+    require("peek").close()
+end, {})
 
 -- [[ BUILT-IN LSP & ENV ]]
 vim.env.PATH = vim.fn.stdpath("data") .. "/mason/bin:" .. vim.env.PATH
+vim.env.ANDROID_HOME = vim.fn.expand("~/android-sdk")
+
+-- Session auto-restore
+vim.api.nvim_create_autocmd("VimEnter", {
+    group = vim.api.nvim_create_augroup("SessionRestore", { clear = true }),
+    callback = function()
+        if vim.fn.argc() == 0 then
+            local f = vim.fn.getcwd() .. "/Session.vim"
+            if vim.fn.filereadable(f) == 1 then
+                vim.cmd("source " .. f)
+            end
+        end
+    end,
+})
 
 -- Java / jdtls
 vim.api.nvim_create_autocmd("FileType", {
@@ -665,9 +707,6 @@ map({ "o", "x" }, "R", function()
 end, { desc = "Treesitter Search" })
 
 -- General
-map("n", "<leader>e", function()
-    require("oil").toggle_float()
-end, { desc = "Oil" })
 map("n", "<leader>ff", "<cmd>FzfLua files<cr>", { desc = "Fzf Files" })
 map("n", "<leader>fr", "<cmd>FzfLua live_grep<cr>", { desc = "Fzf Live Grep" })
 map("n", "<leader>fb", "<cmd>FzfLua buffers<cr>", { desc = "Fzf Buffers" })
@@ -675,6 +714,7 @@ map("n", "<leader>fk", "<cmd>FzfLua keymaps<cr>", { desc = "Fzf Keymaps" })
 map("n", "<leader>fm", "<cmd>FzfLua marks<cr>", { desc = "Fzf Marks" })
 map("n", "<leader>n", "<cmd>bnext<cr>", { desc = "Next Buffer" })
 map("n", "<leader>p", "<cmd>bprev<cr>", { desc = "Prev Buffer" })
+map("n", "<leader>w", "<cmd>write<cr>", { desc = "Save" })
 map("n", "<leader>x", "<cmd>bd<cr>", { desc = "Delete Buffer" })
 map({ "n", "v" }, "<leader>=", function()
     require("conform").format({ lsp_fallback = true })
@@ -699,6 +739,30 @@ map("n", "N", "Nzzzv", { desc = "Previous search result cursor centered" })
 
 map("v", "<leader>y", '"+y', { desc = "Yank to Clipboard" })
 map("n", "<leader>o", ":RunCode<CR>", { desc = "Run Code" })
+map("n", "<leader>q", "<cmd>q<cr>", { desc = "Close Window" })
+map("n", "]d", function()
+    vim.diagnostic.jump({ count = 1 })
+end, { desc = "Next Diagnostic" })
+map("n", "[d", function()
+    vim.diagnostic.jump({ count = -1 })
+end, { desc = "Prev Diagnostic" })
+
+-- Neotest
+map("n", "<leader>tt", function()
+    require("neotest").run.run()
+end, { desc = "Run Nearest Test" })
+map("n", "<leader>tf", function()
+    require("neotest").run.run(vim.fn.expand("%"))
+end, { desc = "Run File Tests" })
+map("n", "<leader>ts", function()
+    require("neotest").summary.toggle()
+end, { desc = "Test Summary" })
+map("n", "<leader>to", function()
+    require("neotest").output.open({ enter = true })
+end, { desc = "Test Output" })
+map("n", "<leader>tl", function()
+    require("neotest").run.run_last()
+end, { desc = "Re-run Last Test" })
 
 -- Autocmds
 local au = vim.api.nvim_create_autocmd

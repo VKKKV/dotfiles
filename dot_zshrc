@@ -38,3 +38,9 @@ function y() {
 	rm -f -- "$tmp"
 }
 
+alias tshell='adb -s adb-1dc5a91e-w30wTs._adb-tls-connect._tcp shell "run-as com.termux env HOME=/data/data/com.termux/files/home PATH=/data/data/com.termux/files/usr/bin:/data/data/com.termux/files/usr/bin/applets:/product/bin:/apex/com.android.runtime/bin:/apex/com.android.art/bin:/system_ext/bin:/system/bin:/system/xbin:/odm/bin:/vendor/bin:/vendor/xbin PREFIX=/data/data/com.termux/files/usr LD_LIBRARY_PATH=/data/data/com.termux/files/usr/lib /data/data/com.termux/files/usr/bin/bash"'
+
+# Android SDK（用户空间手动管理）
+export ANDROID_HOME=$HOME/android-sdk
+export PATH=$ANDROID_HOME/platform-tools:$ANDROID_HOME/cmdline-tools/latest/bin:$PATH
+# 不设置 ANDROID_SDK_ROOT——避免与系统路径冲突

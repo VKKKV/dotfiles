@@ -5,6 +5,11 @@ if status is-interactive
     set -gx EDITOR nvim
     set -gx PATH $PATH ./node_modules/.bin $HOME/.local/bin
 
+    set -gx ANDROID_HOME $HOME/android-sdk
+    set -e ANDROID_SDK_ROOT   # avoid conflict with /opt/android-sdk
+    set -gx PATH $ANDROID_HOME/platform-tools $ANDROID_HOME/cmdline-tools/latest/bin $PATH
+    set -gx RIPGREP_CONFIG_PATH $HOME/.ripgreprc
+
     alias cp='cp -r'
     alias diff="diff --color=auto"
     alias dt='date "+%Y-%m-%d %H:%M:%S"'
@@ -88,3 +93,27 @@ if status is-interactive
     end
 end
 
+function tshell
+    set -l serial ""
+    set -l rest $argv
+    if test (count $argv) -ge 2 && test "$argv[1]" = "-s"
+        set serial $argv[2]
+        set rest $argv[3..]
+    end
+    set -l adb_args
+    if test -n "$serial"
+        set adb_args -s $serial
+    end
+    if test (count $rest) -gt 0
+        # command mode: use fish via .termux-fish script
+        set -l cmd "run-as com.termux /data/data/com.termux/files/home/.termux-fish"
+        for a in $rest
+            set cmd $cmd (string escape -- $a)
+        end
+        set -l full_cmd (string join ' ' -- $cmd)
+        adb $adb_args shell "$full_cmd"
+    else
+        # interactive mode: use bash via .termux-bash script
+        adb $adb_args shell "run-as com.termux /data/data/com.termux/files/usr/bin/bash /data/data/com.termux/files/home/.termux-bash"
+    end
+end

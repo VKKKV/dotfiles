@@ -13,9 +13,13 @@ hl.env("MOZ_ENABLE_WAYLAND", "1")
 hl.env("GDK_SCALE", "1")
 hl.env("ELECTRON_OZONE_PLATFORM_HINT", "auto")
 hl.env("LIBVA_DRIVER_NAME", "nvidia")
+hl.env("__GL_GSYNC_ALLOWED", "1")
+hl.env("__GL_VRR_ENABLED", "1")
 
 hl.env("__GLX_VENDOR_LIBRARY_NAME", "nvidia")
 hl.env("GBM_BACKEND", "nvidia-drm")
+
+hl.env("HYPRCURSOR_SIZE", "24")
 
 hl.env("XMODIFIERS", "@im=fcitx")
 hl.env("GTK_IM_MODULE", "fcitx")
@@ -59,7 +63,7 @@ hl.config({
         disable_hyprland_logo = true,
         disable_splash_rendering = true,
         force_default_wallpaper = 0,
-        render_unfocused_fps = 60,
+        render_unfocused_fps = 30,
     },
 
     debug = {
@@ -70,8 +74,13 @@ hl.config({
         force_zero_scaling = true,
     },
 
+    render = {
+        direct_scanout = 2,
+    },
+
     cursor = {
         -- no_hardware_cursors = 1,
+        use_cpu_buffer = 2,
         inactive_timeout = 3,
     },
 
@@ -80,7 +89,7 @@ hl.config({
         active_opacity = 1.0,
         inactive_opacity = 1.0,
         dim_inactive = false,
-        dim_strength = 0.1,
+        dim_strength = 0.5,
         blur = {
             enabled = true,
         },
