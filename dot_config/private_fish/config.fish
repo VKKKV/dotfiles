@@ -25,7 +25,8 @@ if status is-interactive
     alias ta='tmux attach; or tmux'
     alias up='paru -Syu'
     alias zathura='zathura --fork'
-    alias mpvhdr='ENABLE_HDR_WSI=1 mpv --vo=gpu-next --target-colorspace-hint --gpu-api=vulkan --gpu-context=waylandvk'
+    # mpv.conf provides gpu-next/Vulkan/fullscreen; this adds Wayland + HDR WSI/CM hints.
+    alias mpvhdr='env ENABLE_HDR_WSI=1 mpv --gpu-context=waylandvk --target-colorspace-hint=yes --target-colorspace-hint-mode=source'
     alias dd='dd bs=4M conv=fsync oflag=direct status=progress'
     alias objdump='objdump -M intel'
     alias trans='trans :zh'

@@ -125,21 +125,31 @@ require("lazy").setup({
         end,
     },
     {
-        "nvim-mini/mini.files",
+        "stevearc/oil.nvim",
         lazy = false,
+        dependencies = { "nvim-tree/nvim-web-devicons" },
         config = function()
-            local mf = require("mini.files")
-            mf.setup({
-                options = { permanent_delete = false },
-                windows = { preview = true, width_preview = 40 },
-                mappings = {
-                    go_in_plus = "<Right>",
-                    go_out_plus = "<Left>",
+            require("oil").setup({
+                default_file_explorer = true,
+                view_options = { show_hidden = true },
+                float = {
+                    padding = 2,
+                    max_width = 110,
+                    max_height = 25,
+                    border = "rounded",
+                    win_options = { winblend = 0 },
+                },
+                keymaps = {
+                    ["q"] = "actions.close",
                 },
             })
+            vim.keymap.set("n", "-", function()
+                local root = vim.fs.root(0, ".git") or vim.fn.getcwd()
+                require("oil").open_float(root)
+            end, { desc = "Oil workspace root (float)" })
             vim.keymap.set("n", "<leader>e", function()
-                mf.open()
-            end, { desc = "MiniFiles (cwd)" })
+                require("oil").toggle_float()
+            end, { desc = "Oil current file dir (float)" })
         end,
     },
     {
@@ -183,7 +193,7 @@ require("lazy").setup({
         config = function()
             require("blink.cmp").setup({
                 enabled = function()
-                    return vim.bo.filetype ~= "minifiles"
+                    return vim.bo.filetype ~= "oil"
                 end,
                 keymap = {
                     preset = "default",
@@ -429,6 +439,7 @@ require("lazy").setup({
     },
     {
         "CRAG666/code_runner.nvim",
+        cmd = { "RunCode", "RunFile", "RunProject", "RunClose", "CRFiletype", "CRProjects" },
         keys = { { "<leader>o", "<cmd>RunCode<cr>", desc = "Run Code" } },
         config = function()
             require("code_runner").setup({
@@ -746,23 +757,6 @@ end, { desc = "Next Diagnostic" })
 map("n", "[d", function()
     vim.diagnostic.jump({ count = -1 })
 end, { desc = "Prev Diagnostic" })
-
--- Neotest
-map("n", "<leader>tt", function()
-    require("neotest").run.run()
-end, { desc = "Run Nearest Test" })
-map("n", "<leader>tf", function()
-    require("neotest").run.run(vim.fn.expand("%"))
-end, { desc = "Run File Tests" })
-map("n", "<leader>ts", function()
-    require("neotest").summary.toggle()
-end, { desc = "Test Summary" })
-map("n", "<leader>to", function()
-    require("neotest").output.open({ enter = true })
-end, { desc = "Test Output" })
-map("n", "<leader>tl", function()
-    require("neotest").run.run_last()
-end, { desc = "Re-run Last Test" })
 
 -- Autocmds
 local au = vim.api.nvim_create_autocmd

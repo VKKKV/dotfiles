@@ -76,6 +76,8 @@ hl.config({
 
     render = {
         direct_scanout = 2,
+        -- Let fullscreen applications request HDR; 2 selects the EDID-based HDR preset.
+        cm_auto_hdr = 2,
     },
 
     cursor = {
