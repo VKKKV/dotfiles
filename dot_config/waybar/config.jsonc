@@ -12,7 +12,8 @@
 
     "modules-center": [
         "custom/left_div#4",
-        "clock",
+        "clock#local",
+        "custom/utc",
         "pulseaudio",
         "tray",
         "custom/right_div#4"
@@ -29,8 +30,13 @@
         "spacing": 10,
         "tooltip": false
     },
-    "clock": {
-        "format": "{:%a, %d %I:%M}",
+    "clock#local": {
+        "format": "{:%a, %d %H:%M}",
+        "tooltip": true
+    },
+    "custom/utc": {
+        "exec": "/home/kita/.config/waybar/scripts/utc-clock.sh",
+        "interval": 1,
         "tooltip": true
     },
     "pulseaudio": {
@@ -39,7 +45,6 @@
         "format": "vol{volume}%",
         "format-muted": "MUTED",
         "format-bluetooth": "vol{volume}%",
-        "nospacing": 1,
         "on-click": "pwvucontrol",
         "tooltip": false,
         "nospacing": 1

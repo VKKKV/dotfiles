@@ -1,0 +1,9 @@
+# fcitx5 运行时生成的键盘布局描述缓存（xkeyboard-config 变更时会自动重建）
+.config/fcitx5/conf/cached_layouts
+
+# 仓库自己的说明文档/截图与键盘布局导出文件：保留在仓库里，但不落到 $HOME 根目录
+README.md
+img
+asdf.vil
+crkbd.vil
+options.txt

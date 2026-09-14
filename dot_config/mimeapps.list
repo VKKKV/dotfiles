@@ -65,3 +65,4 @@ x-scheme-handler/claude-cli=claude-code-url-handler.desktop
 x-scheme-handler/mihomo=sparkle.desktop
 x-scheme-handler/sparkle=sparkle.desktop
 x-scheme-handler/lobehub=lobehub-desktop.desktop
+x-scheme-handler/zcode=zcode.desktop

@@ -139,14 +139,11 @@ window#waybar {
 
 /*中间右边第二级*/
 
-#clock {
+#clock,
+#custom-utc {
     padding: 0px 7px;
-}
-
-#clock {
     background-color: @on_secondary;
     color: @secondary;
-
 }
 
 #custom-right_div.2 {
